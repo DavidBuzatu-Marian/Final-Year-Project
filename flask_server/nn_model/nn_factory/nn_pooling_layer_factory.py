@@ -1,36 +1,40 @@
-from flask_server.nn_model.nn_factory.nn_layer_factory import NNAbstractLayerFactory
+import sys
+
+sys.path.insert(0, "../../../nn_model")
+
+from nn_factory.nn_layer_factory import NNAbstractLayerFactory
 import torch
 import torch.nn as nn
 
 
-class NNPoolingLayerFactory (NNAbstractLayerFactory):
+class NNPoolingLayerFactory(NNAbstractLayerFactory):
     def get_layer(self, layer_type, parameters):
         options = {
-            "MaxPool1d": self.__build_maxpool1d(parameters),
-            "MaxPool2d": self.__build_maxpool2d(parameters),
-            "MaxPool3d": self.__build_maxpool3d(parameters),
-            "MaxUnpool1d": self.__build_maxunpool1d(parameters),
-            "MaxUnpool2d": self.__build_maxunpool2d(parameters),
-            "MaxUnpool3d": self.__build_maxunpool3d(parameters),
-            "AvgPool1d": self.__build_avgpool1d(parameters),
-            "AvgPool2d": self.__build_avgpool2d(parameters),
-            "AvgPool3d": self.__build_avgpool3d(parameters),
-            "FractionalMaxPool2d": self.__build_fractional_maxpool2d(parameters),
-            "FractionalMaxPool3d": self.__build_fractional_maxpool3d(parameters),
-            "LPPool1d": self.__build_lppool1d(parameters),
-            "LPPool2d": self.__build_lppool2d(parameters),
-            "AdaptiveMaxPool1d": self.__build_adaptive_maxpool1d(parameters),
-            "AdaptiveMaxPool2d": self.__build_adaptive_maxpool2d(parameters),
-            "AdaptiveMaxPool3d": self.__build_adaptive_maxpool3d(parameters),
-            "AdaptiveAvgPool1d": self.__build_adaptive_avgpool1d(parameters),
-            "AdaptiveAvgPool2d": self.__build_adaptive_avgpool2d(parameters),
-            "AdaptiveAvgPool3d": self.__build_adaptive_avgpool3d(parameters),
+            "MaxPool1d": self.__build_maxpool1d,
+            "MaxPool2d": self.__build_maxpool2d,
+            "MaxPool3d": self.__build_maxpool3d,
+            "MaxUnpool1d": self.__build_maxunpool1d,
+            "MaxUnpool2d": self.__build_maxunpool2d,
+            "MaxUnpool3d": self.__build_maxunpool3d,
+            "AvgPool1d": self.__build_avgpool1d,
+            "AvgPool2d": self.__build_avgpool2d,
+            "AvgPool3d": self.__build_avgpool3d,
+            "FractionalMaxPool2d": self.__build_fractional_maxpool2d,
+            "FractionalMaxPool3d": self.__build_fractional_maxpool3d,
+            "LPPool1d": self.__build_lppool1d,
+            "LPPool2d": self.__build_lppool2d,
+            "AdaptiveMaxPool1d": self.__build_adaptive_maxpool1d,
+            "AdaptiveMaxPool2d": self.__build_adaptive_maxpool2d,
+            "AdaptiveMaxPool3d": self.__build_adaptive_maxpool3d,
+            "AdaptiveAvgPool1d": self.__build_adaptive_avgpool1d,
+            "AdaptiveAvgPool2d": self.__build_adaptive_avgpool2d,
+            "AdaptiveAvgPool3d": self.__build_adaptive_avgpool3d,
         }
         if layer_type in options:
-            return options[layer_type]
+            return options[layer_type](parameters)
         raise Exception("Layer type not in options")
 
-    def __build_maxpool1d(parameters):
+    def __build_maxpool1d(self, parameters):
         parameters_set = set(
             "kernel_size",
             "stride",
@@ -47,7 +51,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.MaxPool1d(**parameters)
 
-    def __build_maxpool2d(parameters):
+    def __build_maxpool2d(self, parameters):
         parameters_set = set(
             "kernel_size",
             "stride",
@@ -64,7 +68,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.MaxPool2d(**parameters)
 
-    def __build_maxpool3d(parameters):
+    def __build_maxpool3d(self, parameters):
         parameters_set = set(
             "kernel_size",
             "stride",
@@ -81,7 +85,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.MaxPool3d(**parameters)
 
-    def __build_maxunpool1d(parameters):
+    def __build_maxunpool1d(self, parameters):
         parameters_set = set("kernel_size", "stride", "padding")
         parameters = dict(
             filter(
@@ -91,7 +95,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.MaxUnpool1d(**parameters)
 
-    def __build_maxunpool2d(parameters):
+    def __build_maxunpool2d(self, parameters):
         parameters_set = set("kernel_size", "stride", "padding")
         parameters = dict(
             filter(
@@ -101,7 +105,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.MaxUnpool2d(**parameters)
 
-    def __build_maxunpool3d(parameters):
+    def __build_maxunpool3d(self, parameters):
         parameters_set = set("kernel_size", "stride", "padding")
         parameters = dict(
             filter(
@@ -111,7 +115,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.MaxUnpool3d(**parameters)
 
-    def __build_avgpool1d(parameters):
+    def __build_avgpool1d(self, parameters):
         parameters_set = set(
             "kernel_size", "stride", "padding", "ceil_mode", "count_include_pad"
         )
@@ -123,7 +127,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.AvgPool1d(**parameters)
 
-    def __build_avgpool2d(parameters):
+    def __build_avgpool2d(self, parameters):
         parameters_set = set(
             "kernel_size",
             "stride",
@@ -140,7 +144,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.AvgPool2d(**parameters)
 
-    def __build_avgpool3d(parameters):
+    def __build_avgpool3d(self, parameters):
         parameters_set = set(
             "kernel_size",
             "stride",
@@ -157,7 +161,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.AvgPool3d(**parameters)
 
-    def __build_fractional_maxpool2d(parameters):
+    def __build_fractional_maxpool2d(self, parameters):
         parameters_set = set(
             "kernel_size", "output_size", "output_ratio", "return_indices"
         )
@@ -169,7 +173,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.FractionalMaxPool2d(**parameters)
 
-    def __build_fractional_maxpool3d(parameters):
+    def __build_fractional_maxpool3d(self, parameters):
         parameters_set = set(
             "kernel_size", "output_size", "output_ratio", "return_indices"
         )
@@ -181,7 +185,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.FractionalMaxPool3d(**parameters)
 
-    def __build_lppool1d(parameters):
+    def __build_lppool1d(self, parameters):
         parameters_set = set("kernel_size", "stride", "ceil_mode")
         parameters = dict(
             filter(
@@ -191,7 +195,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.LPPool1d(**parameters)
 
-    def __build_lppool2d(parameters):
+    def __build_lppool2d(self, parameters):
         parameters_set = set("kernel_size", "stride", "ceil_mode")
         parameters = dict(
             filter(
@@ -201,7 +205,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.LPPool2d(**parameters)
 
-    def __build_adaptive_maxpool1d(parameters):
+    def __build_adaptive_maxpool1d(self, parameters):
         parameters_set = set("output_size", "return_indices")
         parameters = dict(
             filter(
@@ -211,7 +215,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.AdaptiveMaxPool1d(**parameters)
 
-    def __build_adaptive_maxpool2d(parameters):
+    def __build_adaptive_maxpool2d(self, parameters):
         parameters_set = set("output_size", "return_indices")
         parameters = dict(
             filter(
@@ -221,7 +225,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.AdaptiveMaxPool2d(**parameters)
 
-    def __build_adaptive_maxpool3d(parameters):
+    def __build_adaptive_maxpool3d(self, parameters):
         parameters_set = set("output_size", "return_indices")
         parameters = dict(
             filter(
@@ -231,7 +235,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.AdaptiveMaxPool3d(**parameters)
 
-    def __build_adaptive_avgpool1d(parameters):
+    def __build_adaptive_avgpool1d(self, parameters):
         parameters_set = set("output_size")
         parameters = dict(
             filter(
@@ -241,7 +245,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.AdaptiveAvgPool1d(**parameters)
 
-    def __build_adaptive_avgpool2d(parameters):
+    def __build_adaptive_avgpool2d(self, parameters):
         parameters_set = set("output_size")
         parameters = dict(
             filter(
@@ -251,7 +255,7 @@ class NNPoolingLayerFactory (NNAbstractLayerFactory):
         )
         return nn.AdaptiveAvgPool2d(**parameters)
 
-    def __build_adaptive_avgpool3d(parameters):
+    def __build_adaptive_avgpool3d(self, parameters):
         parameters_set = set("output_size")
         parameters = dict(
             filter(

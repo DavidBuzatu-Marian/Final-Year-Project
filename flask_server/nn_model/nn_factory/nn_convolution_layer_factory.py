@@ -1,4 +1,8 @@
-from flask_server.nn_model.nn_factory.nn_layer_factory import NNAbstractLayerFactory
+import sys
+
+sys.path.insert(0, "../../../nn_model")
+
+from nn_factory.nn_layer_factory import NNAbstractLayerFactory
 import torch
 import torch.nn as nn
 
