@@ -21,7 +21,7 @@ class TestConvolutionLayerFactory(unittest.TestCase):
                 "stride": 2,
             },
         )
-        self.assertEqual(conv1d_layer, nn.Conv1d(16, 33, 3, stride=2))
+        self.assertEqual(repr(conv1d_layer), repr(nn.Conv1d(16, 33, 3, stride=2)))
 
 
 if __name__ == "__main__":
