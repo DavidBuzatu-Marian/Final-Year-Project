@@ -8,10 +8,18 @@ class NNLayerFactory:
     def get_layer(self, layer_type, subtype, parameters):
         options = {
             "Convolution": self.__build_convolution(subtype, parameters),
+            "Pooling": self.__build_pooling(subtype, parameters),
+            "Linear": self.__build_linear(subtype, parameters),
         }
         if layer_type in options:
             return options[layer_type]
         raise Exception("Layer type not in options")
 
     def __build_convolution(subtype, parameters):
+        return NNConvolutionLayerFactory.get_layer(subtype, parameters)
+
+    def __build_pooling(subtype, parameters):
+        return NNConvolutionLayerFactory.get_layer(subtype, parameters)
+
+    def __build_linear(subtype, parameters):
         return NNConvolutionLayerFactory.get_layer(subtype, parameters)
