@@ -1,8 +1,9 @@
+from flask_server.nn_model.nn_factory.nn_layer_factory import NNAbstractLayerFactory
 import torch
 import torch.nn as nn
 
 
-class NNConvolutionLayerFactory:
+class NNConvolutionLayerFactory(NNAbstractLayerFactory):
     def get_layer(self, layer_type, parameters):
         options = {
             "Conv1d": self.__build_conv1d(parameters),
