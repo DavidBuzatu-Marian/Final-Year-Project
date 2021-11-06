@@ -143,13 +143,21 @@ class NNPoolingLayerFactory(NNAbstractLayerFactory):
 
     def __build_lppool1d(self, parameters):
         parameters_set = {"kernel_size", "stride", "ceil_mode"}
+        try:
+            norm_type = parameters["norm_type"]
+        except Exception:
+            raise Exception("Norm type is required for LPPool1d")
         parameters = get_params_from_list(parameters, parameters_set)
-        return nn.LPPool1d(**parameters)
+        return nn.LPPool1d(norm_type, **parameters)
 
     def __build_lppool2d(self, parameters):
         parameters_set = {"kernel_size", "stride", "ceil_mode"}
+        try:
+            norm_type = parameters["norm_type"]
+        except Exception:
+            raise Exception("Norm type is required for LPPool2d")
         parameters = get_params_from_list(parameters, parameters_set)
-        return nn.LPPool2d(**parameters)
+        return nn.LPPool2d(norm_type, **parameters)
 
     def __build_adaptive_maxpool1d(self, parameters):
         parameters_set = {"output_size", "return_indices"}
