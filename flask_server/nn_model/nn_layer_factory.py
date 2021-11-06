@@ -1,24 +1,17 @@
 import torch
 import torch.nn as nn
-
-class NNLayerFactory():
-    def get_layer(self, layer_type, parameters):
-        match layer_type:
-            case "Conv1d":
-                return self.__build_conv1d(parameters)
+from nn_factory.nn_convolution_layer_factory import NNConvolutionLayerFactory
 
 
-    def __build_conv1d(parameters):
-        conv1d_dict = set(
-            "in_channels",
-            "out_channels",
-            "kernel_size",
-            "stride",
-            "padding",
-            "padding_mode",
-            "dilation",
-            "groups",
-            "bias"
-        )
-        parameters = dict(filter(lambda key_value: not (key_value[0] in conv1d_dict), parameters.items()))
-        return nn.Conv1d(**parameters)
+class NNLayerFactory:
+    # TODO: May want to encapsulate layer_type and rest in a wrapper class
+    def get_layer(self, layer_type, subtype, parameters):
+        options = {
+            "Convolution": self.__build_convolution(subtype, parameters),
+        }
+        if layer_type in options:
+            return options[layer_type]
+        raise Exception("Layer type not in options")
+
+    def __build_convolution(subtype, parameters):
+        return NNConvolutionLayerFactory.get_layer(subtype, parameters)
