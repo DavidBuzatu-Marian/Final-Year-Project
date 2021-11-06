@@ -33,7 +33,7 @@ class NNPoolingLayerFactory(NNAbstractLayerFactory):
         }
         if layer_type in options:
             return options[layer_type](parameters)
-        raise Exception("Layer type not in options")
+        raise Exception("Pooling layer type not in options")
 
     def __build_maxpool1d(self, parameters):
         parameters_set = {

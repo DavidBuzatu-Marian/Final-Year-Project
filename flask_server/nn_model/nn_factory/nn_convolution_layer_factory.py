@@ -22,7 +22,7 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
         }
         if layer_type in options:
             return options[layer_type](parameters)
-        raise Exception("Layer type not in options")
+        raise Exception("Convolutional layer type not in options")
 
     def __build_conv1d(self, parameters):
         parameters_set = {

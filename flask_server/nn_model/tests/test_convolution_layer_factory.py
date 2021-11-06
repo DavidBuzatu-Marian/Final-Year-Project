@@ -152,6 +152,57 @@ class TestConvolutionLayerFactory(unittest.TestCase):
             repr(nn.Fold(output_size=(4, 5), kernel_size=(2, 2), stride=3, dilation=1)),
         )
 
+    def test_fold_creation_with_extra_params(self):
+        layer_factory = NNLayerFactory()
+        conv_fold_layer = layer_factory.get_layer(
+            layer_type="Convolution",
+            subtype="Fold",
+            parameters={
+                "output_size": (4, 5),
+                "kernel_size": (2, 2),
+                "stride": 3,
+                "dilation": 1,
+                "invalid_param": (3, 4),
+                "other_invalid_param": 34,
+            },
+        )
+        self.assertEqual(
+            repr(conv_fold_layer),
+            repr(nn.Fold(output_size=(4, 5), kernel_size=(2, 2), stride=3, dilation=1)),
+        )
+
+    # Test with misspelled layer_type
+    def test_conv1d_creation_invalid_layer_type(self):
+        layer_factory = NNLayerFactory()
+        with self.assertRaises(Exception, msg="Layer type not in options"):
+            layer_factory.get_layer(
+                layer_type="Convlution",
+                subtype="Conv1d",
+                parameters={
+                    "in_channels": 16,
+                    "out_channels": 33,
+                    "kernel_size": 3,
+                    "stride": 2,
+                },
+            )
+
+    # Test with misspelled subtype for convolution
+    def test_conv1d_creation_invalid_subtype_conv(self):
+        layer_factory = NNLayerFactory()
+        with self.assertRaises(
+            Exception, msg="Convolutional layer type not in options"
+        ):
+            layer_factory.get_layer(
+                layer_type="Convolution",
+                subtype="Convo1d",
+                parameters={
+                    "in_channels": 16,
+                    "out_channels": 33,
+                    "kernel_size": 3,
+                    "stride": 2,
+                },
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
