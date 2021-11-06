@@ -171,7 +171,7 @@ class TestConvolutionLayerFactory(unittest.TestCase):
             repr(nn.Fold(output_size=(4, 5), kernel_size=(2, 2), stride=3, dilation=1)),
         )
 
-    # Test with misspelled layer_type
+    # Test with incorrect layer_type
     def test_conv1d_creation_invalid_layer_type(self):
         layer_factory = NNLayerFactory()
         with self.assertRaises(Exception, msg="Layer type not in options"):
@@ -186,7 +186,7 @@ class TestConvolutionLayerFactory(unittest.TestCase):
                 },
             )
 
-    # Test with misspelled subtype for convolution
+    # Test with incorrect subtype for convolution
     def test_conv1d_creation_invalid_subtype_conv(self):
         layer_factory = NNLayerFactory()
         with self.assertRaises(
