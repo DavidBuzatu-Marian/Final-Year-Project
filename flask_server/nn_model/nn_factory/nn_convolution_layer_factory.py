@@ -20,7 +20,7 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
         raise Exception("Layer type not in options")
 
     def __build_conv1d(parameters):
-        conv1d_set = set(
+        parameters_set = set(
             "in_channels",
             "out_channels",
             "kernel_size",
@@ -33,13 +33,14 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
         )
         parameters = dict(
             filter(
-                lambda key_value: not (key_value[0] in conv1d_set), parameters.items()
+                lambda key_value: not (key_value[0] in parameters_set),
+                parameters.items(),
             )
         )
         return nn.Conv1d(**parameters)
 
     def __build_conv2d(parameters):
-        conv2d_set = set(
+        parameters_set = set(
             "in_channels",
             "out_channels",
             "kernel_size",
@@ -52,13 +53,14 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
         )
         parameters = dict(
             filter(
-                lambda key_value: not (key_value[0] in conv2d_set), parameters.items()
+                lambda key_value: not (key_value[0] in parameters_set),
+                parameters.items(),
             )
         )
         return nn.Conv2d(**parameters)
 
     def __build_conv3d(parameters):
-        conv3d_set = set(
+        parameters_set = set(
             "in_channels",
             "out_channels",
             "kernel_size",
@@ -71,13 +73,14 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
         )
         parameters = dict(
             filter(
-                lambda key_value: not (key_value[0] in conv3d_set), parameters.items()
+                lambda key_value: not (key_value[0] in parameters_set),
+                parameters.items(),
             )
         )
         return nn.Conv3d(**parameters)
 
     def __build_conv_transpose1d(parameters):
-        conv_transpose1d_set = set(
+        parameters_set = set(
             "in_channels",
             "out_channels",
             "kernel_size",
@@ -90,14 +93,14 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
         )
         parameters = dict(
             filter(
-                lambda key_value: not (key_value[0] in conv_transpose1d_set),
+                lambda key_value: not (key_value[0] in parameters_set),
                 parameters.items(),
             )
         )
         return nn.ConvTranspose1d(**parameters)
 
     def __build_conv_transpose2d(parameters):
-        conv_transpose2d_set = set(
+        parameters_set = set(
             "in_channels",
             "out_channels",
             "kernel_size",
@@ -110,14 +113,14 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
         )
         parameters = dict(
             filter(
-                lambda key_value: not (key_value[0] in conv_transpose2d_set),
+                lambda key_value: not (key_value[0] in parameters_set),
                 parameters.items(),
             )
         )
         return nn.ConvTranspose2d(**parameters)
 
     def __build_conv_transpose3d(parameters):
-        conv_transpose3d_set = set(
+        parameters_set = set(
             "in_channels",
             "out_channels",
             "kernel_size",
@@ -130,26 +133,32 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
         )
         parameters = dict(
             filter(
-                lambda key_value: not (key_value[0] in conv_transpose3d_set),
+                lambda key_value: not (key_value[0] in parameters_set),
                 parameters.items(),
             )
         )
         return nn.ConvTranspose3d(**parameters)
 
     def __build_fold(parameters):
-        fold_set = set("output_size", "kernel_size", "stride", "padding", "dilation")
+        parameters_set = set(
+            "output_size", "kernel_size", "stride", "padding", "dilation"
+        )
 
         parameters = dict(
-            filter(lambda key_value: not (key_value[0] in fold_set), parameters.items())
+            filter(
+                lambda key_value: not (key_value[0] in parameters_set),
+                parameters.items(),
+            )
         )
         return nn.Fold(**parameters)
 
     def __build_unfold(parameters):
-        unfold_set = set("kernel_size", "stride", "padding", "dilation")
+        parameters_set = set("kernel_size", "stride", "padding", "dilation")
 
         parameters = dict(
             filter(
-                lambda key_value: not (key_value[0] in unfold_set), parameters.items()
+                lambda key_value: not (key_value[0] in parameters_set),
+                parameters.items(),
             )
         )
         return nn.Unfold(**parameters)
