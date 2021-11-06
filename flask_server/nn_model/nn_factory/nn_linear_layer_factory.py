@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, "../../../nn_model")
 
 from nn_factory.nn_layer_factory import NNAbstractLayerFactory
+from nn_factory.nn_helpers import get_params_from_list
 import torch
 import torch.nn as nn
 
@@ -23,31 +24,16 @@ class NNLinearLayerFactory(NNAbstractLayerFactory):
         return nn.Identity()
 
     def __build_linear(self, parameters):
-        parameters_set = set("in_features", "out_features", "bias")
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters_set = {"in_features", "out_features", "bias"}
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.Linear(**parameters)
 
     def __build_bilinear(self, parameters):
-        parameters_set = set("in1_features", "in2_features", "out_features", "bias")
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters_set = {"in1_features", "in2_features", "out_features", "bias"}
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.Bilinear(**parameters)
 
     def __build_lazy_linear(self, parameters):
-        parameters_set = set("out_features", "bias")
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters_set = {"out_features", "bias"}
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.LazyLinear(**parameters)

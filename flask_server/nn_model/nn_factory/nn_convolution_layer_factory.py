@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, "../../../nn_model")
 
 from nn_factory.nn_layer_factory import NNAbstractLayerFactory
+from nn_factory.nn_helpers import get_params_from_list
 import torch
 import torch.nn as nn
 
@@ -35,12 +36,7 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
             "groups",
             "bias",
         }
-        parameters = dict(
-            filter(
-                lambda key_value: (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.Conv1d(**parameters)
 
     def __build_conv2d(self, parameters):
@@ -55,12 +51,7 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
             "groups",
             "bias",
         }
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.Conv2d(**parameters)
 
     def __build_conv3d(self, parameters):
@@ -75,12 +66,7 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
             "groups",
             "bias",
         }
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.Conv3d(**parameters)
 
     def __build_conv_transpose1d(self, parameters):
@@ -95,12 +81,7 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
             "bias",
             "dilation",
         }
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.ConvTranspose1d(**parameters)
 
     def __build_conv_transpose2d(self, parameters):
@@ -115,12 +96,7 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
             "bias",
             "dilation",
         }
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.ConvTranspose2d(**parameters)
 
     def __build_conv_transpose3d(self, parameters):
@@ -135,32 +111,17 @@ class NNConvolutionLayerFactory(NNAbstractLayerFactory):
             "bias",
             "dilation",
         }
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.ConvTranspose3d(**parameters)
 
     def __build_fold(self, parameters):
         parameters_set = {"output_size", "kernel_size", "stride", "padding", "dilation"}
 
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.Fold(**parameters)
 
     def __build_unfold(self, parameters):
         parameters_set = {"kernel_size", "stride", "padding", "dilation"}
 
-        parameters = dict(
-            filter(
-                lambda key_value: not (key_value[0] in parameters_set),
-                parameters.items(),
-            )
-        )
+        parameters = get_params_from_list(parameters, parameters_set)
         return nn.Unfold(**parameters)
