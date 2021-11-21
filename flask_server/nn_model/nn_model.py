@@ -1,5 +1,5 @@
-from flask_server.nn_model.nn_activation_factory import NNActivationFactory
-from flask_server.nn_model.nn_layer_factory import NNLayerFactory
+from nn_activation_factory import NNActivationFactory
+from nn_layer_factory import NNLayerFactory
 import torch
 import torch.nn as nn
 
@@ -9,9 +9,11 @@ class NNModel(nn.Module):
         super(NNModel, self).__init__()  # needed for how torch works
         layer_factory = NNLayerFactory()
         activation_factory = NNActivationFactory()
+        self._model = []
+
         for component_type, component_details in architecture_components.items():
             if component_type == "layer":
-                self.model.append(
+                self._model.append(
                     layer_factory.get_layer(
                         component_details["layer_type"],
                         component_details["subtype"],
@@ -19,7 +21,7 @@ class NNModel(nn.Module):
                     )
                 )
             elif component_type == "activation":
-                self.model.append(
+                self._model.append(
                     activation_factory.get_activation(
                         component_details["activation_type"],
                         component_details["parameters"],
@@ -34,6 +36,6 @@ class NNModel(nn.Module):
 
     def forward(self, input_data):
         prediction = input_data
-        for component in self.model:
+        for component in self._model:
             prediction = component(prediction)
         return prediction
