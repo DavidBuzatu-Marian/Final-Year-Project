@@ -1,9 +1,6 @@
 import torch
 import torch.nn as nn
 
-# from nn_factory.nn_convolution_layer_factory import NNConvolutionLayerFactory
-# from nn_factory.nn_pooling_layer_factory import NNPoolingLayerFactory
-# from nn_factory.nn_linear_layer_factory import NNLinearLayerFactory
 from nn_factory.nn_helpers import get_params_from_list
 
 
@@ -29,7 +26,7 @@ class NNActivationFactory:
         }
         if activation_type in options:
             return options[activation_type](parameters)
-        raise Exception("Layer type not in options")
+        raise Exception("Activation type not in options")
 
     def __build_elu(self, parameters):
         parameters_set = {"alpha", "inplace"}
@@ -59,7 +56,7 @@ class NNActivationFactory:
     def __build_leakyrelu(self, parameters):
         parameters_set = {"negative_slope", "inplace"}
         parameters = get_params_from_list(parameters, parameters_set)
-        return nn.LeakyRELU(**parameters)
+        return nn.LeakyReLU(**parameters)
 
     def __build_logsigmoid(self, parameters):
         parameters_set = {}
