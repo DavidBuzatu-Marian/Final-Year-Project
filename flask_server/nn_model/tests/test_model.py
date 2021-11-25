@@ -25,7 +25,13 @@ class TestModel(unittest.TestCase):
                 }
             }
         )
-        pytorch_model = nn.Conv2d(16, 33, 3, stride=2)
-        self.assertEqual(
-            summary(model, (16, 50, 100)), summary(pytorch_model, (16, 50, 100))
-        )
+
+        pytorch_model = nn.Sequential(nn.Conv2d(16, 33, 3, stride=2))
+        model.eval()
+
+        for idx in range(len(model._model)):
+            self.assertEqual(repr(model._model[idx]), repr(pytorch_model[idx]))
+
+    def init_weights(self, model):
+        for m in model.modules():
+            torch.nn.init.xavier_uniform(m.weight)
