@@ -1,9 +1,11 @@
 import sys
 
 sys.path.insert(0, "../../../nn_model")
+sys.path.insert(1, "../../nn_helpers")
 
+from nn_helpers import get_params_from_list
 from nn_factory.nn_layer_factory import NNAbstractLayerFactory
-from nn_factory.nn_helpers import get_params_from_list
+
 import torch
 import torch.nn as nn
 

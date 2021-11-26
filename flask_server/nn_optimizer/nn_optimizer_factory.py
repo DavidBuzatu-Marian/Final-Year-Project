@@ -4,7 +4,7 @@ import torch.optim as optim
 from nn_factory.nn_helpers import get_params_from_list
 
 
-class OptimizerFactory:
+class NNOptimizerFactory:
     def get_optimizer(self, optimizer_type, parameters):
         options = {
             "SGD": self.__build_sgd,
