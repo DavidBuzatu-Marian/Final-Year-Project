@@ -1,7 +1,10 @@
 import torch
 import torch.optim as optim
 
-from nn_factory.nn_helpers import get_params_from_list
+import sys
+
+sys.path.insert(0, "../../nn_helpers")
+from nn_helpers import get_params_from_list
 
 
 class NNOptimizerFactory:
@@ -18,7 +21,7 @@ class NNOptimizerFactory:
             return options[optimizer_type](parameters)
         raise Exception("Optimizer type not in options")
 
-    def __build_sgd(parameters):
+    def __build_sgd(self, parameters):
         parameters_set = {"momentum", "weight_decay", "dampening", "nesterov"}
         try:
             params = parameters["params"]
@@ -26,45 +29,45 @@ class NNOptimizerFactory:
         except Exception:
             raise Exception("Param or lr is not defined for sgd")
         parameters = get_params_from_list(parameters, parameters_set)
-        return optim.SGD(params, lr, **parameters)
+        return optim.SGD(params.parameters(), lr, **parameters)
 
-    def __build_rmsprop(parameters):
+    def __build_rmsprop(self, parameters):
         parameters_set = {"lr", "momentum", "weight_decay", "alpha", "eps", "centered"}
         try:
             params = parameters["params"]
         except Exception:
             raise Exception("Param or lr is not defined for sgd")
         parameters = get_params_from_list(parameters, parameters_set)
-        return optim.RMSProp(params, **parameters)
+        return optim.RMSProp(params.parameters(), **parameters)
 
-    def __build_asgd(parameters):
+    def __build_asgd(self, parameters):
         parameters_set = {"lr", "lambd", "weight_decay", "alpha", "t0"}
         try:
             params = parameters["params"]
         except Exception:
             raise Exception("Param or lr is not defined for sgd")
         parameters = get_params_from_list(parameters, parameters_set)
-        return optim.ASGD(params, **parameters)
+        return optim.ASGD(params.parameters(), **parameters)
 
-    def __build_adamax(parameters):
+    def __build_adamax(self, parameters):
         parameters_set = {"lr", "betas", "weight_decay", "eps"}
         try:
             params = parameters["params"]
         except Exception:
             raise Exception("Param or lr is not defined for sgd")
         parameters = get_params_from_list(parameters, parameters_set)
-        return optim.Adamax(params, **parameters)
+        return optim.Adamax(params.parameters(), **parameters)
 
-    def __build_adam(parameters):
+    def __build_adam(self, parameters):
         parameters_set = {"lr", "betas", "weight_decay", "eps", "amsgrad"}
         try:
             params = parameters["params"]
         except Exception:
             raise Exception("Param or lr is not defined for sgd")
         parameters = get_params_from_list(parameters, parameters_set)
-        return optim.Adam(params, **parameters)
+        return optim.Adam(params.parameters(), **parameters)
 
-    def __build_adagrad(parameters):
+    def __build_adagrad(self, parameters):
         parameters_set = {
             "lr",
             "weight_decay",
@@ -76,4 +79,4 @@ class NNOptimizerFactory:
         except Exception:
             raise Exception("Param or lr is not defined for sgd")
         parameters = get_params_from_list(parameters, parameters_set)
-        return optim.Adagrad(params, **parameters)
+        return optim.Adagrad(params.parameters(), **parameters)

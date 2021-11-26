@@ -9,7 +9,7 @@ class NNModel(nn.Module):
         super(NNModel, self).__init__()  # needed for how torch works
         layer_factory = NNLayerFactory()
         activation_factory = NNActivationFactory()
-        self._model = []
+        self._model = nn.ModuleList()
 
         for layer_dict in architecture_components["network"]:
             for component_type, component_details in layer_dict.items():
