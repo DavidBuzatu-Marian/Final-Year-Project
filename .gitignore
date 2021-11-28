@@ -49,3 +49,5 @@ terraform.rc
 
 # Local History for Visual Studio Code
 .history/
+
+model.pth
