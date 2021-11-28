@@ -11,7 +11,7 @@ class NNLossFactory:
             "MSELoss": self.__build_mseloss,
             "CrossEntropyLoss": self.__build_crossentropyloss,
             "NLLLoss": self.__build_nllloss,
-            "PoissonNLLLoss": self.__build_poissonNLLLoss,
+            "PoissonNLLLoss": self.__build_poissonnllloss,
             "GaussianNLLLoss": self.__build_gaussiannllloss,
             "BCELoss": self.__build_bceloss,
             "BCEWithLogitsLoss": self.__build_bcewithlogitsloss,
@@ -55,7 +55,7 @@ class NNLossFactory:
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.NLLLoss(**parameters)
 
-    def __build_poissonNLLLoss(self, parameters):
+    def __build_poissonnllloss(self, parameters):
         parameters_set = {
             "log_input",
             "full",
