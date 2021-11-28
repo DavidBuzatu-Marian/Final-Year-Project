@@ -6,6 +6,9 @@ import sys
 import os
 from dotenv import load_dotenv
 from nn_helpers.nn_helpers import read_model_from_path
+from flask_pymongo import PyMongo
+from bson import json_util
+import json
 
 sys.path.insert(0, "./nn_model/")
 
@@ -17,6 +20,8 @@ except ImportError as exc:
 load_dotenv()
 
 app = Flask(__name__)
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+mongo = PyMongo(app)
 
 
 @app.route("/model/create", methods=["POST"])
@@ -33,6 +38,7 @@ def model_create():
 def model_train():
     path = os.getenv("MODEL_PATH")
     model = read_model_from_path(path)
+
     # Get data from database/local store
     # Get optimizer from request
     # Get loss from request
@@ -44,3 +50,6 @@ def model_train():
 def hello_world():
     path = os.getenv("MODEL_PATH")
     return read_model_from_path(path)
+
+
+# TODO: Create function for json return of database result: jsonify(json_util.dumps(([doc for doc in mongo.db.users.find()]))
