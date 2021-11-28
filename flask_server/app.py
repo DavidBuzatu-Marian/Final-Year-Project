@@ -5,6 +5,7 @@ import torch
 import sys
 import os
 from dotenv import load_dotenv
+from nn_helpers.nn_helpers import read_model_from_path
 
 sys.path.insert(0, "./nn_model/")
 
@@ -21,7 +22,6 @@ app = Flask(__name__)
 @app.route("/model/create", methods=["POST"])
 def model_create():
     model = NNModel(request.json)
-    # TODO: Check if there is a saved model and delete it
     path = os.getenv("MODEL_PATH")
     if os.path.isfile(path):
         os.remove(path)
@@ -29,10 +29,18 @@ def model_create():
     return jsonify(repr(model._model))
 
 
+@app.route("/model/train", methods=["POST"])
+def model_train():
+    path = os.getenv("MODEL_PATH")
+    model = read_model_from_path(path)
+    # Get data from database/local store
+    # Get optimizer from request
+    # Get loss from request
+    # Get training options - epochs - currently set to default of 5
+    # Save model
+
+
 @app.route("/")
 def hello_world():
     path = os.getenv("MODEL_PATH")
-    if os.path.isfile(path):
-        model = torch.load(path)
-        return jsonify(repr(model._model))
-    raise error("Error. No model found")
+    return read_model_from_path(path)
