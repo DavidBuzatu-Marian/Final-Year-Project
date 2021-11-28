@@ -22,17 +22,17 @@ class NNLossFactory:
             return options[loss_type](parameters)
         raise Exception("Loss type not in options")
 
-    def __build_l1loss(parameters):
+    def __build_l1loss(self, parameters):
         parameters_set = {"size_average", "reduce", "reduction"}
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.L1Loss(**parameters)
 
-    def __build_mseloss(parameters):
+    def __build_mseloss(self, parameters):
         parameters_set = {"size_average", "reduce", "reduction"}
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.MSELoss(**parameters)
 
-    def __build_crossentropyloss(parameters):
+    def __build_crossentropyloss(self, parameters):
         parameters_set = {
             "weight",
             "size_average",
@@ -44,7 +44,7 @@ class NNLossFactory:
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.CrossEntropyLoss(**parameters)
 
-    def __build_nllloss(parameters):
+    def __build_nllloss(self, parameters):
         parameters_set = {
             "weight",
             "size_average",
@@ -55,7 +55,7 @@ class NNLossFactory:
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.NLLLoss(**parameters)
 
-    def __build_poissonNLLLoss(parameters):
+    def __build_poissonNLLLoss(self, parameters):
         parameters_set = {
             "log_input",
             "full",
@@ -67,7 +67,7 @@ class NNLossFactory:
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.PoissonNLLLoss(**parameters)
 
-    def __build_gaussiannllloss(parameters):
+    def __build_gaussiannllloss(self, parameters):
         parameters_set = {
             "full",
             "eps",
@@ -76,7 +76,7 @@ class NNLossFactory:
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.GaussianNLLLoss(**parameters)
 
-    def __build_bceloss(parameters):
+    def __build_bceloss(self, parameters):
         parameters_set = {
             "weight",
             "size_average",
@@ -86,17 +86,17 @@ class NNLossFactory:
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.BCELoss(**parameters)
 
-    def __build_bcewithlogitsloss(parameters):
+    def __build_bcewithlogitsloss(self, parameters):
         parameters_set = {"weight", "size_average", "reduce", "reduction", "pos_weight"}
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.BCEWithLogitsLoss(**parameters)
 
-    def __build_softmarginloss(parameters):
+    def __build_softmarginloss(self, parameters):
         parameters_set = {"size_average", "reduce", "reduction"}
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.SoftMarginLoss(**parameters)
 
-    def __build_multilabelsoftmarginloss(parameters):
+    def __build_multilabelsoftmarginloss(self, parameters):
         parameters_set = {"weight", "size_average", "reduce", "reduction"}
         parameters = get_params_from_list(parameters, parameters_set)
         return nn.MultiLabelSoftMarginLoss(**parameters)
