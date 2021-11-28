@@ -1,11 +1,8 @@
 import torch
 import torch.nn as nn
 
-import sys
 
-sys.path.insert(0, "../../nn_helpers")
-
-from nn_helpers import get_params_from_list
+from nn_helpers.nn_helpers import get_params_from_list
 
 
 class NNActivationFactory:

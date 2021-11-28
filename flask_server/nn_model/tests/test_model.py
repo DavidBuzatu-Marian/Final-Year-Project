@@ -4,8 +4,9 @@ import torch.nn as nn
 
 import sys
 
-sys.path.insert(0, "../../nn_model")
-from nn_model import NNModel
+sys.path.insert(0, "../../")
+sys.path.insert(1, "../../nn_model")
+from nn_model.nn_model import NNModel
 
 
 class TestModel(unittest.TestCase):

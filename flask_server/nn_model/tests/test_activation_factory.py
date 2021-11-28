@@ -5,6 +5,7 @@ import torch.nn as nn
 import sys
 
 sys.path.insert(0, "../../nn_model")
+
 from nn_activation_factory import NNActivationFactory
 
 

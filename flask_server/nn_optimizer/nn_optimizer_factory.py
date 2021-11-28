@@ -1,17 +1,14 @@
 import torch
 import torch.optim as optim
 
-import sys
-
-sys.path.insert(0, "../../nn_helpers")
-from nn_helpers import get_params_from_list
+from nn_helpers.nn_helpers import get_params_from_list
 
 
 class NNOptimizerFactory:
     def get_optimizer(self, optimizer_type, parameters):
         options = {
             "SGD": self.__build_sgd,
-            "RMSProp": self.__build_rmsprop,
+            "RMSprop": self.__build_rmsprop,
             "ASGD": self.__build_asgd,
             "Adamax": self.__build_adamax,
             "Adam": self.__build_adam,
@@ -38,7 +35,7 @@ class NNOptimizerFactory:
         except Exception:
             raise Exception("Param or lr is not defined for sgd")
         parameters = get_params_from_list(parameters, parameters_set)
-        return optim.RMSProp(params.parameters(), **parameters)
+        return optim.RMSprop(params.parameters(), **parameters)
 
     def __build_asgd(self, parameters):
         parameters_set = {"lr", "lambd", "weight_decay", "alpha", "t0"}
