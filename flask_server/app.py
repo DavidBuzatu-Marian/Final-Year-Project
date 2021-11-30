@@ -38,7 +38,14 @@ def model_create():
 def model_train():
     path = os.getenv("MODEL_PATH")
     model = read_model_from_path(path)
-
+    error(request.content_type)
+    if not ("multipart/form-data" in request.content_type):
+        return (
+            jsonify("Content type is not supported. Please return multipart/form-data"),
+            415,
+        )
+    error(request.files)
+    return jsonify("tests")
     # Get data from database/local store
     # Get optimizer from request
     # Get loss from request
