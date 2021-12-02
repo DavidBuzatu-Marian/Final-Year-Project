@@ -53,6 +53,9 @@ terraform.rc
 model.pth
 .env
 
-/flask_server/train_dataset/
-/flask_server/validation_dataset/
-/flask_server/test_dataset/
+/flask_server/train_data/
+/flask_server/train_labels/
+/flask_server/validation_data/
+/flask_server/validation_labels/
+/flask_server/test_data/
+/flask_server/test_labels/

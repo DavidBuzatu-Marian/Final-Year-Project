@@ -18,12 +18,17 @@ def dataset_add():
         )
     if len(request.files) == 0:
         return (jsonify("At least a file needs to be selected"), 400)
-    for file in request.files.getlist("train"):
-        save_file(file, "TRAIN_DATA_PATH")
-    for file in request.files.getlist("validation"):
-        save_file(file, "VALIDATION_DATA_PATH")
-    for file in request.files.getlist("test"):
-        save_file(file, "TEST_DATA_PATH")
+    data_types = [
+        ("train_data", "TRAIN_DATA_PATH"),
+        ("train_labels", "TRAIN_LABELS_PATH"),
+        ("validation_data", "VALIDATION_DATA_PATH"),
+        ("validation_labels", "VALIDATION_LABELS_PATH"),
+        ("test_data", "TEST_DATA_PATH"),
+        ("test_labels", "TEST_LABELS_PATH"),
+    ]
+    for key, value in data_types:
+        for file in request.files.getlist(key):
+            save_file(file, value)
     return jsonify("Files save successfully")
 
 
