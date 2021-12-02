@@ -1,9 +1,10 @@
-from logging import error
+from logging import error, debug
 from flask import Flask, request
 from flask.json import jsonify
 import os
 from helpers.app_helpers import read_model_from_path, save_file
 import json
+import shutil
 
 from app import app
 
@@ -28,5 +29,14 @@ def dataset_add():
 
 @app.route("/dataset/remove", methods=["POST"])
 def dataset_remove():
-
-    return jsonify("Files save successfully")
+    dir_paths = [
+        os.path.join(os.getenv("TRAIN_DATA_PATH")),
+        os.path.join(os.getenv("VALIDATION_DATA_PATH")),
+        os.path.join(os.getenv("TEST_DATA_PATH")),
+    ]
+    for path in dir_paths:
+        try:
+            shutil.rmtree(path)
+        except OSError as err:
+            error(err)
+    return jsonify("Files deleted successfully")
