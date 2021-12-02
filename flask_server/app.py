@@ -9,6 +9,7 @@ from nn_helpers.nn_helpers import read_model_from_path
 from flask_pymongo import PyMongo
 from bson import json_util
 import json
+from werkzeug.utils import secure_filename
 
 sys.path.insert(0, "./nn_model/")
 
@@ -38,19 +39,26 @@ def model_create():
 def model_train():
     path = os.getenv("MODEL_PATH")
     model = read_model_from_path(path)
-    error(request.content_type)
-    if not ("multipart/form-data" in request.content_type):
-        return (
-            jsonify("Content type is not supported. Please return multipart/form-data"),
-            415,
-        )
-    error(request.files)
-    return jsonify("tests")
     # Get data from database/local store
     # Get optimizer from request
     # Get loss from request
     # Get training options - epochs - currently set to default of 5
     # Save model
+
+
+@app.route("/model/dataset/add/train", methods=["POST"])
+def model_add_train_dataset():
+    if not ("multipart/form-data" in request.content_type):
+        return (
+            jsonify("Content type is not supported. Please return multipart/form-data"),
+            415,
+        )
+    if len(request.files) == 0:
+        return (jsonify("At least a file needs to be selected"), 400)
+    for file in request.files.getlist("train"):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(os.getenv("TRAIN_DATA_PATH"), filename))
+    return jsonify("tests")
 
 
 @app.route("/")

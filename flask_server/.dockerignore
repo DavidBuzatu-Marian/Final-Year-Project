@@ -1,2 +1,3 @@
 .git
 model.pth
+train_dataset/*
