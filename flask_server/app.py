@@ -5,10 +5,10 @@ import torch
 import sys
 import os
 from dotenv import load_dotenv
-from helpers.app_helpers import read_model_from_path
+from helpers.app_helpers import read_model_from_path, save_file
 from flask_pymongo import PyMongo
 import json
-from werkzeug.utils import secure_filename
+
 
 sys.path.insert(0, "./nn_model/")
 
@@ -55,12 +55,12 @@ def dataset_add():
     if len(request.files) == 0:
         return (jsonify("At least a file needs to be selected"), 400)
     for file in request.files.getlist("train"):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(os.getenv("TRAIN_DATA_PATH"), filename))
+        save_file(file, "TRAIN_DATA_PATH")
     for file in request.files.getlist("validation"):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(os.getenv("TRAIN_DATA_PATH"), filename))
-    return jsonify("tests")
+        save_file(file, "VALIDATION_DATA_PATH")
+    for file in request.files.getlist("test"):
+        save_file(file, "TEST_DATA_PATH")
+    return jsonify("Files save successfully")
 
 
 @app.route("/")

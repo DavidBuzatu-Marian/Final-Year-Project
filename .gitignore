@@ -54,3 +54,5 @@ model.pth
 .env
 
 /flask_server/train_dataset/
+/flask_server/validation_dataset/
+/flask_server/test_dataset/
