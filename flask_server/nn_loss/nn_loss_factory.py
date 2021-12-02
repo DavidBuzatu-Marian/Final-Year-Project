@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from nn_helpers.nn_helpers import get_params_from_list
+from helpers.nn_helpers import get_params_from_list
 
 
 class NNLossFactory:

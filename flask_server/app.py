@@ -5,9 +5,8 @@ import torch
 import sys
 import os
 from dotenv import load_dotenv
-from nn_helpers.nn_helpers import read_model_from_path
+from helpers.app_helpers import read_model_from_path
 from flask_pymongo import PyMongo
-from bson import json_util
 import json
 from werkzeug.utils import secure_filename
 
@@ -46,8 +45,8 @@ def model_train():
     # Save model
 
 
-@app.route("/model/dataset/add/train", methods=["POST"])
-def model_add_train_dataset():
+@app.route("/dataset/add", methods=["POST"])
+def dataset_add():
     if not ("multipart/form-data" in request.content_type):
         return (
             jsonify("Content type is not supported. Please return multipart/form-data"),
@@ -56,6 +55,9 @@ def model_add_train_dataset():
     if len(request.files) == 0:
         return (jsonify("At least a file needs to be selected"), 400)
     for file in request.files.getlist("train"):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(os.getenv("TRAIN_DATA_PATH"), filename))
+    for file in request.files.getlist("validation"):
         filename = secure_filename(file.filename)
         file.save(os.path.join(os.getenv("TRAIN_DATA_PATH"), filename))
     return jsonify("tests")
