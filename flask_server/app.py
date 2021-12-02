@@ -5,7 +5,7 @@ import torch
 import sys
 import os
 from dotenv import load_dotenv
-from helpers.app_helpers import read_model_from_path, save_file
+from helpers.app_helpers import read_model_from_path
 from flask_pymongo import PyMongo
 import json
 

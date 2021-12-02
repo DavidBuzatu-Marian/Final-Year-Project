@@ -3,15 +3,16 @@ from flask import Flask, request
 from flask.json import jsonify
 import os
 import sys
-from helpers.data_helpers import *
-from helpers.app_helpers import *
+
 import torch
 
 
 try:
     from nn_model import NNModel
+    from helpers.data_helpers import *
+    from helpers.app_helpers import *
 except ImportError as exc:
-    sys.stderr.write("Error: failed to import nnmodel module ({})".format(exc))
+    sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 from app import app
 
