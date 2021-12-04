@@ -14,7 +14,7 @@ class CustomDataset(data.Dataset):
 
     def __get_images(self, path):
         imgs = []
-        for filename in glob(os.path.join(path)):
+        for filename in os.listdir(os.path.join(path)):
             imgs.append(os.path.join(path, filename))
         return imgs
 
@@ -29,7 +29,7 @@ class CustomDataset(data.Dataset):
 
 def get_dataloader(data_path, labels_path, hyperparameters):
     return DataLoader(
-        dataset=CustomDataset(os.getenv(data_path, labels_path)),
+        dataset=CustomDataset(data_path, labels_path),
         num_workers=hyperparameters["num_workers"],
         batch_size=hyperparameters["batch_size"],
         shuffle=hyperparameters["shuffle"],
