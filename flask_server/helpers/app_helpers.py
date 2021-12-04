@@ -13,7 +13,7 @@ def read_model_from_path(path):
     if os.path.isfile(path):
         model = torch.load(path)
         return jsonify(repr(model._model))
-    raise error("Error. No model found")
+    raise Exception("Error. No model found")
 
 
 def save_file(file, path_env):
@@ -25,9 +25,12 @@ def save_file(file, path_env):
 
 def get_loss(request_json):
     loss_factory = NNLossFactory()
-    for loss_type, loss_parameters in request_json["loss"]:
-        return loss_factory.get_loss(loss_type=loss_type, parameters=loss_parameters)
-    raise Exception("No loss function set")
+    if not ("loss" in request_json):
+        raise Exception("No loss function set")
+    loss = request_json["loss"]
+    return loss_factory.get_loss(
+        loss_type=loss["loss_type"], parameters=loss["parameters"]
+    )
 
 
 def get_optimizer(request_json):
