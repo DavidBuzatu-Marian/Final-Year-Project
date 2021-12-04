@@ -34,6 +34,7 @@ def model_train():
     loss_func = get_loss(request.json)
     optimizer = get_optimizer(request.json)
     hyperparameters = get_hyperparameters(request.json)
+    processors = get_processors(request.json)
 
     train_dataloader = get_dataloader(
         data_path=os.getenv("TRAIN_DATA_PATH"),
@@ -48,8 +49,10 @@ def model_train():
             data = normalize_data(data, hyperparameters)
 
             output = model(data)
+            output = process_output(output, processors)
             loss = loss_func(output, label)
             loss.backward()
             optimizer.step()
 
     torch.save(model, path)
+    return model.dict_state.to_list()

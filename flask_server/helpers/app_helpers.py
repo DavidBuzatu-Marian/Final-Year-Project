@@ -54,3 +54,14 @@ def get_hyperparameters(request_json):
         "batch_size": batch_size,
         "shuffle": shuffle,
     }
+
+
+def get_processors(request_json):
+    # TODO: Find a way to encapsulate this
+    return [torch.squeeze, torch.argmax]
+
+
+def process_output(output, processors):
+    for proc in processors:
+        output = proc(output)
+    return output
