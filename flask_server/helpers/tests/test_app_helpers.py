@@ -82,3 +82,29 @@ class TestAppHelpers(unittest.TestCase):
         }
         with self.assertRaises(Exception):
             get_optimizer(request_json=request_json)
+
+    def test_get_hyperparameters_1(self):
+        request_json = {"hyperparameters": {"epochs": 5, "num_workers": 2}}
+        hyperparameters = get_hyperparameters(request_json=request_json)
+        self.assertEqual(
+            {"epochs": 5, "num_workers": 2, "batch_size": 1, "shuffle": True},
+            hyperparameters,
+        )
+
+    def test_get_hyperparameters_2(self):
+        request_json = {"hyperparameters": {"shuffle": True, "num_workers": 2}}
+        hyperparameters = get_hyperparameters(request_json=request_json)
+        self.assertEqual(
+            {"epochs": 10, "num_workers": 2, "batch_size": 1, "shuffle": True},
+            hyperparameters,
+        )
+
+    def test_get_hyperparameters_3(self):
+        request_json = {
+            "hyperparameters": {"batch_size": 10, "num_workers": 1, "epochs": 20}
+        }
+        hyperparameters = get_hyperparameters(request_json=request_json)
+        self.assertEqual(
+            {"epochs": 20, "num_workers": 1, "batch_size": 10, "shuffle": True},
+            hyperparameters,
+        )

@@ -44,5 +44,13 @@ def get_optimizer(request_json):
 
 
 def get_hyperparameters(request_json):
-    # TODO: Think how to represent hyperparams
-    return {"epochs": 2, "num_workers": 1, "batch_size": 2, "shuffle": True}
+    epochs = request_json["hyperparameters"].get("epochs", 10)
+    num_workers = request_json["hyperparameters"].get("num_workers", 1)
+    batch_size = request_json["hyperparameters"].get("batch_size", 1)
+    shuffle = request_json["hyperparameters"].get("shuffle", True)
+    return {
+        "epochs": epochs,
+        "num_workers": num_workers,
+        "batch_size": batch_size,
+        "shuffle": shuffle,
+    }
