@@ -14,6 +14,26 @@ from nn_model.nn_model import NNModel
 
 
 class TestAppHelpers(unittest.TestCase):
+
+    model = NNModel(
+        {
+            "network": [
+                {
+                    "layer": {
+                        "layer_type": "Convolution",
+                        "subtype": "Conv2d",
+                        "parameters": {
+                            "in_channels": 16,
+                            "out_channels": 33,
+                            "kernel_size": 3,
+                            "stride": 2,
+                        },
+                    }
+                }
+            ]
+        }
+    )
+
     def test_read_model_with_no_model(self):
         with self.assertRaises(Exception):
             read_model_from_path("/no_model.pth")
@@ -35,3 +55,30 @@ class TestAppHelpers(unittest.TestCase):
         request_json = {"loss": {"loss_type": "CrossEntropyLoss", "parameters": {}}}
         loss = torch.nn.CrossEntropyLoss()
         self.assertEqual(repr(loss), repr(get_loss(request_json=request_json)))
+
+    def test_get_loss_exception(self):
+        request_json = {"no_loss": {"loss_type": "CrossEntropyLoss", "parameters": {}}}
+        with self.assertRaises(Exception):
+            get_loss(request_json=request_json)
+
+    def test_get_optimizer(self):
+        request_json = {
+            "optimizer": {
+                "optimizer_type": "RMSprop",
+                "parameters": {"params": self.model},
+            }
+        }
+        optimizer = torch.optim.RMSprop(self.model.parameters())
+        self.assertEqual(
+            repr(optimizer), repr(get_optimizer(request_json=request_json))
+        )
+
+    def test_get_optimizer_exception(self):
+        request_json = {
+            "no_optimizer": {
+                "optimizer_type": "RMSprop",
+                "parameters": {"params": self.model},
+            }
+        }
+        with self.assertRaises(Exception):
+            get_optimizer(request_json=request_json)

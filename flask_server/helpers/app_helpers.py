@@ -35,11 +35,12 @@ def get_loss(request_json):
 
 def get_optimizer(request_json):
     optimizer_factory = NNOptimizerFactory()
-    for optimizer_type, optimizer_parameters in request_json["optimizer"]:
-        return optimizer_factory.get_optimizer(
-            optimizer_type=optimizer_type, parameters=optimizer_parameters
-        )
-    raise Exception("No optimizer set")
+    if not ("optimizer" in request_json):
+        raise Exception("No optimizer set")
+    optimizer = request_json["optimizer"]
+    return optimizer_factory.get_optimizer(
+        optimizer_type=optimizer["optimizer_type"], parameters=optimizer["parameters"]
+    )
 
 
 def get_hyperparameters(request_json):
