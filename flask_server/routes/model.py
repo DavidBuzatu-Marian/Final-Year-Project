@@ -55,4 +55,4 @@ def model_train():
             optimizer.step()
 
     torch.save(model, path)
-    return 200
+    return "Model trained"
