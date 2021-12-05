@@ -1,3 +1,4 @@
+from logging import error
 import torch.utils.data as data
 import torch
 import cv2
@@ -38,7 +39,7 @@ def get_dataloader(data_path, labels_path, hyperparameters):
 
 def reshape_data(data, hyperparameters):
     if "reshape" in hyperparameters:
-        size = hyperparameters["reshape"]
+        size = eval(hyperparameters["reshape"])
         return data.reshape(size)
     return data
 

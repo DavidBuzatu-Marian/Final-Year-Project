@@ -32,7 +32,7 @@ def model_train():
     path = os.getenv("MODEL_PATH")
     model = read_model_from_path(path)
     loss_func = get_loss(request.json)
-    optimizer = get_optimizer(request.json)
+    optimizer = get_optimizer(request.json, model)
     hyperparameters = get_hyperparameters(request.json)
     processors = get_processors(request.json)
 
@@ -47,12 +47,12 @@ def model_train():
 
             data = reshape_data(data, hyperparameters)
             data = normalize_data(data, hyperparameters)
-
             output = model(data)
-            output = process_output(output, processors)
-            loss = loss_func(output, label)
+            # output = process_output(output, processors)
+
+            loss = loss_func(output, label.to(torch.int64))
             loss.backward()
             optimizer.step()
 
     torch.save(model, path)
-    return model.dict_state.to_list()
+    return 200
