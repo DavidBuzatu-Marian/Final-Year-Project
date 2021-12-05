@@ -1,7 +1,7 @@
 import torch
 import torch.optim as optim
 
-from nn_helpers.nn_helpers import get_params_from_list
+from helpers.nn_helpers import get_params_from_list
 
 
 class NNOptimizerFactory:

@@ -5,34 +5,28 @@ import torch
 import sys
 import os
 from dotenv import load_dotenv
+from helpers.app_helpers import read_model_from_path
+from flask_pymongo import PyMongo
+import json
+
 
 sys.path.insert(0, "./nn_model/")
 
-try:
-    from nn_model import NNModel
-except ImportError as exc:
-    sys.stderr.write("Error: failed to import nnmodel module ({})".format(exc))
 
 load_dotenv()
 
 app = Flask(__name__)
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+mongo = PyMongo(app)
 
-
-@app.route("/model/create", methods=["POST"])
-def model_create():
-    model = NNModel(request.json)
-    # TODO: Check if there is a saved model and delete it
-    path = os.getenv("MODEL_PATH")
-    if os.path.isfile(path):
-        os.remove(path)
-    torch.save(model, path)
-    return jsonify(repr(model._model))
+import routes.model
+import routes.dataset
 
 
 @app.route("/")
 def hello_world():
     path = os.getenv("MODEL_PATH")
-    if os.path.isfile(path):
-        model = torch.load(path)
-        return jsonify(repr(model._model))
-    raise error("Error. No model found")
+    return read_model_from_path(path)
+
+
+# TODO: Create function for json return of database result: jsonify(json_util.dumps(([doc for doc in mongo.db.users.find()]))

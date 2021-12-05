@@ -1,6 +1,6 @@
 import sys
 
-from nn_helpers.nn_helpers import get_params_from_list
+from helpers.nn_helpers import get_params_from_list
 from nn_factory.nn_layer_factory import NNAbstractLayerFactory
 
 import torch
