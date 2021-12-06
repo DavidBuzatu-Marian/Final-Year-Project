@@ -1,5 +1,6 @@
 from logging import error
 from flask import Flask, request
+from flask.helpers import send_file
 from flask.json import jsonify
 import os
 import sys
@@ -55,4 +56,4 @@ def model_train():
             optimizer.step()
 
     torch.save(model, path)
-    return "Model trained"
+    return send_file(os.getenv("MODEL_PATH"))
