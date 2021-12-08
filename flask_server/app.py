@@ -21,6 +21,7 @@ mongo = PyMongo(app)
 
 import routes.model
 import routes.dataset
+import routes.instance
 
 
 @app.route("/")
