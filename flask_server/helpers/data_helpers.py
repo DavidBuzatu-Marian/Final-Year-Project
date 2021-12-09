@@ -5,6 +5,7 @@ import cv2
 import os
 from glob import glob
 from torch.utils.data import DataLoader
+from torchvision.transforms import Normalize
 
 
 class CustomDataset(data.Dataset):
@@ -46,6 +47,8 @@ def reshape_data(data, hyperparameters):
 
 def normalize_data(data, hyperparameters):
     if "normalizer" in hyperparameters:
-        normalizer = hyperparameters["normalizer"]
-        return data / normalizer  # TODO: Research different normalizers
+        mean = eval(hyperparameters["normalizer_mean"])
+        std = eval(hyperparameters["normalizer_std"])
+        normalizer = Normalize(mean, std)
+        return normalizer(data)
     return data

@@ -8,7 +8,6 @@ from nn_factory.nn_linear_layer_factory import NNLinearLayerFactory
 
 
 class NNLayerFactory:
-    # TODO: May want to encapsulate layer_type and rest in a wrapper class
     def get_layer(self, layer_type, subtype, parameters):
         options = {
             "Convolution": self.__build_convolution,

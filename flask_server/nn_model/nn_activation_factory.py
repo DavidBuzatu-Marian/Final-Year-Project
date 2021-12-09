@@ -6,7 +6,6 @@ from helpers.nn_helpers import get_params_from_list
 
 
 class NNActivationFactory:
-    # TODO: May want to encapsulate activation_type and parameters in a class
     def get_activation(self, activation_type, parameters):
         options = {
             "ELU": self.__build_elu,
