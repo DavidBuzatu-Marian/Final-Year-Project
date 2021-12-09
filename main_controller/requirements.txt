@@ -1,0 +1,8 @@
+Flask==2.0.2
+torch
+numpy>=1.21.4
+redis
+python-dotenv
+Flask-PyMongo
+pymongo[srv]
+jsons
