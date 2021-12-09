@@ -6,3 +6,4 @@ python-dotenv
 Flask-PyMongo
 pymongo[srv]
 jsons
+python-terraform
