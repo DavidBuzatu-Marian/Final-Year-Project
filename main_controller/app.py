@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask_pymongo import PyMongo
 
 sys.path.insert(0, "./environment/")
+sys.path.insert(1, "./helpers/")
 
 load_dotenv()
 
