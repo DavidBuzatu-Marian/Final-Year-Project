@@ -7,3 +7,6 @@ class Environment:
         self.environments = dict()
         for options in request_json["environments_options"]:
             self.environments[options["id"]] = options
+
+    def get_nr_instances(self):
+        return self.nr_instances

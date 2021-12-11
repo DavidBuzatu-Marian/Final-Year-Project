@@ -59,3 +59,5 @@ model.pth
 /flask_server/validation_labels/
 /flask_server/test_data/
 /flask_server/test_labels/
+
+aws_credentials
