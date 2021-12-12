@@ -1,6 +1,8 @@
 from logging import debug
 import subprocess
 import json
+import jsons
+from bson.objectid import ObjectId
 
 
 def save_ips_for_user(database, ips, user_id):
@@ -11,6 +13,14 @@ def save_ips_for_user(database, ips, user_id):
     insert_result = db.environments_addresses.insert_one(environments_document)
     debug("Created entry: {}".format(insert_result.inserted_id))
     return insert_result.inserted_id
+
+
+def delete_environment_for_user(database, environment_id, user_id):
+    db = database
+    query = {"_id": ObjectId(environment_id), "user_id": user_id}
+    debug(query)
+    delete_result = db.environments_addresses.delete_one(query)
+    debug("Deleted entry: {}".format(delete_result.deleted_count))
 
 
 # TODO: Get user id from auhentication token
@@ -34,6 +44,20 @@ def apply_terraform(environments):
         )
 
 
+def destroy_terraform():
+    terraform_destroy_result = subprocess.run(
+        "cd ./terraform && terraform destroy -auto-approve",
+        shell=True,
+        capture_output=True,
+        text=True,
+    )
+    if terraform_destroy_result.returncode != 0:
+        return (
+            "Something went wrong when destroying environments. Check logs for more details",
+            500,
+        )
+
+
 def get_terraform_output():
     output = subprocess.run(
         "cd ./terraform && terraform output -json",
@@ -47,6 +71,10 @@ def get_terraform_output():
             500,
         )
     return output.stdout
+
+
+def get_environment_id(request_json):
+    return request_json["environment_id"]
 
 
 def to_json(object):

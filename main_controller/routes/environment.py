@@ -18,9 +18,16 @@ def environment_create():
     apply_terraform(environments)
     output = get_terraform_output()
     json_output = to_json(output)
-    environment_ip = save_ips_for_user(
-        mongo.db, json_output["ec2_instances_public_ip"], user_id
-    )
+    save_ips_for_user(mongo.db, json_output["ec2_instances_public_ip"], user_id)
     return "Created {} environments with requested options. Environments are ready for receiving datasets".format(
-        environment_ip
+        environments.get_nr_instances()
     )
+
+
+@app.route("/environment/delete", methods=["POST"])
+def environment_delete():
+    user_id = get_user_id(request.json)
+    environment_id = get_environment_id(request.json)
+    destroy_terraform()
+    delete_environment_for_user(mongo.db, environment_id, user_id)
+    return "Destroyed environemnt {} for user {}".format(environment_id, user_id)
