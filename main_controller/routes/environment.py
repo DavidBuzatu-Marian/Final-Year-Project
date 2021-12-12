@@ -24,10 +24,22 @@ def environment_create():
     )
 
 
-@app.route("/environment/delete", methods=["POST"])
+@app.route("/environment/delete", methods=["DELETE"])
 def environment_delete():
     user_id = get_user_id(request.json)
     environment_id = get_environment_id(request.json)
     destroy_terraform()
     delete_environment_for_user(mongo.db, environment_id, user_id)
     return "Destroyed environemnt {} for user {}".format(environment_id, user_id)
+
+
+@app.route("environment/dataset", methods=["POST"])
+def environment_dataset():
+    user_id = get_user_id(request.json)
+    environment_id = get_environment_id(request.json)
+    environment = get_environment(mongo.db, environment_id, user_id)
+    environment_data_distribution = get_data_distribution(request.json)
+    error(environment_data_distribution)
+    # for environment_ip, distribution in environment_data_distribution.items():
+    #     if environment_ip in environment["environment_ips"]:
+    return 200

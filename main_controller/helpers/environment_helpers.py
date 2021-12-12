@@ -18,9 +18,23 @@ def save_ips_for_user(database, ips, user_id):
 def delete_environment_for_user(database, environment_id, user_id):
     db = database
     query = {"_id": ObjectId(environment_id), "user_id": user_id}
-    debug(query)
     delete_result = db.environments_addresses.delete_one(query)
     debug("Deleted entry: {}".format(delete_result.deleted_count))
+
+
+def get_environment(database, environment_id, user_id):
+    db = database
+    query = {"user_id": user_id, "_id": ObjectId(environment_id)}
+    environment = db.environments_addresses.find_one(query)
+    if environment == None:
+        raise "Environment not found"
+    environment["environment_ips"] = set(environment["environment_ips"])
+    return environment
+
+
+def get_data_distribution(request_json):
+    data_distribution = request_json["data_distribution"]
+    return data_distribution
 
 
 # TODO: Get user id from auhentication token
