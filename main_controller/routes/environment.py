@@ -9,6 +9,7 @@ from app import mongo
 
 from environment import Environment
 from helpers.environment_helpers import *
+from helpers.request_helpers import *
 
 
 @app.route("/environment/create", methods=["POST"])
@@ -33,13 +34,17 @@ def environment_delete():
     return "Destroyed environemnt {} for user {}".format(environment_id, user_id)
 
 
-@app.route("environment/dataset", methods=["POST"])
-def environment_dataset():
+@app.route("/environment/dataset/data", methods=["POST"])
+def environment_dataset_data():
     user_id = get_user_id(request.json)
     environment_id = get_environment_id(request.json)
     environment = get_environment(mongo.db, environment_id, user_id)
-    environment_data_distribution = get_data_distribution(request.json)
-    error(environment_data_distribution)
-    # for environment_ip, distribution in environment_data_distribution.items():
-    #     if environment_ip in environment["environment_ips"]:
+    environment_data_distribution = get_environment_data_distribution(
+        mongo.db, environment_id, user_id
+    )
+
+    for environment_ip, _ in environment_data_distribution.distributions:
+        if not (environment_ip in environment["environment_ips"]):
+            return 401, "Environment ip is invalid"
+    post_data_distribution(environment_data_distribution)
     return 200

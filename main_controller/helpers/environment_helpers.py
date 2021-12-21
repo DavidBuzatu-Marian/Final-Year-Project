@@ -32,10 +32,17 @@ def get_environment(database, environment_id, user_id):
     return environment
 
 
+def get_environment_data_distribution(database, environment_id, user_id):
+    db = database
+    query = {"user_id": user_id, "_id": ObjectId(environment_id)}
+    data_distribution = db.environments_data_distribution.find_one(query)
+    if data_distribution == None:
+        raise "Environment distribution not found"
+    return data_distribution
+
 def get_data_distribution(request_json):
     data_distribution = request_json["data_distribution"]
     return data_distribution
-
 
 # TODO: Get user id from auhentication token
 def get_user_id(request_json):
