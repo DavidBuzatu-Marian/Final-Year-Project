@@ -48,3 +48,18 @@ def environment_dataset_data():
             return 401, "Environment ip is invalid"
     post_data_distribution(environment_data_distribution)
     return 200
+
+
+@app.route("/environment/dataset/distribution", methods=["POST"])
+def environment_dataset_distribution():
+    user_id = get_user_id(request.json)
+    environment_id = get_environment_id(request.json)
+    environment = get_environment(mongo.db, environment_id, user_id)
+    environment_data_distribution = get_data_distribution(request.json)
+
+    for environment_ip, distribution in environment_data_distribution.items():
+        # save to database the distribution
+        # How is the distribution set?
+        pass
+
+    return 200
