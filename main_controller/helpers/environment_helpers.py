@@ -40,9 +40,30 @@ def get_environment_data_distribution(database, environment_id, user_id):
         raise "Environment distribution not found"
     return data_distribution
 
+
+def save_environment_data_distribution(
+    database, environment_id, user_id, distributions
+):
+    data_distribution_document = {
+        "user_id": user_id,
+        "_id": ObjectId(environment_id),
+        "distributions": distributions,
+    }
+    insert_result = database.environment_data_distribution.insert_one(
+        data_distribution_document
+    )
+    return insert_result.inserted_id
+
+
 def get_data_distribution(request_json):
     data_distribution = request_json["data_distribution"]
     return data_distribution
+
+
+def get_dataset_length(request_json):
+    dataset_length = request_json["dataset_length"]
+    return dataset_length
+
 
 # TODO: Get user id from auhentication token
 def get_user_id(request_json):

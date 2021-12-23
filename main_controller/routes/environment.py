@@ -3,13 +3,18 @@ from flask import Flask, request
 import sys
 from flask.json import jsonify
 import torch
+import random
 
 from app import app
 from app import mongo
 
-from environment import Environment
-from helpers.environment_helpers import *
-from helpers.request_helpers import *
+
+try:
+    from environment import Environment
+    from helpers.environment_helpers import *
+    from helpers.request_helpers import *
+except ImportError as exc:
+    sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
 @app.route("/environment/create", methods=["POST"])
@@ -36,8 +41,8 @@ def environment_delete():
 
 @app.route("/environment/dataset/data", methods=["POST"])
 def environment_dataset_data():
-    user_id = get_user_id(request.json)
-    environment_id = get_environment_id(request.json)
+    user_id = get_user_id(request.args)
+    environment_id = get_environment_id(request.args)
     environment = get_environment(mongo.db, environment_id, user_id)
     environment_data_distribution = get_environment_data_distribution(
         mongo.db, environment_id, user_id
@@ -46,7 +51,7 @@ def environment_dataset_data():
     for environment_ip, _ in environment_data_distribution.distributions:
         if not (environment_ip in environment["environment_ips"]):
             return 401, "Environment ip is invalid"
-    post_data_distribution(environment_data_distribution)
+    post_data_distribution(request.files, environment_data_distribution)
     return 200
 
 
@@ -56,10 +61,15 @@ def environment_dataset_distribution():
     environment_id = get_environment_id(request.json)
     environment = get_environment(mongo.db, environment_id, user_id)
     environment_data_distribution = get_data_distribution(request.json)
+    dataset_length = get_dataset_length(request.json)
 
     for environment_ip, distribution in environment_data_distribution.items():
-        # save to database the distribution
-        # How is the distribution set?
-        pass
-
+        if not (environment_ip in environment["environment_ips"]):
+            return 401, "Environment ip is invalid"
+        environment_data_distribution[environment_ip] = random.sample(
+            range(1, dataset_length), distribution
+        )
+    save_environment_data_distribution(
+        mongo.db, environment_id, user_id, environment_data_distribution
+    )
     return 200
