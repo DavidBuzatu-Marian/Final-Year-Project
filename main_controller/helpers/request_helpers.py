@@ -3,10 +3,11 @@ import asyncio
 from aiohttp import ClientSession
 
 
-async def post_to_instance(url, session, data):
-    headers = {"content-type": "multipart/form-data"}
+async def post_to_instance(
+    url, session, data, headers={"content-type": "multipart/form-data"}
+):
     response = await session.post(url=url, data=data, headers=headers)
-    return response.text()
+    return response
 
 
 def get_instance_data_from_files(files, data_distribution):
