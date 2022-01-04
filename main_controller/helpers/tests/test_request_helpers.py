@@ -4,6 +4,7 @@ import asyncio
 from aiohttp import ClientSession
 import json
 from logging import error
+import io
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
