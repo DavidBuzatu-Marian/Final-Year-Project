@@ -28,13 +28,13 @@ def async_test(coro):
 
 
 class TestEnvironmentHelpers(unittest.TestCase):
+    load_dotenv()
+    app = Flask(__name__)
+    app.config["MONGO_URI"] = os.getenv("MONGO_TEST_URI")
+    mongo = PyMongo(app)
+    test_user_id = 1
+
     def test_save_ips_for_user(self):
-        load_dotenv()
-
-        app = Flask(__name__)
-        app.config["MONGO_URI"] = os.getenv("MONGO_TEST_URI")
-        mongo = PyMongo(app)
-
         test_ips = {
             "value": [
                 "86.226.152.234",
@@ -50,5 +50,30 @@ class TestEnvironmentHelpers(unittest.TestCase):
             ]
         }
 
-        test_user_id = 1
-        error(save_ips_for_user(mongo.db, test_ips, test_user_id))
+        test_environment_ip = save_ips_for_user(
+            self.mongo.db, test_ips, self.test_user_id
+        )
+        self.assertIsNotNone(test_environment_ip)
+
+    def test_delete_environment_for_user(self):
+        test_ips = {
+            "value": [
+                "86.226.152.234",
+                "91.141.197.126",
+                "65.252.196.198",
+                "225.252.227.246",
+                "186.31.110.169",
+                "51.81.67.248",
+                "148.74.192.211",
+                "91.29.51.150",
+                "115.81.152.124",
+                "109.97.229.225",
+            ]
+        }
+        test_environment_ip = save_ips_for_user(
+            self.mongo.db, test_ips, self.test_user_id
+        )
+        self.assertIsNotNone(test_environment_ip)
+        delete_environment_for_user(
+            self.mongo.db, test_environment_ip, self.test_user_id
+        )
