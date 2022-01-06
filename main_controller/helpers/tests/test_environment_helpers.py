@@ -1,8 +1,5 @@
 import unittest
 import sys
-import asyncio
-from aiohttp import ClientSession
-from logging import error
 from dotenv import load_dotenv
 from flask_pymongo import PyMongo
 from flask import Flask
@@ -13,19 +10,6 @@ sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
 
 from environment_helpers import *
-
-# Reference used for testing async code:
-# https://stackoverflow.com/a/46324983/11023871
-# https://stackoverflow.com/a/23036785/11023871
-def async_test(coro):
-    def wrapper(*args, **kwargs):
-        loop = asyncio.new_event_loop()
-        try:
-            return loop.run_until_complete(coro(*args, **kwargs))
-        finally:
-            loop.close()
-
-    return wrapper
 
 
 class TestEnvironmentHelpers(unittest.TestCase):
