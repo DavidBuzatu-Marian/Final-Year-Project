@@ -49,7 +49,7 @@ def save_environment_data_distribution(
         "_id": ObjectId(environment_id),
         "distributions": distributions,
     }
-    insert_result = database.environment_data_distribution.insert_one(
+    insert_result = database.environments_data_distribution.insert_one(
         data_distribution_document
     )
     return insert_result.inserted_id
