@@ -20,11 +20,12 @@ def get_instance_data_from_files(files, data_distribution):
         "test_labels",
     ]
     instance_data = dict()
+    error(files.getlist("train_data"))
     return {
-        key: instance_data.get(key, []).append(data[i])
+        key: instance_data.get(key, []).append(files.getlist(key)[i])
         for key in data_keys
-        for data in files.getlist(key)
         for i in data_distribution
+        if len(files.getlist(key)) > 0
     }
 
 
@@ -35,7 +36,7 @@ async def post_data_distribution(files, environment_data_distribution):
             instance_data = get_instance_data_from_files(files, data_distribution)
             post_requests.append(
                 post_to_instance(
-                    environment_ip + "/dataset/distribution",
+                    "http://" + environment_ip + ":5000/dataset/add",
                     client_session,
                     instance_data,
                 )

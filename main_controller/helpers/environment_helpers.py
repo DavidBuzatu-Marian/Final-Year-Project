@@ -1,4 +1,4 @@
-from logging import debug
+from logging import debug, error
 import subprocess
 import json
 import jsons
@@ -27,7 +27,7 @@ def get_environment(database, environment_id, user_id):
     query = {"user_id": user_id, "_id": ObjectId(environment_id)}
     environment = db.environments_addresses.find_one(query)
     if environment == None:
-        raise "Environment not found"
+        raise ValueError("Environment not found")
     environment["environment_ips"] = set(environment["environment_ips"])
     return environment
 
@@ -37,7 +37,7 @@ def get_environment_data_distribution(database, environment_id, user_id):
     query = {"user_id": user_id, "_id": ObjectId(environment_id)}
     data_distribution = db.environments_data_distribution.find_one(query)
     if data_distribution == None:
-        raise "Environment distribution not found"
+        raise ValueError("Environment distribution not found")
     return data_distribution
 
 
@@ -67,7 +67,7 @@ def get_dataset_length(request_json):
 
 # TODO: Get user id from auhentication token
 def get_user_id(request_json):
-    return request_json["user_id"]
+    return int(request_json["user_id"])
 
 
 def apply_terraform(environments):

@@ -4,6 +4,7 @@ import sys
 from flask.json import jsonify
 import torch
 import random
+import asyncio
 
 from app import app
 from app import mongo
@@ -47,12 +48,15 @@ def environment_dataset_data():
     environment_data_distribution = get_environment_data_distribution(
         mongo.db, environment_id, user_id
     )
-
-    for environment_ip, _ in environment_data_distribution.distributions:
+    for environment_ip, _ in environment_data_distribution["distributions"].items():
         if not (environment_ip in environment["environment_ips"]):
             return 401, "Environment ip is invalid"
-    post_data_distribution(request.files, environment_data_distribution)
-    return 200
+    asyncio.run(
+        post_data_distribution(
+            request.files, environment_data_distribution["distributions"]
+        )
+    )
+    return "Saved data in instances"
 
 
 @app.route("/environment/dataset/distribution", methods=["POST"])
@@ -72,4 +76,4 @@ def environment_dataset_distribution():
     save_environment_data_distribution(
         mongo.db, environment_id, user_id, environment_data_distribution
     )
-    return 200
+    return "Saved dataset distribution"

@@ -29,7 +29,7 @@ def dataset_add():
     for key, value in data_types:
         for file in request.files.getlist(key):
             save_file(file, value)
-    return jsonify("Files save successfully")
+    return jsonify("Files saved successfully")
 
 
 @app.route("/dataset/remove", methods=["POST"])
