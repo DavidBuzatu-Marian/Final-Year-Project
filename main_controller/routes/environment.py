@@ -5,6 +5,7 @@ from flask.json import jsonify
 import torch
 import random
 import asyncio
+from flask.json import jsonify
 
 from app import app
 from app import mongo
@@ -50,7 +51,7 @@ def environment_dataset_data():
     )
     for environment_ip, _ in environment_data_distribution["distributions"].items():
         if not (environment_ip in environment["environment_ips"]):
-            return 401, "Environment ip is invalid"
+            return (jsonify("Environment ip is invalid"), 400)
     asyncio.run(
         post_data_distribution(
             request.files, environment_data_distribution["distributions"]
@@ -69,7 +70,7 @@ def environment_dataset_distribution():
 
     for environment_ip, distribution in environment_data_distribution.items():
         if not (environment_ip in environment["environment_ips"]):
-            return 401, "Environment ip is invalid"
+            return (jsonify("Environment ip is invalid"), 400)
         environment_data_distribution[environment_ip] = random.sample(
             range(1, dataset_length), distribution
         )

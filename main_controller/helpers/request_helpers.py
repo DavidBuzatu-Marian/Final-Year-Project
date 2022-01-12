@@ -7,7 +7,8 @@ async def post_to_instance(
     url, session, data, headers={"content-type": "multipart/form-data"}
 ):
     response = await session.post(url=url, data=data, headers=headers)
-    return response
+    error(response.status)
+    return await response.text()
 
 
 def get_instance_data_from_files(files, data_distribution):
@@ -20,7 +21,6 @@ def get_instance_data_from_files(files, data_distribution):
         "test_labels",
     ]
     instance_data = dict()
-    error(files.getlist("train_data"))
     return {
         key: instance_data.get(key, []).append(files.getlist(key)[i])
         for key in data_keys

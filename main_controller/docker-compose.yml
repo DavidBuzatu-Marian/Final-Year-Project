@@ -7,9 +7,8 @@ services:
       - ./:/app
     ports:
       - "5001:5000"
-  # TODO: Might become useful as a message queue later on
-  # redis:
-  #   image: redis
-  #   container_name: redis-server
-  #   ports:
-  #     - "6379:6379"
+
+networks:
+  default:
+    external: true
+    name: local_environment_network
