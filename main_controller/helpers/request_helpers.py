@@ -1,14 +1,19 @@
+from collections import defaultdict
 from logging import error
-import asyncio
-from aiohttp import ClientSession
+import requests
+from flask import abort
 
 
-async def post_to_instance(
-    url, session, data, headers={"content-type": "multipart/form-data"}
-):
-    response = await session.post(url=url, data=data, headers=headers)
-    error(response.status)
-    return await response.text()
+def post_to_instance(url, data):
+    files = [
+        (file_type, (file.filename, file.read(), file.content_type))
+        for file_type, value in data.items()
+        for file in value
+    ]
+
+    response = requests.post(url=url, files=files)
+    if not response.ok:
+        abort(400, "Posting data went wrong")
 
 
 def get_instance_data_from_files(files, data_distribution):
@@ -21,26 +26,20 @@ def get_instance_data_from_files(files, data_distribution):
         "test_labels",
     ]
     instance_data = dict()
-    return {
-        key: instance_data.get(key, []).append(files.getlist(key)[i])
-        for key in data_keys
-        for i in data_distribution
-        if len(files.getlist(key)) > 0
-    }
+    for key in data_keys:
+        if len(files.getlist(key)) > 0:
+            for i in data_distribution:
+                if key in instance_data:
+                    instance_data[key].append(files.getlist(key)[i])
+                else:
+                    instance_data[key] = [files.getlist(key)[i]]
+    return instance_data
 
 
-async def post_data_distribution(files, environment_data_distribution):
-    async with ClientSession() as client_session:
-        post_requests = []
-        for environment_ip, data_distribution in environment_data_distribution.items():
-            instance_data = get_instance_data_from_files(files, data_distribution)
-            post_requests.append(
-                post_to_instance(
-                    "http://" + environment_ip + ":5000/dataset/add",
-                    client_session,
-                    instance_data,
-                )
-            )
-
-        results = await asyncio.gather(*post_requests)
-        error(results)
+def post_data_distribution(files, environment_data_distribution):
+    for environment_ip, data_distribution in environment_data_distribution.items():
+        instance_data = get_instance_data_from_files(files, data_distribution)
+        post_to_instance(
+            "http://" + environment_ip + ":5000/dataset/add",
+            instance_data,
+        )

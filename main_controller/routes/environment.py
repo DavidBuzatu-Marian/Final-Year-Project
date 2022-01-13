@@ -1,11 +1,8 @@
 from logging import debug, error
-from flask import Flask, request
+from flask import request
 import sys
 from flask.json import jsonify
-import torch
 import random
-import asyncio
-from flask.json import jsonify
 
 from app import app
 from app import mongo
@@ -52,11 +49,10 @@ def environment_dataset_data():
     for environment_ip, _ in environment_data_distribution["distributions"].items():
         if not (environment_ip in environment["environment_ips"]):
             return (jsonify("Environment ip is invalid"), 400)
-    asyncio.run(
-        post_data_distribution(
-            request.files, environment_data_distribution["distributions"]
-        )
+    post_data_distribution(
+        request.files, environment_data_distribution["distributions"]
     )
+
     return "Saved data in instances"
 
 

@@ -8,3 +8,4 @@ pymongo[srv]
 jsons
 python-terraform
 aiohttp
+requests
