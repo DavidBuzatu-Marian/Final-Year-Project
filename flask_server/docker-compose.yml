@@ -5,8 +5,8 @@ services:
     build: .
     volumes:
       - ./:/app
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
 
 networks:
   default:
