@@ -14,6 +14,7 @@ app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 mongo = PyMongo(app)
 
 import routes.environment
+import routes.model
 
 
 @app.route("/")

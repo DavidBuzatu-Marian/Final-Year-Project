@@ -1,8 +1,8 @@
-from logging import debug, error
+from logging import error
 from flask import request
 import sys
 from flask.json import jsonify
-
+import random
 from app import app
 from app import mongo
 
@@ -20,9 +20,11 @@ REQUIRED_INSTANCES = 2
 
 @app.route("/model/train", methods=["POST"])
 def model_train():
-    user_id = get_user_id(request.args)
-    environment_id = get_environment_id(request.args)
+    user_id = get_user_id(request.json)
+    environment_id = get_environment_id(request.json)
     environment = get_environment(mongo.db, environment_id, user_id)
-    available_instanecs = get_available_instances(
+    available_instances = get_available_instances(
         environment, MAX_TRIALS, REQUIRED_INSTANCES
     )
+    error(random.sample(available_instances, REQUIRED_INSTANCES))
+    return "Received available servers"

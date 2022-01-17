@@ -3,8 +3,9 @@ version: '3.8'
 services:
   flask-server:
     build: .
-    volumes:
-      - ./:/app
+    # volumes:
+
+    #   - ./:/app
     expose:
       - "5000"
 
