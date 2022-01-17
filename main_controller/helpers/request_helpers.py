@@ -14,6 +14,14 @@ def post_to_instance(url, data):
     response = requests.post(url=url, files=files)
     if not response.ok:
         abort(400, "Posting data went wrong")
+    return response
+
+
+def get_to_instance(url):
+    response = requests.get(url)
+    if not response.ok:
+        abort(400, "Getting from {} went wrong".format(url))
+    return response
 
 
 def get_instance_data_from_files(files, data_distribution):
