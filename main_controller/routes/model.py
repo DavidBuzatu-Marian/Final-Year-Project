@@ -34,3 +34,14 @@ def model_train():
         instance_training_parameters,
     )
     return "Received available servers"
+
+
+@app.route("/model/create", methods=["POST"])
+def model_create():
+    user_id = get_user_id(request.json)
+    environment_id = get_environment_id(request.json)
+    environment = get_environment(mongo.db, environment_id, user_id)
+    model_network_options = get_model_network_options(request.json)
+    create_model(environment["environment_ips"], model_network_options)
+
+    return "Created models on instances"

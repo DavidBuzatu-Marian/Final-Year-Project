@@ -31,6 +31,10 @@ def get_instance_training_parameters(request_json):
     return request_json["environment_parameters"]
 
 
+def get_model_network_options(request_json):
+    return request_json["environment_model_network_options"]
+
+
 def train_model(instances, training_iterations, instance_training_parameters):
     for _ in range(training_iterations):
         for instance_ip in instances:
@@ -40,3 +44,10 @@ def train_model(instances, training_iterations, instance_training_parameters):
             )
             with open("model_{}.pth".format(instance_ip), "wb") as instance_model_file:
                 instance_model_file.write(response.content)
+
+
+def create_model(environment_ips, model_network_options):
+    for instance_ip in environment_ips:
+        post_json_to_instance(
+            "http://{}:5000/model/create".format(instance_ip), model_network_options
+        )
