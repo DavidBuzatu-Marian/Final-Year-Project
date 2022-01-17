@@ -17,7 +17,7 @@ def get_available_instances(environment, max_trials, required_instances):
             response = get_to_instance(
                 "http://{}:5000/instance/availability".format(environment_ip)
             )
-            if response.json()["availability"]:
+            if response.json()["availability"] == True:
                 available_instances.add(environment_ip)
         trials += 1
     return list(available_instances)
@@ -35,6 +35,8 @@ def train_model(instances, training_iterations, instance_training_parameters):
     for _ in range(training_iterations):
         for instance_ip in instances:
             response = post_json_to_instance(
-                "http://{}:5000/model/train", instance_training_parameters
+                "http://{}:5000/model/train".format(instance_ip),
+                instance_training_parameters,
             )
-            pass
+            with open("model_{}.pth".format(instance_ip), "wb") as instance_model_file:
+                instance_model_file.write(response.content)
