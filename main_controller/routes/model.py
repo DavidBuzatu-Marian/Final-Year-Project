@@ -26,5 +26,11 @@ def model_train():
     available_instances = get_available_instances(
         environment, MAX_TRIALS, REQUIRED_INSTANCES
     )
-    error(random.sample(available_instances, REQUIRED_INSTANCES))
+    training_iterations = get_training_iterations(request.json)
+    instance_training_parameters = get_instance_training_parameters(request.json)
+    train_model(
+        random.sample(available_instances, REQUIRED_INSTANCES),
+        training_iterations,
+        instance_training_parameters,
+    )
     return "Received available servers"

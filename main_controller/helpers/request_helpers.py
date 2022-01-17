@@ -17,6 +17,13 @@ def post_to_instance(url, data):
     return response
 
 
+def post_json_to_instance(url, json):
+    response = requests.post(url, json=json)
+    if not response.ok:
+        abort(400, "Posting data went wrong")
+    return response
+
+
 def get_to_instance(url):
     response = requests.get(url)
     if not response.ok:
