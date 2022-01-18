@@ -11,21 +11,21 @@ def post_to_instance(url, data):
         for file in value
     ]
 
-    response = requests.post(url=url, files=files)
+    response = requests.post(url=url, files=files, timeout=10)
     if not response.ok:
         abort(400, "Posting data went wrong")
     return response
 
 
 def post_json_to_instance(url, json):
-    response = requests.post(url, json=json)
+    response = requests.post(url, json=json, timeout=10)
     if not response.ok:
         abort(400, "Posting data went wrong")
     return response
 
 
 def get_to_instance(url):
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     if not response.ok:
         abort(400, "Getting from {} went wrong".format(url))
     return response

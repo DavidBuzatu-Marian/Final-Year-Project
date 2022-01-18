@@ -15,8 +15,3 @@ mongo = PyMongo(app)
 
 import routes.environment
 import routes.model
-
-
-@app.route("/")
-def hello_word():
-    return "Hello from main controller"

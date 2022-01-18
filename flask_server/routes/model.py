@@ -2,6 +2,7 @@ from logging import error
 from flask import Flask, request
 from flask.helpers import send_file
 from flask.json import jsonify
+import json
 import os
 import sys
 
@@ -42,6 +43,7 @@ def model_train():
         labels_path=os.getenv("TRAIN_LABELS_PATH"),
         hyperparameters=hyperparameters,
     )
+
     for _ in range(0, hyperparameters["epochs"]):
         for data, label in train_dataloader:
             optimizer.zero_grad()
