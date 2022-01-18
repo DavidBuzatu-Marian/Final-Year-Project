@@ -5,12 +5,11 @@ from flask import abort
 
 
 def post_to_instance(url, data):
-    files = [
-        (file_type, (file.filename, file.read(), file.content_type))
-        for file_type, value in data.items()
-        for file in value
-    ]
-
+    files = []
+    for file_type, value in data.items():
+        for file in value:
+            files.append((file_type, (file.filename, file.read(), file.content_type)))
+            file.seek(0)
     response = requests.post(url=url, files=files, timeout=10)
     if not response.ok:
         abort(400, "Posting data went wrong")
@@ -43,6 +42,7 @@ def get_instance_data_from_files(files, data_distribution):
     instance_data = dict()
     for key in data_keys:
         if len(files.getlist(key)) > 0:
+
             for i in data_distribution:
                 if key in instance_data:
                     instance_data[key].append(files.getlist(key)[i])

@@ -19,7 +19,8 @@ def read_model_from_path(path):
 def save_file(file, path_env):
     filename = secure_filename(file.filename)
     path = os.getenv(path_env)
-    Path(path).mkdir(parents=True, exist_ok=True)
+    if not Path(path).is_dir():
+        Path(path).mkdir(parents=True, exist_ok=True)
     file.save(os.path.join(path, filename))
 
 

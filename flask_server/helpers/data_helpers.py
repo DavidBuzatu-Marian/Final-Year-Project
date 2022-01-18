@@ -18,12 +18,10 @@ class CustomDataset(data.Dataset):
         imgs = []
         for filename in os.listdir(os.path.join(path)):
             imgs.append(os.path.join(path, filename))
-        return imgs
+        imgs.sort()
+        return sorted(imgs, key=len)
 
     def __getitem__(self, index):
-        error(index)
-        error(self.data[index])
-        error(self.labels[index])
         data = cv2.imread(self.data[index], cv2.IMREAD_UNCHANGED)
         label = cv2.imread(self.labels[index], cv2.IMREAD_UNCHANGED)
         return torch.from_numpy(data).float(), torch.from_numpy(label).float()
