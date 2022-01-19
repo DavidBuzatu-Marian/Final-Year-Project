@@ -1,5 +1,8 @@
 import sys
+import os
+import torch
 from logging import error
+from flask.helpers import send_file
 
 try:
     from request_helpers import get_to_instance, post_json_to_instance
@@ -37,13 +40,54 @@ def get_model_network_options(request_json):
 
 def train_model(instances, training_iterations, instance_training_parameters):
     for _ in range(training_iterations):
-        for instance_ip in instances:
-            response = post_json_to_instance(
-                "http://{}:5000/model/train".format(instance_ip),
-                instance_training_parameters,
-            )
-            with open("model_{}.pth".format(instance_ip), "wb") as instance_model_file:
-                instance_model_file.write(response.content)
+        train_on_instances(instances, instance_training_parameters)
+        aggregated_model = aggregate_models(instances)
+        save_aggregated_model(aggregated_model)
+        # TODO: Send aggregated model
+    return send_file("./models/model_global.pth")
+
+
+def save_aggregated_model(aggregated_model):
+    torch.save(aggregated_model, "./models/model_global.pth")
+
+
+def aggregate_models(instances):
+    aggregated_model = None
+    for instance_ip in instances:
+        model = load_model_from_path("./models/model_{}.pth".format(instance_ip))
+        if aggregated_model == None:
+            aggregated_model = model
+        else:
+            for layer in aggregated_model:
+                aggregated_model[layer] += model[layer]
+        delete_model_from_path("./models/model_{}.pth".format(instance_ip))
+    for layer in aggregated_model:
+        aggregated_model[layer] /= len(instances)
+    return aggregated_model
+
+
+def train_on_instances(instances, instance_training_parameters):
+    for instance_ip in instances:
+        response = post_json_to_instance(
+            "http://{}:5000/model/train".format(instance_ip),
+            instance_training_parameters,
+        )
+        with open(
+            "./models/model_{}.pth".format(instance_ip), "wb"
+        ) as instance_model_file:
+            instance_model_file.write(response.content)
+
+
+def load_model_from_path(path):
+    if os.path.isFile(path):
+        return torch.load(path)
+    raise FileNotFoundError("Model not found")
+
+
+def delete_model_from_path(path):
+    if os.path.isFile(path):
+        os.remove(path)
+    raise FileNotFoundError("Model not found")
 
 
 def create_model(environment_ips, model_network_options):
