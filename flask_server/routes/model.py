@@ -1,6 +1,8 @@
 from logging import error
 from flask import Flask, request
+from flask.helpers import send_file
 from flask.json import jsonify
+import json
 import os
 import sys
 
@@ -41,6 +43,7 @@ def model_train():
         labels_path=os.getenv("TRAIN_LABELS_PATH"),
         hyperparameters=hyperparameters,
     )
+
     for _ in range(0, hyperparameters["epochs"]):
         for data, label in train_dataloader:
             optimizer.zero_grad()
@@ -55,4 +58,10 @@ def model_train():
             optimizer.step()
 
     torch.save(model, path)
-    return "Model trained"
+    return send_file(os.getenv("MODEL_PATH"))
+
+
+@app.route("/model/update", methods=["POST"])
+def model_update():
+    request.files["model"].save(os.getenv("MODEL_PATH"))
+    return "Saved aggregated model"

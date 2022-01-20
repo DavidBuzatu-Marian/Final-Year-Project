@@ -1,0 +1,11 @@
+Flask==2.0.2
+torch
+numpy>=1.22.1
+redis
+python-dotenv
+Flask-PyMongo
+pymongo[srv]
+jsons
+python-terraform
+aiohttp
+requests

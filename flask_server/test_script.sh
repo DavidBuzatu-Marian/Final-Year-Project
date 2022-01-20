@@ -1,0 +1,1 @@
+find . -type d -name 'tests' -execdir python3 -m unittest discover -s . {} \;

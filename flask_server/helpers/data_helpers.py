@@ -5,6 +5,7 @@ import cv2
 import os
 from glob import glob
 from torch.utils.data import DataLoader
+from torchvision.transforms import Normalize
 
 
 class CustomDataset(data.Dataset):
@@ -17,7 +18,8 @@ class CustomDataset(data.Dataset):
         imgs = []
         for filename in os.listdir(os.path.join(path)):
             imgs.append(os.path.join(path, filename))
-        return imgs
+        imgs.sort()
+        return sorted(imgs, key=len)
 
     def __getitem__(self, index):
         data = cv2.imread(self.data[index], cv2.IMREAD_UNCHANGED)
@@ -34,6 +36,7 @@ def get_dataloader(data_path, labels_path, hyperparameters):
         num_workers=hyperparameters["num_workers"],
         batch_size=hyperparameters["batch_size"],
         shuffle=hyperparameters["shuffle"],
+        drop_last=hyperparameters["drop_last"],
     )
 
 
@@ -46,6 +49,8 @@ def reshape_data(data, hyperparameters):
 
 def normalize_data(data, hyperparameters):
     if "normalizer" in hyperparameters:
-        normalizer = hyperparameters["normalizer"]
-        return data / normalizer  # TODO: Research different normalizers
+        mean = eval(hyperparameters["normalizer_mean"])
+        std = eval(hyperparameters["normalizer_std"])
+        normalizer = Normalize(mean, std)
+        return normalizer(data)
     return data

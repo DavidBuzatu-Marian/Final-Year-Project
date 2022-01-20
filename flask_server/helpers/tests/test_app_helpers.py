@@ -70,7 +70,8 @@ class TestAppHelpers(unittest.TestCase):
         }
         optimizer = torch.optim.RMSprop(self.model.parameters())
         self.assertEqual(
-            repr(optimizer), repr(get_optimizer(request_json=request_json))
+            repr(optimizer),
+            repr(get_optimizer(request_json=request_json, model=self.model)),
         )
 
     def test_get_optimizer_exception(self):
