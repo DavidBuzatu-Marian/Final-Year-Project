@@ -6,6 +6,7 @@ from flask.helpers import send_file
 
 try:
     from request_helpers import get_to_instance, post_json_to_instance
+    from nn_model import NNModel
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -79,13 +80,13 @@ def train_on_instances(instances, instance_training_parameters):
 
 
 def load_model_from_path(path):
-    if os.path.isFile(path):
+    if os.path.isfile(path):
         return torch.load(path)
     raise FileNotFoundError("Model not found")
 
 
 def delete_model_from_path(path):
-    if os.path.isFile(path):
+    if os.path.isfile(path):
         os.remove(path)
     raise FileNotFoundError("Model not found")
 
