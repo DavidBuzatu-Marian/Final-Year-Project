@@ -59,11 +59,16 @@ def aggregate_models(instances):
         if aggregated_model == None:
             aggregated_model = model
         else:
-            for layer in aggregated_model:
-                aggregated_model[layer] += model[layer]
+            state_aggregated = aggregated_model.state_dict()
+            state_model = model.state_dict()
+            for layer in state_aggregated:
+                state_aggregated[layer] += state_model[layer]
+            aggregated_model.load_state_dict(state_aggregated)
         delete_model_from_path("./models/model_{}.pth".format(instance_ip))
-    for layer in aggregated_model:
-        aggregated_model[layer] /= len(instances)
+    state_aggregated = aggregated_model.state_dict()
+    for layer in state_aggregated:
+        state_aggregated[layer] /= len(instances)
+    aggregated_model.load_state_dict(state_aggregated)
     return aggregated_model
 
 
@@ -82,13 +87,15 @@ def train_on_instances(instances, instance_training_parameters):
 def load_model_from_path(path):
     if os.path.isfile(path):
         return torch.load(path)
-    raise FileNotFoundError("Model not found")
+    else:
+        raise FileNotFoundError("Model not found")
 
 
 def delete_model_from_path(path):
     if os.path.isfile(path):
         os.remove(path)
-    raise FileNotFoundError("Model not found")
+    else:
+        raise FileNotFoundError("Model not found: {}".format(path))
 
 
 def create_model(environment_ips, model_network_options):
