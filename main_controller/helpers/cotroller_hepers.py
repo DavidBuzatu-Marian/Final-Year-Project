@@ -3,9 +3,10 @@ import os
 import torch
 from logging import error
 from flask.helpers import send_file
+from werkzeug.datastructures import FileStorage
 
 try:
-    from request_helpers import get_to_instance, post_json_to_instance
+    from request_helpers import get_to_instance, post_json_to_instance, post_to_instance
     from nn_model import NNModel
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
@@ -44,12 +45,22 @@ def train_model(instances, training_iterations, instance_training_parameters):
         train_on_instances(instances, instance_training_parameters)
         aggregated_model = aggregate_models(instances)
         save_aggregated_model(aggregated_model)
-        # TODO: Send aggregated model
-    return send_file("./models/model_global.pth")
+        update_instances_model(instances)
+    return send_file(os.getenv("GLOBAL_MODEL"))
+
+
+def update_instances_model(instances):
+    model_file = open(os.getenv("GLOBAL_MODEL"), "rb")
+    model = FileStorage(model_file)
+    for instance_ip in instances:
+        post_to_instance(
+            "http://{}:5000/model/update".format(instance_ip),
+            {"model": [model]},
+        )
 
 
 def save_aggregated_model(aggregated_model):
-    torch.save(aggregated_model, "./models/model_global.pth")
+    torch.save(aggregated_model, os.getenv("GLOBAL_MODEL"))
 
 
 def aggregate_models(instances):

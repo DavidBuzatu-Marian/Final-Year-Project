@@ -59,3 +59,9 @@ def model_train():
 
     torch.save(model, path)
     return send_file(os.getenv("MODEL_PATH"))
+
+
+@app.route("/model/update", methods=["POST"])
+def model_update():
+    request.files["model"].save(os.getenv("MODEL_PATH"))
+    return "Saved aggregated model"
