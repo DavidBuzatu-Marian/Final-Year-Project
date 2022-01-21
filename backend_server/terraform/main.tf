@@ -4,6 +4,7 @@ provider "google" {
   zone    = "europe-west1-b"
 }
 
+
 resource "google_compute_instance" "vm_instance" {
   name         = "terraform-test-instance"
   machine_type = "e2-micro"
@@ -19,4 +20,8 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   metadata_startup_script = file("./startup_script.sh")
+
+  service_account {
+    scopes = ["cloud-platform", "cloud-source-repos", "compute-rw"]
+  }
 }
