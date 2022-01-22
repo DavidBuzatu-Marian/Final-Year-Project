@@ -28,12 +28,16 @@ def dataset_add():
 def dataset_remove():
     dir_paths = [
         os.path.join(os.getenv("TRAIN_DATA_PATH")),
+        os.path.join(os.getenv("TRAIN_LABELS_PATH")),
         os.path.join(os.getenv("VALIDATION_DATA_PATH")),
+        os.path.join(os.getenv("VALIDATION_LABELS_PATH")),
         os.path.join(os.getenv("TEST_DATA_PATH")),
+        os.path.join(os.getenv("TEST_LABELS_PATH")),
     ]
     for path in dir_paths:
         try:
             shutil.rmtree(path)
         except OSError as err:
             error(err)
-    return jsonify("Files deleted successfully")
+    delete_model_from_path(os.getenv("MODEL_PATH"))
+    return jsonify("Files and model deleted successfully")
