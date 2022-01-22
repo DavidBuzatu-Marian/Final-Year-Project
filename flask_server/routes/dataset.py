@@ -2,9 +2,12 @@ from logging import error, debug
 from flask import Flask, request
 from flask.json import jsonify
 import os
-from helpers.app_helpers import read_model_from_path, save_file
-from helpers.dataset_helpers import delete_model_from_path, save_dataset
-import json
+import sys
+
+try:
+    from helpers.dataset_helpers import delete_model_from_path, save_dataset
+except ImportError as exc:
+    sys.stderr.write("Error: failed to import modules ({})".format(exc))
 import shutil
 
 from app import app

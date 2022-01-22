@@ -1,5 +1,5 @@
 import os
-from app_helpers import save_file
+from helpers.app_helpers import save_file
 
 
 def delete_model_from_path(path):
