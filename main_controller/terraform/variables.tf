@@ -13,3 +13,15 @@ variable "username" {
   type        = string
   description = "The user name for the current environment"
 }
+
+variable "machine_type" {
+  type        = string
+  description = "The type of machine instance for the environment"
+  default     = "e2-medium"
+}
+
+variable "instance_image" {
+  type        = string
+  description = "The type of image to use for the instance"
+  default     = "ubuntu-os-cloud/ubuntu-2004-lts"
+}

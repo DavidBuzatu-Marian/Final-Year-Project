@@ -8,11 +8,11 @@ provider "google" {
 resource "google_compute_instance" "instances" {
   count        = var.nr_instances
   name         = "${var.username}-${count.index}"
-  machine_type = "e2-micro"
+  machine_type = var.machine_type
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-os-cloud/ubuntu-2004-lts"
+      image = var.instance_image
     }
   }
   network_interface {
