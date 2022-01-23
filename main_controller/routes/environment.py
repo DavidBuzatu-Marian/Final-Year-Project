@@ -20,10 +20,10 @@ except ImportError as exc:
 def environment_create():
     environments = Environment(request.json)
     user_id = get_user_id(request.json)
-    apply_terraform(environments)
+    apply_terraform(user_id, environments)
     output = get_terraform_output()
     json_output = to_json(output)
-    save_ips_for_user(mongo.db, json_output["ec2_instances_public_ip"], user_id)
+    save_ips_for_user(mongo.db, json_output["gci_instances_ids"], user_id)
     return "Created {} environments with requested options. Environments are ready for receiving datasets".format(
         environments.get_nr_instances()
     )

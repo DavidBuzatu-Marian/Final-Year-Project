@@ -7,7 +7,7 @@ provider "google" {
 
 resource "google_compute_instance" "instances" {
   count        = var.nr_instances
-  name         = "${var.username}-${count.index}"
+  name         = "${var.user_id}-${count.index}"
   machine_type = var.machine_type
 
   boot_disk {
@@ -27,7 +27,7 @@ resource "google_compute_instance" "instances" {
 }
 
 resource "google_compute_instance_group" "environment" {
-  name        = var.username
+  name        = var.user_id
   description = "Environment group. Only 1 environment/user"
   instances   = google_compute_instance.instances[*].self_link
 

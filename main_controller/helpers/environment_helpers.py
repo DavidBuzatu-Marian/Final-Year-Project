@@ -70,10 +70,10 @@ def get_user_id(request_json):
     return int(request_json["user_id"])
 
 
-def apply_terraform(environments):
+def apply_terraform(user_id, environments):
     terraform_apply_result = subprocess.run(
-        'cd ./terraform && terraform apply -var="nr_instances={}" -auto-approve'.format(
-            environments.get_nr_instances()
+        'cd ./terraform && terraform apply -var="nr_instances={} -var="user_id={}" -auto-approve'.format(
+            environments.get_nr_instances(), user_id
         ),
         shell=True,
         capture_output=True,

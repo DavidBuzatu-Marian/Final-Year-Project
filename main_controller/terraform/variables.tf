@@ -9,7 +9,7 @@ variable "nr_instances" {
   }
 }
 
-variable "username" {
+variable "user_id" {
   type        = string
   description = "The user name for the current environment"
 }
