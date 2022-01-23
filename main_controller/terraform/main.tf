@@ -1,24 +1,39 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 3.6"
+provider "google" {
+  project = "finalyearproject-338819"
+  region  = "europe-west1"
+  zone    = "europe-west1-b"
+}
+
+
+resource "google_compute_instance" "instances" {
+  count        = var.nr_instances
+  name         = "${var.username}-${count.index}"
+  machine_type = "e2-micro"
+
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-2004-lts"
     }
+  }
+  network_interface {
+    network = "default"
+    access_config {}
+  }
+
+  metadata_startup_script = file("./startup_script.sh")
+
+  service_account {
+    scopes = ["cloud-platform", "cloud-source-repos", "compute-rw"]
   }
 }
 
-provider "aws" {
-  profile                 = "testing"
-  region                  = "eu-west-2"
-  shared_credentials_file = "./aws_credentials"
-}
+resource "google_compute_instance_group" "environment" {
+  name        = var.username
+  description = "Environment group. Only 1 environment/user"
+  instances   = google_compute_instance.instances[*].self_link
 
-resource "aws_instance" "test_server" {
-  ami           = "ami-0194c3e07668a7e36"
-  instance_type = "t2.micro"
-  count         = var.nr_instances
-
-  tags = {
-    Name = "test_instance"
+  named_port {
+    name = "http"
+    port = "5000"
   }
 }

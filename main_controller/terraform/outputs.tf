@@ -1,7 +1,7 @@
-output "ec2_instances_id" {
-  value = aws_instance.test_server.*.id
+output "gci_instances_id" {
+  value = google_compute_instance.instances[*].network_interface.0.network_ip
 }
 
-output "ec2_instances_public_ip" {
-  value = aws_instance.test_server.*.public_ip
+output "gci_instances_public_ip" {
+  value = google_compute_instance.instances[*].network_interface.0.network_ip
 }

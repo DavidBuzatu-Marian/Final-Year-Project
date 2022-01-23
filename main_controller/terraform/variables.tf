@@ -8,3 +8,8 @@ variable "nr_instances" {
     error_message = "The instance number has to be between 1 and 10 (inclusive)."
   }
 }
+
+variable "username" {
+  type        = string
+  description = "The user name for the current environment"
+}
