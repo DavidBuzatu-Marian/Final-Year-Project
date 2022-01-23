@@ -23,5 +23,5 @@ variable "machine_type" {
 variable "instance_image" {
   type        = string
   description = "The type of image to use for the instance"
-  default     = "ubuntu-os-cloud/ubuntu-2004-lts"
+  default     = "projects/finalyearproject-338819/global/images/instance-image"
 }

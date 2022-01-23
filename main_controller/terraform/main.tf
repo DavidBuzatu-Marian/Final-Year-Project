@@ -7,7 +7,7 @@ provider "google" {
 
 resource "google_compute_instance" "instances" {
   count        = var.nr_instances
-  name         = "${var.user_id}-${count.index}"
+  name         = "instance-${var.user_id}${count.index}"
   machine_type = var.machine_type
 
   boot_disk {
@@ -17,6 +17,9 @@ resource "google_compute_instance" "instances" {
   }
   network_interface {
     network = "default"
+    access_config {
+
+    }
   }
 
   metadata_startup_script = file("./startup_script.sh")
@@ -27,7 +30,7 @@ resource "google_compute_instance" "instances" {
 }
 
 resource "google_compute_instance_group" "environment" {
-  name        = var.user_id
+  name        = "instance-group-${var.user_id}"
   description = "Environment group. Only 1 environment/user"
   instances   = google_compute_instance.instances[*].self_link
 
