@@ -33,7 +33,7 @@ def environment_create():
 def environment_delete():
     user_id = get_user_id(request.json)
     environment_id = get_environment_id(request.json)
-    destroy_terraform()
+    destroy_terraform(user_id)
     delete_environment_for_user(mongo.db, environment_id, user_id)
     return "Destroyed environemnt {} for user {}".format(environment_id, user_id)
 

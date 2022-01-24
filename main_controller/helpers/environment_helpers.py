@@ -3,6 +3,7 @@ import subprocess
 import json
 import jsons
 from bson.objectid import ObjectId
+from flask import abort
 
 
 def save_ips_for_user(database, ips, user_id):
@@ -72,7 +73,7 @@ def get_user_id(request_json):
 
 def apply_terraform(user_id, environments):
     terraform_apply_result = subprocess.run(
-        'cd ./terraform && terraform apply -var="nr_instances={} -var="user_id={}" -auto-approve'.format(
+        'cd ./terraform && terraform apply -var="nr_instances={}" -var="user_id={}" -auto-approve'.format(
             environments.get_nr_instances(), user_id
         ),
         shell=True,
@@ -80,23 +81,34 @@ def apply_terraform(user_id, environments):
         text=True,
     )
     if terraform_apply_result.returncode != 0:
-        return (
-            "Something went wrong when constructing environments. Check logs for more details",
+        destroy_terraform()
+        abort(
             500,
+            "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
+                terraform_apply_result.stderr,
+                terraform_apply_result.returncode,
+                terraform_apply_result.stdout,
+            ),
         )
 
 
-def destroy_terraform():
+def destroy_terraform(user_id):
     terraform_destroy_result = subprocess.run(
-        "cd ./terraform && terraform destroy -auto-approve",
+        'cd ./terraform && terraform destroy -var="user_id={}" -auto-approve'.format(
+            user_id
+        ),
         shell=True,
         capture_output=True,
         text=True,
     )
     if terraform_destroy_result.returncode != 0:
-        return (
-            "Something went wrong when destroying environments. Check logs for more details",
+        abort(
             500,
+            "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
+                terraform_apply_result.stderr,
+                terraform_apply_result.returncode,
+                terraform_apply_result.stdout,
+            ),
         )
 
 
