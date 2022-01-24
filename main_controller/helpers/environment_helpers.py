@@ -12,7 +12,7 @@ def save_ips_for_user(database, ips, user_id):
     for ip in ips["value"]:
         environments_document["environment_ips"].append(ip)
     insert_result = db.environments_addresses.insert_one(environments_document)
-    debug("Created entry: {}".format(insert_result.inserted_id))
+    error("Created entry: {}".format(insert_result.inserted_id))
     return insert_result.inserted_id
 
 
@@ -20,7 +20,14 @@ def delete_environment_for_user(database, environment_id, user_id):
     db = database
     query = {"_id": ObjectId(environment_id), "user_id": user_id}
     delete_result = db.environments_addresses.delete_one(query)
-    debug("Deleted entry: {}".format(delete_result.deleted_count))
+    error("Deleted entry: {}".format(delete_result.deleted_count))
+
+
+def delete_environment_distribution(database, environment_id, user_id):
+    db = database
+    query = {"_id": ObjectId(environment_id), "user_id": user_id}
+    delete_result = db.environments_data_distribution.delete_one(query)
+    error("Deleted entry: {}".format(delete_result.deleted_count))
 
 
 def get_environment(database, environment_id, user_id):
