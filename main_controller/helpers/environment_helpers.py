@@ -105,9 +105,9 @@ def destroy_terraform(user_id):
         abort(
             500,
             "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
-                terraform_apply_result.stderr,
-                terraform_apply_result.returncode,
-                terraform_apply_result.stdout,
+                terraform_destroy_result.stderr,
+                terraform_destroy_result.returncode,
+                terraform_destroy_result.stdout,
             ),
         )
 
