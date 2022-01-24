@@ -120,9 +120,13 @@ def get_terraform_output():
         text=True,
     )
     if output.returncode != 0:
-        return (
-            "Something went wrong when getting outputs. Check logs for more details",
+        abort(
             500,
+            "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
+                output.stderr,
+                output.returncode,
+                output.stdout,
+            ),
         )
     return output.stdout
 
