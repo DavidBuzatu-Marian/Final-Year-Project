@@ -7,7 +7,8 @@ const User = require('./models/User');
 const app = express();
 const { connectToMongoDB } = require('./config/mongo');
 const { registerLoggerInApp } = require('./logs/loger');
-
+const { configureProxyWithApplication } = require('./routes/proxy');
+const ROUTES = require('./routes/routes');
 // Connect to Mongo
 connectToMongoDB();
 
@@ -38,6 +39,8 @@ passport.deserializeUser(User.deserializeUser());
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 
+// Proxy
+configureProxyWithApplication(app, ROUTES);
 // Start server
 const PORT = config.get('port') || 5002;
 app.listen(PORT, (err) => {
