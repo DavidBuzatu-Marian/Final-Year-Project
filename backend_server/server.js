@@ -6,9 +6,15 @@ const passport = require('passport');
 const User = require('./models/User');
 const app = express();
 const { connectToMongoDB } = require('./config/mongo');
-const LocalStrategy = require('passport-local').Strategy;
+const { registerLoggerInApp } = require('./logs/loger');
 
+// Connect to Mongo
 connectToMongoDB();
+
+// Set-up logger
+registerLoggerInApp(app);
+
+// Set-up session
 app.use(
   session({
     secret: config.get('sessionSecret'),
@@ -18,11 +24,13 @@ app.use(
   })
 );
 
+// Set-up json and form data parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Set-up passport
 app.use(passport.initialize());
 app.use(passport.session());
-
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -32,7 +40,6 @@ app.use('/api/auth', require('./routes/auth'));
 
 // Start server
 const PORT = config.get('port') || 5002;
-
 app.listen(PORT, (err) => {
   if (err) {
     console.log(`Error: ${err}`);
