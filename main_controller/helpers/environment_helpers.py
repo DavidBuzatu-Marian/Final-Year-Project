@@ -88,7 +88,7 @@ def apply_terraform(user_id, environments):
         text=True,
     )
     if terraform_apply_result.returncode != 0:
-        destroy_terraform()
+        destroy_terraform(user_id)
         abort(
             500,
             "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
