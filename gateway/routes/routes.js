@@ -1,9 +1,12 @@
 const ROUTES = [
   {
+    authenticated: true,
     proxy: {
-      target: 'http://localhost:3000',
-      changeOrigin: true,
+      target: 'http://localhost:5005',
       pathRewrite: { '^/backend': '' },
+      onProxyReq: (proxyReq, req) => {
+        proxyReq.setHeader('x-auth', req.user._id);
+      },
     },
   },
 ];
