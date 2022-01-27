@@ -28,12 +28,11 @@ def model_train():
     )
     training_iterations = get_training_iterations(request.json)
     instance_training_parameters = get_instance_training_parameters(request.json)
-    train_model(
+    return train_model(
         random.sample(available_instances, REQUIRED_INSTANCES),
         training_iterations,
         instance_training_parameters,
     )
-    return "Received available servers"
 
 
 @app.route("/model/create", methods=["POST"])

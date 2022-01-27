@@ -3,9 +3,9 @@ version: '3.8'
 services:
   flask-server:
     build: .
-    # volumes:
-
-    #   - ./:/app
+    image: "eu.gcr.io/finalyearproject-338819/fyp_instance"
+    volumes:
+      - ./:/app
     expose:
       - "5000"
 
