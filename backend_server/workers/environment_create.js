@@ -14,6 +14,7 @@ environmentCreateQueue.process(async (job) => {
     `http://${config.get('loadBalancerIP')}:${config.get(
       'loadBalancerPort'
     )}/environment/create`,
+    job.data.body,
     { headers: job.data.headers }
   );
   done(null, res.data);
