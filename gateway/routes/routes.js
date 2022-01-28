@@ -1,3 +1,5 @@
+const { fixRequestBody } = require('http-proxy-middleware');
+
 const ROUTES = [
   {
     authenticated: true,
@@ -6,6 +8,7 @@ const ROUTES = [
       pathRewrite: { '^/backend': '' },
       onProxyReq: (proxyReq, req) => {
         proxyReq.setHeader('x-auth', req.user._id);
+        fixRequestBody(proxyReq, req);
       },
     },
   },
