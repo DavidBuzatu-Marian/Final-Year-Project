@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/environment', require('./routes/environment'));
-
+app.use('/api/health', require('./routes/health'));
 // Start server
 const PORT = config.get('port') || 5005;
 app.listen(PORT, (err) => {
