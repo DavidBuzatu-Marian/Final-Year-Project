@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  redis:
+    image: "redis:6.2.6-alpine"
+    command: "redis-server --requirepass 6rIcwwgwrtSVixPsUEXh"
+    ports:
+      - '6379:6379'
+  backend-server:
+    build: .
+    volumes:
+      - ./:/usr/src/backend
+    ports:
+      - "5005:5005"
+    expose:
+      - "5005"

@@ -2,10 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('config');
 const { connectToMongoDB } = require('./config/mongo');
+const { registerLoggerInApp } = require('./logs/loger');
 const app = express();
 
 // Connect to mongo
 connectToMongoDB();
+
+// Set-up morgan
+registerLoggerInApp(app);
 
 // Set-up json and form data parser
 app.use(bodyParser.urlencoded({ extended: true }));
