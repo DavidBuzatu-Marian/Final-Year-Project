@@ -92,3 +92,5 @@
 ::ffff:172.20.0.1 - - [29/Jan/2022:15:05:53 +0000] "GET /api/health/status HTTP/1.1" 202 34 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.20.0.1 - - [29/Jan/2022:15:05:54 +0000] "GET /api/health/status/3 HTTP/1.1" 200 103 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.20.0.1 - - [29/Jan/2022:15:05:59 +0000] "GET /api/health/status/4 HTTP/1.1" 200 263 "-" "PostmanRuntime/7.29.0"
+::ffff:172.20.0.1 - - [29/Jan/2022:15:06:37 +0000] "GET /api/health/status HTTP/1.1" 202 34 "-" "PostmanRuntime/7.29.0"
+::ffff:172.20.0.1 - - [29/Jan/2022:15:06:38 +0000] "GET /api/health/status/5 HTTP/1.1" 200 64 "-" "PostmanRuntime/7.29.0"

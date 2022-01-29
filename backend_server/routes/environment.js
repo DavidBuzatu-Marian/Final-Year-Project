@@ -1,7 +1,15 @@
 const express = require('express');
 const {
+  handleJobResponse,
+  createJobBody,
+  createJobHeader,
+} = require('../hooks/environment');
+const {
   environmentCreateQueue,
 } = require('../workers/environment/environment_create');
+const {
+  environmentDatasetQueue,
+} = require('../workers/environment/environment_dataset');
 const {
   environmentDeleteQueue,
 } = require('../workers/environment/environment_delete');
@@ -9,8 +17,8 @@ const router = express.Router();
 
 router.post('/create', async (req, res) => {
   delete req.headers['content-length'];
-  const job_headers = { ...req.headers, 'content-type': 'application/json' };
-  const job_body = { ...req.body, user_id: req.headers['x-auth'] };
+  const job_headers = createJobHeader(req, 'application/json');
+  const job_body = createJobBody(req);
   const job = await environmentCreateQueue.add({
     headers: job_headers,
     body: job_body,
@@ -21,19 +29,13 @@ router.post('/create', async (req, res) => {
 router.get('/create/:id', async (req, res) => {
   const id = req.params.id;
   const job = await environmentCreateQueue.getJob(id);
-  if (job === null) {
-    return res.status(400).end();
-  } else {
-    const jobState = await job.getState();
-    const jobFailReason = job.failedReason;
-    return res.json({ id, jobState, jobFailReason });
-  }
+  return await handleJobResponse(res, id, job);
 });
 
 router.delete('/delete', async (req, res) => {
   delete req.headers['content-length'];
-  const job_headers = { ...req.headers, 'content-type': 'application/json' };
-  const job_body = { ...req.body, user_id: req.headers['x-auth'] };
+  const job_headers = createJobHeader(req, 'application/json');
+  const job_body = createJobBody(req);
   const job = await environmentDeleteQueue.add({
     headers: job_headers,
     body: job_body,
@@ -44,17 +46,27 @@ router.delete('/delete', async (req, res) => {
 router.get('/delete/:id', async (req, res) => {
   const id = req.params.id;
   const job = await environmentDeleteQueue.getJob(id);
-  if (job === null) {
-    return res.status(400).end();
-  } else {
-    const jobState = await job.getState();
-    const jobFailReason = job.failedReason;
-    let jobResult;
-    if (jobState === 'completed') {
-      jobResult = await job.finished();
-    }
-    return res.json({ id, jobState, jobFailReason, jobResult });
-  }
+  return await handleJobResponse(res, id, job);
+});
+
+router.post('/dataset/data', async (req, res) => {
+  delete req.headers['content-length'];
+  const job_headers = createJobHeader(req, 'multipart/form-data');
+  const job_body = createJobBody(req);
+  const job = await environmentDatasetQueue.add({
+    headers: job_headers,
+    body: job_body,
+    endpoint: '/data',
+  });
+  return res
+    .status(202)
+    .json({ jobLink: `/api/environment/dataset/${job.id}` });
+});
+
+router.get('/dataset/:id', async (req, res) => {
+  const id = req.params.id;
+  const job = await environmentDatasetQueue.getJob(id);
+  return await handleJobResponse(res, id, job);
 });
 
 module.exports = router;
