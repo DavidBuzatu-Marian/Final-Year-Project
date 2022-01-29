@@ -53,10 +53,11 @@ router.post('/dataset/data', async (req, res) => {
   delete req.headers['content-length'];
   const job_headers = createJobHeader(req, 'multipart/form-data');
   const job_body = createJobBody(req);
+  console.log(req.body);
   const job = await environmentDatasetQueue.add({
     headers: job_headers,
     body: job_body,
-    endpoint: '/data',
+    endpoint: `/data?user_id=${req.query.user_id}&environment_id=${req.query.environment_id}`,
   });
   return res
     .status(202)

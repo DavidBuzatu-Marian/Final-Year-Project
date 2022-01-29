@@ -16,6 +16,7 @@
     "bull": "^4.4.0",
     "config": "^3.3.7",
     "express": "^4.17.2",
+    "express-fileupload": "^1.2.1",
     "mongoose": "^6.1.8",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15",

@@ -10,6 +10,7 @@ const ROUTES = [
       onProxyReq: (proxyReq, req) => {
         proxyReq.setHeader('x-auth', req.user._id);
         fixRequestBody(proxyReq, req);
+        proxyReq.write(JSON.stringify(req.files));
       },
     },
   },

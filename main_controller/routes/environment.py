@@ -48,9 +48,12 @@ def environment_dataset_data():
     environment_data_distribution = get_environment_data_distribution(
         mongo.db, environment_id, user_id
     )
+    error("here")
     for environment_ip, _ in environment_data_distribution["distributions"].items():
         if not (environment_ip in environment["environment_ips"]):
             return (jsonify("Environment ip is invalid"), 400)
+    error("here2")
+    error(len(request.files))
     post_data_distribution(
         request.files, environment_data_distribution["distributions"]
     )
