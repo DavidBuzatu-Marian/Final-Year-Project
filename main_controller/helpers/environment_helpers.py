@@ -87,7 +87,6 @@ def apply_terraform(user_id, environments):
         capture_output=True,
         text=True,
     )
-    error(terraform_apply_result)
     if terraform_apply_result.returncode != 0:
         destroy_terraform(user_id)
         abort(
