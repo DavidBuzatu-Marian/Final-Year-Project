@@ -19,7 +19,7 @@ environmentCreateQueue.process(async (job) => {
     { headers: job.data.headers, timeout: 1000 * 60 * 10 }
   );
 
-  done(null, res.data);
+  done(null, { resData: res.data });
 });
 
 module.exports = { environmentCreateQueue };

@@ -1,13 +1,30 @@
 const express = require('express');
+const { healthQueue } = require('../workers/health/health');
 const router = express.Router();
-const axios = require('axios');
 
 router.get('/status', async (req, res) => {
-  const health_res = await axios.get(
-    'http://host.docker.internal:3000/health/status',
-    { headers: req.headers }
-  );
-  res.json({ user_id: req.headers['x-auth'], resp: health_res.data });
+  delete req.headers['content-length'];
+  const job_headers = { ...req.headers, 'content-type': 'application/json' };
+  const job = await healthQueue.add({
+    headers: job_headers,
+  });
+  return res.status(202).json({ jobLink: `/api/health/status/${job.id}` });
+});
+
+router.get('/status/:id', async (req, res) => {
+  const id = req.params.id;
+  const job = await healthQueue.getJob(id);
+  if (job === null) {
+    return res.status(400).end();
+  } else {
+    const jobState = await job.getState();
+    const jobFailReason = job.failedReason;
+    let jobResult;
+    if (jobState === 'completed') {
+      jobResult = await job.finished();
+    }
+    return res.json({ id, jobState, jobFailReason, jobResult });
+  }
 });
 
 module.exports = router;
