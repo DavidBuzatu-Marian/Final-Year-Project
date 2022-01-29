@@ -63,6 +63,20 @@ router.post('/dataset/data', async (req, res) => {
     .json({ jobLink: `/api/environment/dataset/${job.id}` });
 });
 
+router.post('/dataset/distribution', async (req, res) => {
+  delete req.headers['content-length'];
+  const job_headers = createJobHeader(req, 'application/json');
+  const job_body = createJobBody(req);
+  const job = await environmentDatasetQueue.add({
+    headers: job_headers,
+    body: job_body,
+    endpoint: '/distribution',
+  });
+  return res
+    .status(202)
+    .json({ jobLink: `/api/environment/dataset/${job.id}` });
+});
+
 router.get('/dataset/:id', async (req, res) => {
   const id = req.params.id;
   const job = await environmentDatasetQueue.getJob(id);

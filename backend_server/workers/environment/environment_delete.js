@@ -11,18 +11,22 @@ const environmentDeleteQueue = new Queue('environment-delete-queue', {
 });
 
 environmentDeleteQueue.process(async (job, done) => {
-  const res = await axios.delete(
-    `http://${config.get('loadBalancerIP')}:${config.get(
-      'loadBalancerPort'
-    )}/environment/delete`,
-    {
-      headers: job.data.headers,
-      timeout: 1000 * 60 * 10,
-      data: JSON.stringify(job.data.body),
-    }
-  );
+  try {
+    const res = await axios.delete(
+      `http://${config.get('loadBalancerIP')}:${config.get(
+        'loadBalancerPort'
+      )}/environment/delete`,
+      {
+        headers: job.data.headers,
+        timeout: 1000 * 60 * 10,
+        data: JSON.stringify(job.data.body),
+      }
+    );
 
-  done(null, { resData: res.data });
+    done(null, { resData: res.data });
+  } catch (err) {
+    return done(new Error(err));
+  }
 });
 
 module.exports = { environmentDeleteQueue };
