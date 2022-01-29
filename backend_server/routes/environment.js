@@ -3,10 +3,11 @@ const { environmentCreateQueue } = require('../workers/environment_create');
 const router = express.Router();
 
 router.post('/create', async (req, res) => {
+  delete req.headers['content-length'];
+  const job_headers = { ...req.headers, 'content-type': 'application/json' };
   const job_body = { ...req.body, user_id: req.headers['x-auth'] };
-  console.log(job_body);
   const job = await environmentCreateQueue.add({
-    headers: req.headers,
+    headers: job_headers,
     body: job_body,
   });
   return res.status(202).json({ jobLink: `/api/environment/create/${job.id}` });
