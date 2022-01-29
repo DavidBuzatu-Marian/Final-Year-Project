@@ -8,7 +8,7 @@ from flask import abort
 
 def save_ips_for_user(database, ips, user_id):
     db = database
-    environments_document = {"user_id": user_id, "environment_ips": []}
+    environments_document = {"user_id": ObjectId(user_id), "environment_ips": []}
     for ip in ips["value"]:
         environments_document["environment_ips"].append(ip)
     insert_result = db.environments_addresses.insert_one(environments_document)
@@ -18,21 +18,21 @@ def save_ips_for_user(database, ips, user_id):
 
 def delete_environment_for_user(database, environment_id, user_id):
     db = database
-    query = {"_id": ObjectId(environment_id), "user_id": user_id}
+    query = {"_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
     delete_result = db.environments_addresses.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
 
 
 def delete_environment_distribution(database, environment_id, user_id):
     db = database
-    query = {"_id": ObjectId(environment_id), "user_id": user_id}
+    query = {"_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
     delete_result = db.environments_data_distribution.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
 
 
 def get_environment(database, environment_id, user_id):
     db = database
-    query = {"user_id": user_id, "_id": ObjectId(environment_id)}
+    query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
     environment = db.environments_addresses.find_one(query)
     if environment == None:
         raise ValueError("Environment not found")
@@ -42,7 +42,7 @@ def get_environment(database, environment_id, user_id):
 
 def get_environment_data_distribution(database, environment_id, user_id):
     db = database
-    query = {"user_id": user_id, "_id": ObjectId(environment_id)}
+    query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
     data_distribution = db.environments_data_distribution.find_one(query)
     if data_distribution == None:
         raise ValueError("Environment distribution not found")
@@ -53,7 +53,7 @@ def save_environment_data_distribution(
     database, environment_id, user_id, distributions
 ):
     data_distribution_document = {
-        "user_id": user_id,
+        "user_id": ObjectId(user_id),
         "_id": ObjectId(environment_id),
         "distributions": distributions,
     }
@@ -75,18 +75,19 @@ def get_dataset_length(request_json):
 
 # TODO: Get user id from auhentication token
 def get_user_id(request_json):
-    return int(request_json["user_id"])
+    return request_json["user_id"]
 
 
 def apply_terraform(user_id, environments):
     terraform_apply_result = subprocess.run(
-        'cd ./terraform && terraform apply -var="nr_instances={}" -var="user_id={}" -auto-approve'.format(
+        'cd ./terraform && terraform init && terraform apply -var="nr_instances={}" -var="user_id={}" -auto-approve'.format(
             environments.get_nr_instances(), user_id
         ),
         shell=True,
         capture_output=True,
         text=True,
     )
+    error(terraform_apply_result)
     if terraform_apply_result.returncode != 0:
         destroy_terraform(user_id)
         abort(
@@ -139,7 +140,7 @@ def get_terraform_output():
 
 
 def get_environment_id(request_json):
-    return request_json["environment_id"]
+    return ObjectId(request_json["environment_id"])
 
 
 def to_json(object):

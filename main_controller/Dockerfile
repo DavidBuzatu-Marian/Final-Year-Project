@@ -18,5 +18,7 @@ RUN cd ./terraform && terraform init && cd ..
 ENV FLASK_ENV=development
 
 ENV FLASK_APP=app.py
+
+ENV GOOGLE_APPLICATION_CREDENTIALS='./terraform/finalyearproject-338819-12b837ed8475.json'
 # Host is chosen as 0.0.0.0 to make it available outside of container
 CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0" ]

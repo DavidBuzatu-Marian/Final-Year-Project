@@ -3,6 +3,7 @@ from flask import request
 import sys
 from flask.json import jsonify
 import random
+import json
 
 from app import app
 from app import mongo
@@ -19,8 +20,11 @@ except ImportError as exc:
 @app.route("/environment/create", methods=["POST"])
 def environment_create():
     environments = Environment(request.json)
+    error(environments.get_nr_instances())
     user_id = get_user_id(request.json)
+    error(user_id)
     apply_terraform(user_id, environments)
+    error(user_id)
     output = get_terraform_output()
     json_output = to_json(output)
     save_ips_for_user(mongo.db, json_output["gci_instances_ids"], user_id)
