@@ -10,8 +10,11 @@ const ROUTES = [
       onProxyReq: (proxyReq, req) => {
         proxyReq.setHeader('x-auth', req.user._id);
         fixRequestBody(proxyReq, req);
-        if (req.headers.hasOwnProperty('content-length')) {
-          proxyReq.setHeader('content-length', req.headers['content-length']);
+        // if (req.headers.hasOwnProperty('content-length')) {
+        //   proxyReq.setHeader('content-length', req.headers['content-length']);
+        // }
+        if (req.files !== undefined) {
+          proxyReq.files = req.files;
         }
       },
     },

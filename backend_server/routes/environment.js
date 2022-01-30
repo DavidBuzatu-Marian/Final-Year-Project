@@ -1,4 +1,12 @@
 const express = require('express');
+const multer = require('multer');
+const upload = multer({
+  dest: 'temp/',
+  onError: function (err, next) {
+    console.log('error', err);
+    next(err);
+  },
+});
 const {
   handleJobResponse,
   createJobBody,
@@ -49,20 +57,27 @@ router.get('/delete/:id', async (req, res) => {
   return await handleJobResponse(res, id, job);
 });
 
-router.post('/dataset/data', async (req, res) => {
-  delete req.headers['content-length'];
-  const job_headers = createJobHeader(req, 'multipart/form-data');
-  const job_body = createJobBody(req);
-  console.log(req.body);
-  const job = await environmentDatasetQueue.add({
-    headers: job_headers,
-    body: job_body,
-    endpoint: `/data?user_id=${req.query.user_id}&environment_id=${req.query.environment_id}`,
-  });
-  return res
-    .status(202)
-    .json({ jobLink: `/api/environment/dataset/${job.id}` });
-});
+router.post(
+  '/dataset/data',
+  upload.fields([
+    { name: 'train_data', maxCount: 10000 },
+    { name: 'train_labels', maxCount: 10000 },
+  ]),
+  async (req, res) => {
+    delete req.headers['content-length'];
+    const job_headers = createJobHeader(req, 'multipart/form-data');
+    const job_body = createJobBody(req);
+    console.log(req.files);
+    const job = await environmentDatasetQueue.add({
+      headers: job_headers,
+      body: job_body,
+      endpoint: `/data?user_id=${req.query.user_id}&environment_id=${req.query.environment_id}`,
+    });
+    return res
+      .status(202)
+      .json({ jobLink: `/api/environment/dataset/${job.id}` });
+  }
+);
 
 router.post('/dataset/distribution', async (req, res) => {
   delete req.headers['content-length'];

@@ -12,7 +12,13 @@ connectToMongoDB();
 registerLoggerInApp(app);
 
 // Set-up json and form data parser
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    limit: '1gb',
+    parameterLimit: 1000000,
+  })
+);
 app.use(express.json());
 
 // Routes

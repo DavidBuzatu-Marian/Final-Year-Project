@@ -7,7 +7,6 @@ const app = express();
 const { connectToMongoDB } = require('./config/mongo');
 const { registerLoggerInApp } = require('./logs/loger');
 const { configureProxyWithApplication } = require('./routes/proxy');
-const fileUpload = require('express-fileupload');
 const ROUTES = require('./routes/routes');
 // Connect to Mongo
 connectToMongoDB();
@@ -33,8 +32,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use(express.json());
-app.use(fileUpload());
 // Routes
+app.use('/api/environment', require('./routes/environment'));
 app.use('/api/auth', require('./routes/auth'));
 
 // Proxy
