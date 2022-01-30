@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const session = require('express-session');
 const config = require('config');
 const passport = require('passport');
@@ -26,11 +25,6 @@ app.use(
   })
 );
 
-// Set-up json and form data parser
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(fileUpload());
-
 // Set-up passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -38,11 +32,14 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(express.json());
+app.use(fileUpload());
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 
 // Proxy
 configureProxyWithApplication(app, ROUTES);
+
 // Start server
 const PORT = config.get('port') || 5002;
 app.listen(PORT, (err) => {
