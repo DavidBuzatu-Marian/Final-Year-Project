@@ -11,14 +11,18 @@ const healthQueue = new Queue('health-queue', {
 });
 
 healthQueue.process(async (job, done) => {
-  const res = await axios.get(
-    `http://${config.get('loadBalancerIP')}:${config.get(
-      'loadBalancerPort'
-    )}/health/status`,
-    { headers: job.data.headers }
-  );
+  try {
+    const res = await axios.get(
+      `http://${config.get('loadBalancerIP')}:${config.get(
+        'loadBalancerPort'
+      )}/health/status`,
+      { headers: job.data.headers }
+    );
 
-  done(null, { data: res.data });
+    done(null, { data: res.data });
+  } catch (err) {
+    return done(new Error(err));
+  }
 });
 
 module.exports = { healthQueue };

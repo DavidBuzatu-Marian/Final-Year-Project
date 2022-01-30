@@ -146,3 +146,4 @@
 ::ffff:172.20.0.1 - - [29/Jan/2022:20:06:30 +0000] "POST /api/environment/dataset/data?user_id=61f141cfbf9f948c588baca4&environment_id=61f55e45e486c02af5540fc3 HTTP/1.1" 202 41 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.20.0.1 - - [29/Jan/2022:20:30:19 +0000] "POST /api/environment/dataset/data?user_id=61f141cfbf9f948c588baca4&environment_id=61f55e45e486c02af5540fc3 HTTP/1.1" 202 41 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.20.0.1 - - [29/Jan/2022:20:56:21 +0000] "POST /api/environment/dataset/data?user_id=61f141cfbf9f948c588baca4&environment_id=61f55e45e486c02af5540fc3 HTTP/1.1" 202 41 "-" "PostmanRuntime/7.29.0"
+::ffff:172.20.0.1 - - [30/Jan/2022:15:33:36 +0000] "GET /api/health/status HTTP/1.1" 202 34 "-" "PostmanRuntime/7.29.0"
