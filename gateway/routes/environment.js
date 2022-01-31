@@ -6,9 +6,7 @@ const FormData = require('form-data');
 const multer = require('multer');
 const upload = multer({ dest: 'temp/' });
 const fs = require('fs');
-const { promisify } = require('util');
-
-const unlinkAsync = promisify(fs.unlink);
+const { deleteLocalFiles } = require('../hooks/upload');
 
 router.post(
   '/dataset/data',
@@ -44,11 +42,7 @@ router.post(
       console.log(error);
       res.sendStatus(500);
     } finally {
-      for (key in req.files) {
-        for (file of req.files[key]) {
-          await unlinkAsync(file.path);
-        }
-      }
+      deleteLocalFiles(req);
     }
   }
 );
