@@ -13,6 +13,9 @@ const handleJobResponse = async (res, id, job) => {
 };
 
 const createJobBody = (req) => {
+  if (req.files) {
+    return { ...req.body, files: req.files, user_id: req.headers['x-auth'] };
+  }
   return { ...req.body, user_id: req.headers['x-auth'] };
 };
 

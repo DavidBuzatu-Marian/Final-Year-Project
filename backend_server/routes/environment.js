@@ -25,11 +25,11 @@ const router = express.Router();
 
 router.post('/create', async (req, res) => {
   delete req.headers['content-length'];
-  const job_headers = createJobHeader(req, 'application/json');
-  const job_body = createJobBody(req);
+  const jobHeader = createJobHeader(req, 'application/json');
+  const jobBody = createJobBody(req);
   const job = await environmentCreateQueue.add({
-    headers: job_headers,
-    body: job_body,
+    headers: jobHeader,
+    body: jobBody,
   });
   return res.status(202).json({ jobLink: `/api/environment/create/${job.id}` });
 });
@@ -42,11 +42,11 @@ router.get('/create/:id', async (req, res) => {
 
 router.delete('/delete', async (req, res) => {
   delete req.headers['content-length'];
-  const job_headers = createJobHeader(req, 'application/json');
-  const job_body = createJobBody(req);
+  const jobHeader = createJobHeader(req, 'application/json');
+  const jobBody = createJobBody(req);
   const job = await environmentDeleteQueue.add({
-    headers: job_headers,
-    body: job_body,
+    headers: jobHeader,
+    body: jobBody,
   });
   return res.status(202).json({ jobLink: `/api/environment/delete/${job.id}` });
 });
@@ -65,11 +65,11 @@ router.post(
   ]),
   async (req, res) => {
     delete req.headers['content-length'];
-    const job_headers = createJobHeader(req, 'multipart/form-data');
-    const job_body = createJobBody(req);
+    const jobHeader = createJobHeader(req, 'multipart/form-data');
+    const jobBody = createJobBody(req);
     const job = await environmentDatasetQueue.add({
-      headers: job_headers,
-      body: job_body,
+      headers: jobHeader,
+      body: jobBody,
       endpoint: `/data?user_id=${req.query.user_id}&environment_id=${req.query.environment_id}`,
     });
     return res
@@ -80,11 +80,11 @@ router.post(
 
 router.post('/dataset/distribution', async (req, res) => {
   delete req.headers['content-length'];
-  const job_headers = createJobHeader(req, 'application/json');
-  const job_body = createJobBody(req);
+  const jobHeader = createJobHeader(req, 'application/json');
+  const jobBody = createJobBody(req);
   const job = await environmentDatasetQueue.add({
-    headers: job_headers,
-    body: job_body,
+    headers: jobHeader,
+    body: jobBody,
     endpoint: '/distribution',
   });
   return res
