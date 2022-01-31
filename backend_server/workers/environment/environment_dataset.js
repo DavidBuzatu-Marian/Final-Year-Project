@@ -3,6 +3,7 @@ const config = require('config');
 const axios = require('axios');
 const fs = require('fs');
 const { deleteLocalFiles } = require('../../hooks/upload');
+const FormData = require('form-data');
 
 const environmentDatasetQueue = new Queue('environment-dataset-queue', {
   redis: {
@@ -34,6 +35,7 @@ const makeAxiosRequest = async (job) => {
         formData.append(key, fs.createReadStream(file.path));
       }
     }
+    console.log(formData);
     return await axios.post(
       `http://${config.get('loadBalancerIP')}:${config.get(
         'loadBalancerPort'
