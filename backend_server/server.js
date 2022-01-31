@@ -16,7 +16,6 @@ app.use(
   bodyParser.urlencoded({
     extended: true,
     limit: '1gb',
-    parameterLimit: 1000000,
   })
 );
 app.use(express.json());
@@ -24,6 +23,7 @@ app.use(express.json());
 // Routes
 app.use('/api/environment', require('./routes/environment'));
 app.use('/api/health', require('./routes/health'));
+app.use('/api/model', require('./routes/model'));
 // Start server
 const PORT = config.get('port') || 5005;
 app.listen(PORT, (err) => {

@@ -2,7 +2,7 @@ const Queue = require('bull');
 const config = require('config');
 const axios = require('axios');
 
-const environmentCreateQueue = new Queue('environment-create-queue', {
+const modelCreateQueue = new Queue('model-create-queue', {
   redis: {
     port: config.get('redisPort'),
     host: config.get('redisIP'),
@@ -10,12 +10,12 @@ const environmentCreateQueue = new Queue('environment-create-queue', {
   },
 });
 
-environmentCreateQueue.process(async (job, done) => {
+modelCreateQueue.process(async (job, done) => {
   try {
     const res = await axios.post(
       `http://${config.get('loadBalancerIP')}:${config.get(
         'loadBalancerPort'
-      )}/environment/create`,
+      )}/model/create`,
       JSON.stringify(job.data.body),
       { headers: job.data.headers, timeout: 1000 * 60 * 10 }
     );
@@ -26,4 +26,4 @@ environmentCreateQueue.process(async (job, done) => {
   }
 });
 
-module.exports = { environmentCreateQueue };
+module.exports = { modelCreateQueue };
