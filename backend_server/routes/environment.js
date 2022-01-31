@@ -67,7 +67,6 @@ router.post(
     delete req.headers['content-length'];
     const job_headers = createJobHeader(req, 'multipart/form-data');
     const job_body = createJobBody(req);
-    console.log(req.files);
     const job = await environmentDatasetQueue.add({
       headers: job_headers,
       body: job_body,
