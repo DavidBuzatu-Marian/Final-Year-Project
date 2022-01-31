@@ -35,7 +35,6 @@ const makeAxiosRequest = async (job) => {
         formData.append(key, fs.createReadStream(file.path));
       }
     }
-    console.log(formData);
     return await axios.post(
       `http://${config.get('loadBalancerIP')}:${config.get(
         'loadBalancerPort'

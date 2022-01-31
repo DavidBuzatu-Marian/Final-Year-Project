@@ -192,3 +192,6 @@
 ::ffff:172.20.0.1 - - [31/Jan/2022:18:17:25 +0000] "POST /api/environment/dataset/data?user_id=61f141cfbf9f948c588baca4&environment_id=61f55e45e486c02af5540fc3 HTTP/1.1" 202 41 "-" "axios/0.25.0"
 ::ffff:172.20.0.1 - - [31/Jan/2022:18:17:49 +0000] "GET /api/environment/dataset/71 HTTP/1.1" 200 92 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.20.0.1 - - [31/Jan/2022:18:21:00 +0000] "POST /api/environment/dataset/data?user_id=61f141cfbf9f948c588baca4&environment_id=61f55e45e486c02af5540fc3 HTTP/1.1" 202 41 "-" "axios/0.25.0"
+::ffff:172.20.0.1 - - [31/Jan/2022:20:21:51 +0000] "POST /api/environment/dataset/data?user_id=61f141cfbf9f948c588baca4&environment_id=61f55e45e486c02af5540fc3 HTTP/1.1" 202 41 "-" "axios/0.25.0"
+::ffff:172.20.0.1 - - [31/Jan/2022:20:21:59 +0000] "GET /api/environment/dataset/73 HTTP/1.1" 200 31 "-" "PostmanRuntime/7.29.0"
+::ffff:172.20.0.1 - - [31/Jan/2022:20:22:10 +0000] "GET /api/environment/dataset/73 HTTP/1.1" 200 84 "-" "PostmanRuntime/7.29.0"

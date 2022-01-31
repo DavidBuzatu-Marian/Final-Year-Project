@@ -1,12 +1,5 @@
 const express = require('express');
 const multer = require('multer');
-const upload = multer({
-  dest: 'temp/',
-  onError: function (err, next) {
-    console.log('error', err);
-    next(err);
-  },
-});
 const {
   handleJobResponse,
   createJobBody,
@@ -22,6 +15,14 @@ const {
   environmentDeleteQueue,
 } = require('../workers/environment/environment_delete');
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: './temp/',
+  filename: (_, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 
 router.post('/create', async (req, res) => {
   delete req.headers['content-length'];
