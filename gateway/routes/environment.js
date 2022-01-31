@@ -7,13 +7,16 @@ const multer = require('multer');
 const upload = multer({ dest: 'temp/' });
 const fs = require('fs');
 const { deleteLocalFiles } = require('../hooks/upload');
-
+const { ensureAuthenticated } = require('../middleware/auth');
 router.post(
   '/dataset/data',
-  upload.fields([
-    { name: 'train_data', maxCount: 10000 },
-    { name: 'train_labels', maxCount: 10000 },
-  ]),
+  [
+    ensureAuthenticated,
+    upload.fields([
+      { name: 'train_data', maxCount: 10000 },
+      { name: 'train_labels', maxCount: 10000 },
+    ]),
+  ],
   async (req, res) => {
     try {
       let formData = new FormData();
