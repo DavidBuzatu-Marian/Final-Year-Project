@@ -4,10 +4,18 @@ const axios = require('axios');
 const config = require('config');
 const FormData = require('form-data');
 const multer = require('multer');
-const upload = multer({ dest: 'temp/' });
 const fs = require('fs');
 const { deleteLocalFiles } = require('../hooks/upload');
 const { ensureAuthenticated } = require('../middleware/auth');
+
+const storage = multer.diskStorage({
+  destination: './temp/',
+  filename: (_, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
+
 router.post(
   '/dataset/data',
   [
