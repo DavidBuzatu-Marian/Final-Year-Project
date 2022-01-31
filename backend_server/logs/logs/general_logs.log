@@ -199,3 +199,5 @@
 ::ffff:172.20.0.1 - - [31/Jan/2022:20:30:11 +0000] "GET /api/environment/dataset/74 HTTP/1.1" 200 84 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.20.0.1 - - [31/Jan/2022:20:40:50 +0000] "POST /api/model/create HTTP/1.1" 202 33 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.20.0.1 - - [31/Jan/2022:20:40:58 +0000] "GET /api/model/create/1 HTTP/1.1" 200 68 "-" "PostmanRuntime/7.29.0"
+::ffff:172.20.0.1 - - [31/Jan/2022:20:41:48 +0000] "POST /api/model/create HTTP/1.1" 202 33 "-" "PostmanRuntime/7.29.0"
+::ffff:172.20.0.1 - - [31/Jan/2022:20:41:51 +0000] "GET /api/model/create/2 HTTP/1.1" 200 87 "-" "PostmanRuntime/7.29.0"
