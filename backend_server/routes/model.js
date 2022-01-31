@@ -1,45 +1,41 @@
 const express = require('express');
 const router = express.Router();
-const { modelCreateQueue } = require('../workers/model/model_create');
+const { strategyMap, QueueStrategy } = require('../workers/strategy');
 
 const {
   handleJobResponse,
   createJobBody,
   createJobHeader,
 } = require('../hooks/environment');
-const { modelTrainQueue } = require('../workers/model/model_train');
 
-router.post('/create', async (req, res) => {
+router.post('/*', async (req, res) => {
+  if (!strategyMap.has(req.originalUrl)) {
+    return res.statusCode(404);
+  }
+  const routeStrategy = new QueueStrategy();
+  routeStrategy.setStrategy(strategyMap.get(req.originalUrl));
   delete req.headers['content-length'];
   const jobHeader = createJobHeader(req, 'application/json');
   const jobBody = createJobBody(req);
-  const job = await modelCreateQueue.add({
+  const job = await routeStrategy.add({
     headers: jobHeader,
     body: jobBody,
   });
   return res.status(202).json({ jobLink: `/api/model/create/${job.id}` });
 });
 
-router.get('/create/:id', async (req, res) => {
-  const id = req.params.id;
-  const job = await modelCreateQueue.getJob(id);
-  return await handleJobResponse(res, id, job);
-});
+router.get('/*:id', async (req, res) => {
+  let url = req.originalUrl.split('/');
+  url.pop();
+  url = url.join('/');
 
-router.post('/train', async (req, res) => {
-  delete req.headers['content-length'];
-  const jobHeader = createJobHeader(req, 'application/json');
-  const jobBody = createJobBody(req);
-  const job = await modelTrainQueue.add({
-    headers: jobHeader,
-    body: jobBody,
-  });
-  return res.status(202).json({ jobLink: `/api/model/train/${job.id}` });
-});
-
-router.get('/train/:id', async (req, res) => {
+  if (!strategyMap.has(url)) {
+    return res.status(404).send('Endpoint not found');
+  }
+  const routeStrategy = new QueueStrategy();
+  routeStrategy.setStrategy(strategyMap.get(url));
   const id = req.params.id;
-  const job = await modelTrainQueue.getJob(id);
+  const job = await routeStrategy.getJob(id);
   return await handleJobResponse(res, id, job);
 });
 

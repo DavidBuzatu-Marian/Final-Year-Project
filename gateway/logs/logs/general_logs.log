@@ -356,3 +356,6 @@
 ::ffff:172.19.0.1 - - [31/Jan/2022:20:40:58 +0000] "GET /backend/api/model/create/1 HTTP/1.1" 200 68 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.19.0.1 - - [31/Jan/2022:20:41:48 +0000] "POST /backend/api/model/create HTTP/1.1" 202 33 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.19.0.1 - - [31/Jan/2022:20:41:51 +0000] "GET /backend/api/model/create/2 HTTP/1.1" 200 87 "-" "PostmanRuntime/7.29.0"
+::ffff:172.19.0.1 - - [31/Jan/2022:21:04:09 +0000] "GET /backend/api/model/train HTTP/1.1" 404 154 "-" "PostmanRuntime/7.29.0"
+::ffff:172.19.0.1 - - [31/Jan/2022:21:04:34 +0000] "POST /backend/api/model/train HTTP/1.1" 202 32 "-" "PostmanRuntime/7.29.0"
+::ffff:172.19.0.1 - - [31/Jan/2022:21:04:58 +0000] "GET /backend/api/model/train/1 HTTP/1.1" 200 5409 "-" "PostmanRuntime/7.29.0"
