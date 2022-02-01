@@ -67,3 +67,5 @@ node_modules
 default.json
 
 ssl-certs/
+
+.next
