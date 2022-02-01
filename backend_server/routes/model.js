@@ -22,7 +22,7 @@ router.post('/*', async (req, res) => {
     headers: jobHeader,
     body: jobBody,
   });
-  return res.status(202).json({ jobLink: `/api/model/create/${job.id}` });
+  return res.status(202).json({ jobLink: `${req.originalUrl}/${job.id}` });
 });
 
 router.get('/*:id', async (req, res) => {
