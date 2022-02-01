@@ -62,3 +62,14 @@ def process_output(output, processors):
     for proc in processors:
         output = proc(output, dim=1)
     return output
+
+
+def get_loss_type(request_json):
+    if request_json["loss_type"] == "training":
+        return {"data_path": "TRAIN_DATA_PATH", "labels_path": "TRAIN_LABELS_PATH"}
+    if request_json["loss_type"] == "test":
+        return {"data_path": "TEST_DATA_PATH", "labels_path": "TEST_LABELS_PATH"}
+    return {
+        "data_path": "VALIDATION_DATA_PATH",
+        "labels_path": "VALIDATION_LABELS_PATH",
+    }

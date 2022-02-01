@@ -29,6 +29,35 @@ def model_create():
     return jsonify(repr(model._model))
 
 
+@app.route("/model/loss", methods=["POST"])
+def model_validate():
+    path = os.getenv("MODEL_PATH")
+    model = read_model_from_path(path)
+    loss_func = get_loss(request.json)
+    hyperparameters = get_hyperparameters(request.json)
+
+    loss_type = get_loss_type(request.json)
+
+    validation_dataloader = get_dataloader(
+        data_path=os.getenv(loss_type["data_path"]),
+        labels_path=os.getenv(loss_type["labels_path"]),
+        hyperparameters=hyperparameters,
+    )
+
+    total_loss = 0
+
+    with torch.no_grad():
+        for data, label in validation_dataloader:
+            data = reshape_data(data, hyperparameters)
+            data = normalize_data(data, hyperparameters)
+            output = model(data)
+
+            loss = loss_func(output, label.to(torch.int64))
+            total_loss = loss.item()
+
+    return json.dumps({"total_loss": total_loss / len(validation_dataloader)})
+
+
 @app.route("/model/train", methods=["POST"])
 def model_train():
     path = os.getenv("MODEL_PATH")

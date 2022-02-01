@@ -15,7 +15,7 @@ except ImportError as exc:
 
 # TODO: Change this to a parameter during training
 MAX_TRIALS = 10
-REQUIRED_INSTANCES = 2
+REQUIRED_INSTANCES = 1
 
 
 @app.route("/model/train", methods=["POST"])
@@ -44,3 +44,15 @@ def model_create():
     create_model(environment["environment_ips"], model_network_options)
 
     return "Created models on instances"
+
+
+@app.route("/model/loss", methods=["POST"])
+def model_loss():
+    user_id = get_user_id(request.json)
+    environment_id = get_environment_id(request.json)
+    environment = get_environment(mongo.db, environment_id, user_id)
+    instance_training_parameters = get_instance_training_parameters(request.json)
+    losses = compute_losses(
+        instance_training_parameters, environment["environment_ips"]
+    )
+    return json.dumps(losses)
