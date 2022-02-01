@@ -26,11 +26,11 @@ router.post('/*', async (req, res) => {
 });
 
 router.get('/*:id', async (req, res) => {
-  let url = removeUrlParams(req.originalUrl);
-
+  const url = removeUrlParams(req.originalUrl);
   if (!strategyMap.has(url)) {
     return res.status(404).send('Endpoint not found');
   }
+
   const routeStrategy = new QueueStrategy();
   routeStrategy.setStrategy(strategyMap.get(url));
   const id = req.params.id;

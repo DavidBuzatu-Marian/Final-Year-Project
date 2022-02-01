@@ -1,3 +1,4 @@
+const { healthQueue } = require('./health/health');
 const { modelCreateQueue } = require('./model/model_create');
 const { modelTrainQueue } = require('./model/model_train');
 
@@ -18,5 +19,6 @@ class QueueStrategy {
 const strategyMap = new Map();
 strategyMap.set('/api/model/create', modelCreateQueue);
 strategyMap.set('/api/model/train', modelTrainQueue);
+strategyMap.set('/api/health/status', healthQueue);
 
 module.exports = { strategyMap, QueueStrategy };
