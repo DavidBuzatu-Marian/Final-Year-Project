@@ -4,8 +4,8 @@ services:
   flask-server:
     build: .
     image: "local_fyp_instance"
-    # volumes:
-    #   - ./:/app
+    volumes:
+      - ./:/app
     expose:
       - "5000"
 

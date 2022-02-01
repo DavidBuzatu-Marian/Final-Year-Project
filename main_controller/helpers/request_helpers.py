@@ -2,6 +2,7 @@ from collections import defaultdict
 from logging import error
 import requests
 from flask import abort
+import json
 
 
 def post_to_instance(url, data):
@@ -12,6 +13,8 @@ def post_to_instance(url, data):
         for file in value:
             files.append((file_type, (file.filename, file.read(), file.content_type)))
             file.seek(0)
+    if len(files) == 0:
+        abort(400, "No files selected")
     response = requests.post(url=url, files=files, timeout=10)
     if not response.ok:
         abort(
@@ -84,3 +87,15 @@ def post_data_to_instance(files, environment_ips):
         post_to_instance(
             "http://" + environment_ip + ":5000/dataset/add", instances_data
         )
+
+
+def compute_losses(request_json, environment_ips):
+    losses = dict()
+    for environment_ip in environment_ips:
+        losses[environment_ip] = json.dumps(
+            post_json_to_instance(
+                "http://" + environment_ip + ":5000/model/loss", request_json
+            ).content.decode("utf-8")
+        )
+    error(losses)
+    return losses

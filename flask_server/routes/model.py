@@ -55,7 +55,7 @@ def model_validate():
             loss = loss_func(output, label.to(torch.int64))
             total_loss = loss.item()
 
-    return jsonify({"total_loss": total_loss / len(validation_dataloader)})
+    return json.dumps({"total_loss": total_loss / len(validation_dataloader)})
 
 
 @app.route("/model/train", methods=["POST"])
