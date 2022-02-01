@@ -3,11 +3,13 @@ version: '3.8'
 services:
   main-controller-server:
     build: .
-    image: "eu.gcr.io/finalyearproject-338819/fyp_main_controller"
+    image: "local_fyp_main_controller"
     volumes:
       - ./:/app
     ports:
-      - "5001:5000"
+      - "5000-5001:5000"
+    expose:
+      - "5000"
 
 networks:
   default:

@@ -1,5 +1,6 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const { ensureAuthenticated } = require('../middleware/auth');
+
 const configureProxyWithApplication = (app, routes) => {
   routes.forEach((route) => {
     if (route.authenticated) {

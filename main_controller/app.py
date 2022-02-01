@@ -16,3 +16,4 @@ mongo = PyMongo(app)
 
 import routes.environment
 import routes.model
+import routes.health

@@ -1,7 +1,8 @@
 provider "google" {
-  project = "finalyearproject-338819"
-  region  = "europe-west1"
-  zone    = "europe-west1-b"
+  credentials = file("finalyearproject-338819-12b837ed8475.json")
+  project     = "finalyearproject-338819"
+  region      = "europe-west1"
+  zone        = "europe-west1-b"
 }
 
 
