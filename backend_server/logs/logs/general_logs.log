@@ -210,3 +210,5 @@
 ::ffff:172.20.0.1 - - [31/Jan/2022:22:03:45 +0000] "GET /api/model/creat HTTP/1.1" 404 18 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.20.0.1 - - [01/Feb/2022:07:24:23 +0000] "POST /api/model/train HTTP/1.1" 202 33 "-" "PostmanRuntime/7.29.0"
 ::ffff:172.20.0.1 - - [01/Feb/2022:07:24:31 +0000] "GET /api/model/train/2 HTTP/1.1" 200 94 "-" "PostmanRuntime/7.29.0"
+::ffff:172.20.0.1 - - [01/Feb/2022:07:30:32 +0000] "GET /api/health/status HTTP/1.1" 202 34 "-" "PostmanRuntime/7.29.0"
+::ffff:172.20.0.1 - - [01/Feb/2022:07:30:47 +0000] "GET /api/health/status/7 HTTP/1.1" 200 94 "-" "PostmanRuntime/7.29.0"

@@ -23,6 +23,7 @@ router.get('/status/:id', async (req, res) => {
   if (!strategyMap.has(url)) {
     return res.status(404).send('Endpoint not found');
   }
+
   const routeStrategy = new QueueStrategy();
   routeStrategy.setStrategy(strategyMap.get(url));
   const id = req.params.id;
