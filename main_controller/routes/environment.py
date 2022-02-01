@@ -58,6 +58,26 @@ def environment_dataset_data():
     return "Saved data in instances"
 
 
+@app.route("/environment/dataset/validation", methods=["POST"])
+def environment_dataset_validation():
+    user_id = get_user_id(request.args)
+    environment_id = get_environment_id(request.args)
+    environment = get_environment(mongo.db, environment_id, user_id)
+
+    post_data_to_instance(request.files, environment["environment_ips"])
+    return "Saved validation data in instances"
+
+
+@app.route("/environment/dataset/test", methods=["POST"])
+def environment_dataset_test():
+    user_id = get_user_id(request.args)
+    environment_id = get_environment_id(request.args)
+    environment = get_environment(mongo.db, environment_id, user_id)
+
+    post_data_to_instance(request.files, environment["environment_ips"])
+    return "Saved test data in instances"
+
+
 @app.route("/environment/dataset/distribution", methods=["POST"])
 def environment_dataset_distribution():
     user_id = get_user_id(request.json)

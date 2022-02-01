@@ -8,3 +8,4 @@ jsons
 python-terraform
 aiohttp
 requests
+celery

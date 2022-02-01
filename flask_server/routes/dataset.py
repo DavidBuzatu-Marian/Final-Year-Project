@@ -23,7 +23,7 @@ def dataset_add():
     if len(request.files) == 0:
         return (jsonify("At least a file needs to be selected"), 400)
     save_dataset(request)
-    delete_model_from_path(os.getenv("MODEL_PATH"))
+    # delete_model_from_path(os.getenv("MODEL_PATH"))
     return jsonify("Files saved successfully")
 
 
@@ -42,5 +42,5 @@ def dataset_remove():
             shutil.rmtree(path)
         except OSError as err:
             error(err)
-    delete_model_from_path(os.getenv("MODEL_PATH"))
+    # delete_model_from_path(os.getenv("MODEL_PATH"))
     return jsonify("Files and model deleted successfully")
