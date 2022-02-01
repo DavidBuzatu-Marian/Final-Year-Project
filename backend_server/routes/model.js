@@ -7,10 +7,11 @@ const {
   createJobBody,
   createJobHeader,
 } = require('../hooks/environment');
+const { removeUrlParams } = require('../hooks/url');
 
 router.post('/*', async (req, res) => {
   if (!strategyMap.has(req.originalUrl)) {
-    return res.statusCode(404);
+    return res.statusCode(404).send('Endpoint not found');
   }
   const routeStrategy = new QueueStrategy();
   routeStrategy.setStrategy(strategyMap.get(req.originalUrl));
@@ -25,9 +26,7 @@ router.post('/*', async (req, res) => {
 });
 
 router.get('/*:id', async (req, res) => {
-  let url = req.originalUrl.split('/');
-  url.pop();
-  url = url.join('/');
+  let url = removeUrlParams(req.originalUrl);
 
   if (!strategyMap.has(url)) {
     return res.status(404).send('Endpoint not found');
