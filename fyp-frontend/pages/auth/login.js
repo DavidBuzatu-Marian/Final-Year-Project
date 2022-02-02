@@ -5,6 +5,8 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
+import LoginForm from '../../components/auth/loginForm';
 
 const login = () => {
   return (
@@ -18,14 +20,46 @@ const login = () => {
           alignItems: 'center',
         }}
       >
-        <Card sx={{ mx: 'auto', my: '0', minWidth: '100%' }}>
-          <CardContent>
-            <Typography variant='h1' component='div'>
+        <Card
+          sx={{
+            mx: 'auto',
+            my: 2,
+            minWidth: '100%',
+            boxShadow: 3,
+          }}
+        >
+          <CardContent
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+            }}
+          >
+            <Typography
+              variant='h2'
+              component='div'
+              sx={{ fontWeight: 'bold' }}
+            >
               Login to FYP
             </Typography>
+            <LoginForm />
           </CardContent>
-          <CardActions>
-            <Button size='small'>Learn More</Button>
+          <CardActions
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+              mb: 1,
+            }}
+          >
+            <Button variant='outlined' size='large'>
+              Login
+            </Button>
+            <Typography sx={{ mt: 1 }} variant='body2'>
+              Not registered? Login here
+            </Typography>
           </CardActions>
         </Card>
       </Container>
