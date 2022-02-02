@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { FormControl } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
@@ -138,12 +138,16 @@ export default function RegisterForm() {
           error={formValues.passwordConfirmErrorText.length > 0}
           helperText={formValues.passwordConfirmErrorText}
         />
-      </FormControl>
-      <div style={{ marginTop: '1rem' }}>
-        <Button variant='outlined' size='large' disabled={checkErrors()}>
+        <LoadingButton
+          variant='outlined'
+          disabled={checkErrors()}
+          loadingPosition='end'
+          loading={false}
+          sx={{ marginTop: '1rem' }}
+        >
           Register
-        </Button>
-      </div>
+        </LoadingButton>
+      </FormControl>
     </Box>
   );
 }
