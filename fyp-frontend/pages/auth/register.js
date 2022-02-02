@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
-import LoginForm from '../../components/auth/loginForm';
+import RegisterForm from '../../components/auth/registerForm';
 import Link from 'next/link';
 import style from '../../styles/Utils.module.scss';
 const login = () => {
@@ -22,7 +22,7 @@ const login = () => {
     >
       <header>
         <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
-          Sign in to project
+          Sign up to project
         </Typography>
       </header>
       <section>
@@ -51,7 +51,7 @@ const login = () => {
                 flexDirection: 'column',
               }}
             >
-              <LoginForm />
+              <RegisterForm />
             </CardContent>
             <CardActions
               sx={{
@@ -60,8 +60,8 @@ const login = () => {
               }}
             >
               <Typography sx={{ mt: 1 }} variant='body2'>
-                Not registered? Sign up{' '}
-                <Link href='/auth/register'>
+                Already registered? Sign in{' '}
+                <Link href='/auth/login'>
                   <a className={style.form_link}>here</a>
                 </Link>
               </Typography>
