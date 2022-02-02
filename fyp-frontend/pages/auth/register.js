@@ -12,7 +12,7 @@ import style from '../../styles/Utils.module.scss';
 const login = () => {
   return (
     <Container
-      maxWidth='sm'
+      maxWidth='md'
       sx={{
         minHeight: '100vh',
         display: 'flex',

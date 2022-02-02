@@ -8,7 +8,7 @@ export default function LoginForm() {
     <Box
       component='form'
       sx={{
-        '& .MuiTextField-root': { width: '25ch', my: 1 },
+        '& .MuiTextField-root': { width: '35ch', my: 1 },
         mt: 1,
         mx: 'auto',
       }}
