@@ -7,63 +7,69 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import LoginForm from '../../components/auth/loginForm';
-
+import Link from 'next/link';
+import style from '../../styles/Utils.module.scss';
 const login = () => {
   return (
-    <section>
-      <Container
-        maxWidth='sm'
-        sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Card
+    <Container
+      maxWidth='sm'
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <header>
+        <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+          Sign in to project
+        </Typography>
+      </header>
+      <section>
+        <Container
+          maxWidth='sm'
           sx={{
-            mx: 'auto',
-            my: 2,
-            minWidth: '100%',
-            boxShadow: 3,
+            minHeight: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          <CardContent
+          <Card
             sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
+              mx: 'auto',
+              my: 2,
+              minWidth: '100%',
+              boxShadow: 3,
             }}
           >
-            <Typography
-              variant='h2'
-              component='div'
-              sx={{ fontWeight: 'bold' }}
+            <CardContent
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+              }}
             >
-              Login to FYP
-            </Typography>
-            <LoginForm />
-          </CardContent>
-          <CardActions
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              mb: 1,
-            }}
-          >
-            <Button variant='outlined' size='large'>
-              Login
-            </Button>
-            <Typography sx={{ mt: 1 }} variant='body2'>
-              Not registered? Login here
-            </Typography>
-          </CardActions>
-        </Card>
-      </Container>
-    </section>
+              <LoginForm />
+            </CardContent>
+            <CardActions
+              sx={{
+                mb: 1,
+                ml: 1.25,
+              }}
+            >
+              <Typography sx={{ mt: 1 }} variant='body2'>
+                Not registered? Login{' '}
+                <Link href='/auth/register'>
+                  <a className={style.form_link}>here</a>
+                </Link>
+              </Typography>
+            </CardActions>
+          </Card>
+        </Container>
+      </section>
+    </Container>
   );
 };
 

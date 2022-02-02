@@ -30,10 +30,15 @@ export default function Home() {
         </Typography>
 
         <Container sx={{ mt: 4 }}>
-          <Button variant='outlined' size='large' sx={{ mr: 2 }}>
+          <Button
+            href='/auth/register'
+            variant='outlined'
+            size='large'
+            sx={{ mr: 2 }}
+          >
             Sign Up
           </Button>
-          <Button variant='contained' size='large'>
+          <Button href='/auth/login' variant='contained' size='large'>
             Sign In
           </Button>
         </Container>

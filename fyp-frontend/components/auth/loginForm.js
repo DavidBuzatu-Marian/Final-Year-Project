@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 export default function LoginForm() {
   return (
@@ -8,9 +9,8 @@ export default function LoginForm() {
       component='form'
       sx={{
         '& .MuiTextField-root': { width: '25ch', my: 1 },
-        mt: 4,
+        mt: 1,
         mx: 'auto',
-        mb: 4,
       }}
       noValidate
       autoComplete='off'
@@ -25,6 +25,11 @@ export default function LoginForm() {
           type='password'
           autoComplete='current-password'
         />
+      </div>
+      <div style={{ marginTop: '1rem' }}>
+        <Button variant='outlined' size='large'>
+          Login
+        </Button>
       </div>
     </Box>
   );
