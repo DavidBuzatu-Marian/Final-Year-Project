@@ -3,10 +3,9 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { FormControl } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
+import { handleClickShowPassword, handleMouseDownPassword } from './hooks';
 
 export default function RegisterForm() {
   const [formValues, setFormValues] = React.useState({
@@ -50,17 +49,6 @@ export default function RegisterForm() {
     }
   };
 
-  const handleClickShowPassword = () => {
-    setFormValues({
-      ...formValues,
-      showPassword: !formValues.showPassword,
-    });
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   /* RegEx from: https://regexr.com/3bfsi*/
   const validatePassword = (password) => {
     const regEx = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).{8,}$';
@@ -71,6 +59,7 @@ export default function RegisterForm() {
     return errorMessage;
   };
 
+  /* regex from: https://stackoverflow.com/a/46181/11023871 */
   const validateEmail = (email) => {
     return String(email)
       .toLowerCase()
@@ -123,7 +112,9 @@ export default function RegisterForm() {
               <InputAdornment position='end'>
                 <IconButton
                   aria-label='toggle password visibility'
-                  onClick={handleClickShowPassword}
+                  onClick={() =>
+                    handleClickShowPassword(setFormValues, formValues)
+                  }
                   onMouseDown={handleMouseDownPassword}
                   edge='end'
                 >

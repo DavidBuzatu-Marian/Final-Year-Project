@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import LoginForm from '../../components/auth/loginForm';
 import Link from 'next/link';
 import style from '../../styles/Utils.module.scss';
+
 const login = () => {
   return (
     <Container
