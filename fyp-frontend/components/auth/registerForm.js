@@ -81,6 +81,17 @@ export default function RegisterForm() {
       : '';
   };
 
+  const checkErrors = () => {
+    return !(
+      formValues.passwordErrorText.length === 0 &&
+      formValues.passwordConfirmErrorText.length === 0 &&
+      formValues.emailErrorText.length === 0 &&
+      formValues.email.length > 0 &&
+      formValues.password.length > 0 &&
+      formValues.passwordConfirm.length > 0
+    );
+  };
+
   return (
     <Box
       component='form'
@@ -138,7 +149,7 @@ export default function RegisterForm() {
         />
       </FormControl>
       <div style={{ marginTop: '1rem' }}>
-        <Button variant='outlined' size='large'>
+        <Button variant='outlined' size='large' disabled={checkErrors()}>
           Register
         </Button>
       </div>
