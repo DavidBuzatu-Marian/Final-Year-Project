@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import { handleClickShowPassword, handleMouseDownPassword } from './hooks';
 import axios from 'axios';
 import { getConfig } from '../../config/defaultConfig';
+import ClosableAlert from '../alert/closableAlert';
 
 export default function RegisterForm() {
   const [formValues, setFormValues] = React.useState({
@@ -19,6 +20,7 @@ export default function RegisterForm() {
     passwordConfirmErrorText: '',
     emailErrorText: '',
     loading: false,
+    onSubmitError: false,
   });
 
   /* Added as per described in official documentation: https://mui.com/components/text-fields/#form-props
@@ -88,7 +90,7 @@ export default function RegisterForm() {
     event.preventDefault();
 
     setFormValues({ ...formValues, loading: true });
-
+    let onSubmitError = false;
     try {
       const res = await axios.post(getConfig()['registerUrl'], {
         email: formValues.email,
@@ -96,7 +98,7 @@ export default function RegisterForm() {
       });
       console.log(res);
     } catch (err) {
-      // TODO: Handle error
+      onSubmitError = true;
       console.log(err);
     } finally {
       setFormValues({
@@ -104,6 +106,7 @@ export default function RegisterForm() {
         password: '',
         passwordConfirm: '',
         loading: false,
+        onSubmitError,
       });
     }
   };
@@ -119,6 +122,13 @@ export default function RegisterForm() {
       autoComplete='off'
     >
       <FormControl>
+        {formValues.onSubmitError && (
+          <ClosableAlert
+            severity={'error'}
+            alertMessage={'Registration went wrong'}
+          />
+        )}
+
         <TextField
           id='outlined-required'
           label='Email'
