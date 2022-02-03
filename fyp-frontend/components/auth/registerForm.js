@@ -96,6 +96,7 @@ export default function RegisterForm() {
         email: formValues.email,
         password: formValues.password,
       });
+      // TODO: Redirect to dashboard
       console.log(res);
     } catch (err) {
       onSubmitError = true;

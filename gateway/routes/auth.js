@@ -7,7 +7,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
   res.json({ user_id: req.user._id });
 });
 
-router.get('/secret', ensureAuthenticated, (req, res) => {
+router.get('/authenticated', ensureAuthenticated, (req, res) => {
   res.json({ user_id: req.user._id });
 });
 
