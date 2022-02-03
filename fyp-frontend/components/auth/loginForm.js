@@ -1,17 +1,23 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import { handleClickShowPassword, handleMouseDownPassword } from './hooks';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import LoadingButton from '@mui/lab/LoadingButton';
+
+import axios from 'axios';
+import { getConfig } from '../../config/defaultConfig';
+import ClosableAlert from '../alert/closableAlert';
+
 export default function LoginForm() {
   const [formValues, setFormValues] = React.useState({
     email: '',
     password: '',
     showPassword: false,
+    loading: false,
+    onSubmitError: '',
   });
 
   const handleChange = (prop) => (event) => {
@@ -24,6 +30,30 @@ export default function LoginForm() {
   const checkErrors = () => {
     return !(formValues.email.length > 0 && formValues.password.length > 0);
   };
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+
+    setFormValues({ ...formValues, loading: true });
+    let onSubmitError = false;
+    try {
+      const res = await axios.post(getConfig()['loginUrl'], {
+        email: formValues.email,
+        password: formValues.password,
+      });
+      console.log(res);
+    } catch (err) {
+      onSubmitError = true;
+      console.log(err);
+    } finally {
+      setFormValues({
+        ...formValues,
+        password: '',
+        loading: false,
+        onSubmitError,
+      });
+    }
+  };
   return (
     <Box
       component='form'
@@ -32,10 +62,15 @@ export default function LoginForm() {
         mt: 1,
         mx: 'auto',
       }}
-      noValidate
       autoComplete='off'
     >
       <FormControl>
+        {formValues.onSubmitError && (
+          <ClosableAlert
+            severity={'error'}
+            alertMessage={'Signing in went wrong. Invalid email or password'}
+          />
+        )}
         <TextField
           id='outlined-required'
           label='Email'
@@ -68,21 +103,18 @@ export default function LoginForm() {
             ),
           }}
         />
-      </FormControl>
-      <div style={{ marginTop: '1rem' }}>
         <LoadingButton
           variant='outlined'
-          size='large'
           disabled={checkErrors()}
-          endIcon={
-            <span className='material-icons' loadingPosition='end'>
-              login
-            </span>
-          }
+          loadingPosition='end'
+          loading={formValues.loading}
+          endIcon={<span className='material-icons'>login</span>}
+          sx={{ mt: '1rem' }}
+          onClick={(event) => onSubmit(event)}
         >
           Login
         </LoadingButton>
-      </div>
+      </FormControl>
     </Box>
   );
 }

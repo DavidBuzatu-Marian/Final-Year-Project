@@ -7,7 +7,7 @@ export default function ClosableAlert({ severity, alertMessage }) {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '35ch' }}>
       <Collapse in={open}>
         <Alert
           action={
