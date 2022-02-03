@@ -6,6 +6,8 @@ import { FormControl } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import { handleClickShowPassword, handleMouseDownPassword } from './hooks';
+import axios from 'axios';
+import { getConfig } from '../../config/defaultConfig';
 
 export default function RegisterForm() {
   const [formValues, setFormValues] = React.useState({
@@ -16,6 +18,7 @@ export default function RegisterForm() {
     passwordErrorText: '',
     passwordConfirmErrorText: '',
     emailErrorText: '',
+    loading: false,
   });
 
   /* Added as per described in official documentation: https://mui.com/components/text-fields/#form-props
@@ -81,6 +84,30 @@ export default function RegisterForm() {
     );
   };
 
+  const onSubmit = async (event) => {
+    event.preventDefault();
+
+    setFormValues({ ...formValues, loading: true });
+
+    try {
+      const res = await axios.post(getConfig()['registerUrl'], {
+        email: formValues.email,
+        password: formValues.password,
+      });
+      console.log(res);
+    } catch (err) {
+      // TODO: Handle error
+      console.log(err);
+    } finally {
+      setFormValues({
+        ...formValues,
+        password: '',
+        passwordConfirm: '',
+        loading: false,
+      });
+    }
+  };
+
   return (
     <Box
       component='form'
@@ -95,6 +122,7 @@ export default function RegisterForm() {
         <TextField
           id='outlined-required'
           label='Email'
+          value={formValues.email}
           onChange={handleChange('email')}
           error={formValues.emailErrorText.length > 0}
           helperText={formValues.emailErrorText}
@@ -142,8 +170,10 @@ export default function RegisterForm() {
           variant='outlined'
           disabled={checkErrors()}
           loadingPosition='end'
-          loading={false}
+          loading={formValues.loading}
+          endIcon={<span className='material-icons'>send</span>}
           sx={{ marginTop: '1rem' }}
+          onClick={(event) => onSubmit(event)}
         >
           Register
         </LoadingButton>

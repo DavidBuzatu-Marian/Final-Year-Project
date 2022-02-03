@@ -6,6 +6,7 @@ import { handleClickShowPassword, handleMouseDownPassword } from './hooks';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
+import LoadingButton from '@mui/lab/LoadingButton';
 export default function LoginForm() {
   const [formValues, setFormValues] = React.useState({
     email: '',
@@ -69,9 +70,18 @@ export default function LoginForm() {
         />
       </FormControl>
       <div style={{ marginTop: '1rem' }}>
-        <Button variant='outlined' size='large' disabled={checkErrors()}>
+        <LoadingButton
+          variant='outlined'
+          size='large'
+          disabled={checkErrors()}
+          endIcon={
+            <span className='material-icons' loadingPosition='end'>
+              login
+            </span>
+          }
+        >
           Login
-        </Button>
+        </LoadingButton>
       </div>
     </Box>
   );
