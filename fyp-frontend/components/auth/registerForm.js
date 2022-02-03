@@ -59,7 +59,7 @@ export default function RegisterForm() {
     const regEx = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).{8,}$';
     const errorMessage =
       password.length > 0 && password.match(regEx) === null
-        ? 'Password needs to be at least 8 characters long, contain one uppercase and lowercase letter, and a number'
+        ? 'Password needs to be:\n- at least 8 characters long,\n- contain one uppercase letter\n- contain one lowercase letter,\n- a number.'
         : '';
     return errorMessage;
   };
@@ -116,6 +116,7 @@ export default function RegisterForm() {
       component='form'
       sx={{
         '& .MuiTextField-root': { width: '35ch', my: 1 },
+        '& .Mui-error': { whiteSpace: 'pre-wrap' },
         mt: 1,
         mx: 'auto',
       }}
