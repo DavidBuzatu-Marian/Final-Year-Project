@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -9,8 +9,17 @@ import TextField from '@mui/material/TextField';
 import LoginForm from '../../components/auth/loginForm';
 import Link from 'next/link';
 import style from '../../styles/Utils.module.scss';
+import { useUser } from '../../hooks/user';
+import Router from 'next/router';
+const Login = () => {
+  const [user] = useUser();
+  useEffect(() => {
+    console.log(user);
+    if (user) {
+      Router.push('/dashboard');
+    }
+  }, [user]);
 
-const login = () => {
   return (
     <Container
       maxWidth='md'
@@ -74,4 +83,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

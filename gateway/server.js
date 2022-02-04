@@ -8,11 +8,21 @@ const { connectToMongoDB } = require('./config/mongo');
 const { registerLoggerInApp } = require('./logs/loger');
 const { configureProxyWithApplication } = require('./routes/proxy');
 const ROUTES = require('./routes/routes');
+const cors = require('cors');
 // Connect to Mongo
 connectToMongoDB();
 
 // Set-up logger
 registerLoggerInApp(app);
+
+//CORS
+app.use(
+  cors({
+    credentials: true,
+    origin: config.get('originUrl'),
+    exposedHeaders: ['set-cookie'],
+  })
+);
 
 // Set-up session
 app.use(

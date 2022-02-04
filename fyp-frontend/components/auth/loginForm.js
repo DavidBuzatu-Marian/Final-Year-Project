@@ -6,7 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import { useUser } from '../../hooks/user';
 import axios from 'axios';
 import { getConfig } from '../../config/defaultConfig';
 import ClosableAlert from '../alert/closableAlert';
@@ -19,6 +19,7 @@ export default function LoginForm() {
     loading: false,
     onSubmitError: '',
   });
+  const [user, { mutate }, error] = useUser();
 
   const handleChange = (prop) => (event) => {
     setFormValues({
@@ -37,14 +38,17 @@ export default function LoginForm() {
     setFormValues({ ...formValues, loading: true });
     let onSubmitError = false;
     try {
-      const res = await axios.post(getConfig()['loginUrl'], {
-        email: formValues.email,
-        password: formValues.password,
-      });
-      console.log(res);
+      const res = await axios.post(
+        getConfig()['loginUrl'],
+        {
+          email: formValues.email,
+          password: formValues.password,
+        },
+        { withCredentials: true }
+      );
+      mutate(res.data);
     } catch (err) {
       onSubmitError = true;
-      console.log(err);
     } finally {
       setFormValues({
         ...formValues,
@@ -54,6 +58,7 @@ export default function LoginForm() {
       });
     }
   };
+
   return (
     <Box
       component='form'
