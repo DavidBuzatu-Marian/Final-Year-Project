@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
-import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useUser } from '../hooks/user';
 import Router from 'next/router';
 import DrawerMenu from '../components/dashboard/drawerMenu';
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 
+import EnvironmentsDataGridHeader from '../components/dashboard/environmentsDataGridHeader';
 const Dashboard = () => {
   const [user, { loading }] = useUser();
   useEffect(() => {
@@ -29,13 +28,8 @@ const Dashboard = () => {
       ) : (
         <>
           <DrawerMenu user={user} />
-          <section>
-            <Box
-              component='main'
-              sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
-            >
-              <Typography variant='h3'>Dashboard</Typography>
-            </Box>
+          <section style={{ width: '100%' }}>
+            <EnvironmentsDataGridHeader />
           </section>
         </>
       )}
