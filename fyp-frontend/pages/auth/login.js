@@ -11,14 +11,14 @@ import Link from 'next/link';
 import style from '../../styles/Utils.module.scss';
 import { useUser } from '../../hooks/user';
 import Router from 'next/router';
+import { CircularProgress } from '@mui/material';
 const Login = () => {
-  const [user] = useUser();
+  const [user, { loading }] = useUser();
   useEffect(() => {
-    console.log(user);
     if (user) {
       Router.push('/dashboard');
     }
-  }, [user]);
+  }, [user, loading]);
 
   return (
     <Container
@@ -30,55 +30,61 @@ const Login = () => {
         alignItems: 'center',
       }}
     >
-      <header>
-        <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
-          Sign in to project
-        </Typography>
-      </header>
-      <section>
-        <Container
-          maxWidth='sm'
-          sx={{
-            minHeight: '100vh',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Card
-            sx={{
-              mx: 'auto',
-              my: 2,
-              minWidth: '100%',
-              boxShadow: 3,
-            }}
-          >
-            <CardContent
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <header>
+            <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+              Sign in to project
+            </Typography>
+          </header>
+          <section>
+            <Container
+              maxWidth='sm'
               sx={{
+                minHeight: '100vh',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                flexDirection: 'column',
               }}
             >
-              <LoginForm />
-            </CardContent>
-            <CardActions
-              sx={{
-                mb: 1,
-                ml: 1.25,
-              }}
-            >
-              <Typography sx={{ mt: 1 }} variant='body2'>
-                Not registered? Sign up{' '}
-                <Link href='/auth/register'>
-                  <a className={style.form_link}>here</a>
-                </Link>
-              </Typography>
-            </CardActions>
-          </Card>
-        </Container>
-      </section>
+              <Card
+                sx={{
+                  mx: 'auto',
+                  my: 2,
+                  minWidth: '100%',
+                  boxShadow: 3,
+                }}
+              >
+                <CardContent
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <LoginForm />
+                </CardContent>
+                <CardActions
+                  sx={{
+                    mb: 1,
+                    ml: 1.25,
+                  }}
+                >
+                  <Typography sx={{ mt: 1 }} variant='body2'>
+                    Not registered? Sign up{' '}
+                    <Link href='/auth/register'>
+                      <a className={style.form_link}>here</a>
+                    </Link>
+                  </Typography>
+                </CardActions>
+              </Card>
+            </Container>
+          </section>
+        </>
+      )}
     </Container>
   );
 };

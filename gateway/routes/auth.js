@@ -4,13 +4,11 @@ const passport = require('passport');
 const { ensureAuthenticated } = require('../middleware/auth');
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
-  console.log(req);
-  res.json({ user_id: req.user._id });
+  res.json({ user_id: req.user._id, email: req.user.email });
 });
 
 router.get('/authenticated', ensureAuthenticated, (req, res) => {
-  console.log(req.cookies);
-  res.json({ user_id: req.user._id });
+  res.json({ user_id: req.user._id, email: req.user.email });
 });
 
 router.post('/register', (req, res) => {

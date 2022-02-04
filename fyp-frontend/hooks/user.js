@@ -15,7 +15,7 @@ export const useUser = () => {
     getConfig()['authenticatedUrl'],
     fetcher
   );
-  const loading = !data;
-  const user = data ? data.user_id : null;
+  const loading = !data && !error;
+  const user = data ? data : null;
   return [user, { mutate, loading }, error];
 };
