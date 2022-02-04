@@ -12,12 +12,17 @@ import style from '../../styles/Utils.module.scss';
 import { useUser } from '../../hooks/user';
 import Router from 'next/router';
 import { CircularProgress } from '@mui/material';
+import { useRouter } from 'next/router';
 
 const Register = () => {
+  const router = useRouter();
   const [user, { loading }] = useUser();
   useEffect(() => {
     if (user) {
-      Router.push('/dashboard');
+      const redirectUrl = router.query.afterLoginRedirect
+        ? router.query.afterLoginRedirect
+        : '/dashboard';
+      Router.push(redirectUrl);
     }
   }, [user, loading]);
   return (

@@ -15,7 +15,7 @@ const Dashboard = () => {
   useEffect(() => {
     console.log(user);
     if (!user) {
-      Router.push('/auth/login');
+      Router.push('/auth/login?afterLoginRedirect=dashboard');
     }
   }, [user]);
   return (

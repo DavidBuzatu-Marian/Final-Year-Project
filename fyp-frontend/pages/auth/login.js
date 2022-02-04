@@ -2,21 +2,25 @@ import React, { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
 import LoginForm from '../../components/auth/loginForm';
 import Link from 'next/link';
 import style from '../../styles/Utils.module.scss';
 import { useUser } from '../../hooks/user';
 import Router from 'next/router';
 import { CircularProgress } from '@mui/material';
+import { useRouter } from 'next/router';
+
 const Login = () => {
   const [user, { loading }] = useUser();
+  const router = useRouter();
   useEffect(() => {
     if (user) {
-      Router.push('/dashboard');
+      const redirectUrl = router.query.afterLoginRedirect
+        ? router.query.afterLoginRedirect
+        : '/dashboard';
+      Router.push(redirectUrl);
     }
   }, [user, loading]);
 
