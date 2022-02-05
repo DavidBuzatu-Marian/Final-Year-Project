@@ -10,13 +10,22 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
+import { logout } from '../auth/hooks';
+import { useUser } from '../../hooks/user';
+
 const drawerWidth = 240;
 
 const DrawerMenu = ({ user }) => {
+  const [_, { mutate }] = useUser();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   // As guided from documentation: https://mui.com/components/lists/
   const onClick = (event, index) => {
     setSelectedIndex(index);
+  };
+
+  const logoutUser = async () => {
+    await logout();
+    mutate(null);
   };
 
   return (
@@ -59,7 +68,6 @@ const DrawerMenu = ({ user }) => {
               ['Datasets', 'storage'],
             ].map((item, index) => (
               <ListItemButton
-                button
                 key={index}
                 selected={selectedIndex === index}
                 onClick={(event) => onClick(event, index)}
@@ -74,12 +82,12 @@ const DrawerMenu = ({ user }) => {
           <Divider />
           <List>
             {[['Logout', 'logout']].map((item, index) => (
-              <ListItem button key={index}>
+              <ListItemButton key={index} onClick={(event) => logoutUser()}>
                 <ListItemIcon>
                   <span className='material-icons'>{item[1]}</span>
                 </ListItemIcon>
                 <ListItemText primary={item[0]} />
-              </ListItem>
+              </ListItemButton>
             ))}
           </List>
         </Drawer>

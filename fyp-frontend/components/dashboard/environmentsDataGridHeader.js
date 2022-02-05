@@ -23,13 +23,13 @@ const EnvironmentsDataGridHeader = () => {
         <Stack direction='row' spacing={2} sx={{ ml: 4 }}>
           <Button
             variant='outlined'
-            startIcon={<span class='material-icons'>add</span>}
+            startIcon={<span className='material-icons'>add</span>}
           >
             Create environment
           </Button>
           <Button
             variant='contained'
-            startIcon={<span class='material-icons'>delete</span>}
+            startIcon={<span className='material-icons'>delete</span>}
           >
             Delete environment
           </Button>
