@@ -39,7 +39,7 @@ const DrawerMenu = ({ user }) => {
           }}
         >
           <Toolbar sx={{ justifyContent: 'end' }}>
-            <Typography variant='h6' noWrap component='div'>
+            <Typography variant='p' noWrap component='div'>
               {user.email}
             </Typography>
           </Toolbar>
