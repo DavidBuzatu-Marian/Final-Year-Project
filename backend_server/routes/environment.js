@@ -5,6 +5,7 @@ const {
   createJobBody,
   createJobHeader,
 } = require('../hooks/environment');
+const EnvironmentAddresses = require('../models/EnvironmentAddresses');
 const {
   environmentCreateQueue,
 } = require('../workers/environment/environment_create');
@@ -97,6 +98,14 @@ router.get('/dataset/:id', async (req, res) => {
   const id = req.params.id;
   const job = await environmentDatasetQueue.getJob(id);
   return await handleJobResponse(res, id, job);
+});
+
+router.get('/', async (req, res) => {
+  const userId = req.headers['x-auth'];
+  const environmentAddresses = await EnvironmentAddresses.find({
+    user_id: userId,
+  });
+  return res.send(environmentAddresses);
 });
 
 module.exports = router;

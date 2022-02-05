@@ -11,7 +11,7 @@ def save_ips_for_user(database, ips, user_id):
     environments_document = {"user_id": ObjectId(user_id), "environment_ips": []}
     for ip in ips["value"]:
         environments_document["environment_ips"].append(ip)
-    insert_result = db.environments_addresses.insert_one(environments_document)
+    insert_result = db.environmentsAddresses.insert_one(environments_document)
     error("Created entry: {}".format(insert_result.inserted_id))
     return insert_result.inserted_id
 
@@ -19,7 +19,7 @@ def save_ips_for_user(database, ips, user_id):
 def delete_environment_for_user(database, environment_id, user_id):
     db = database
     query = {"_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
-    delete_result = db.environments_addresses.delete_one(query)
+    delete_result = db.environmentsAddresses.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
 
 
@@ -33,7 +33,7 @@ def delete_environment_distribution(database, environment_id, user_id):
 def get_environment(database, environment_id, user_id):
     db = database
     query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
-    environment = db.environments_addresses.find_one(query)
+    environment = db.environmentsAddresses.find_one(query)
     if environment == None:
         raise ValueError("Environment not found")
     environment["environment_ips"] = set(environment["environment_ips"])
