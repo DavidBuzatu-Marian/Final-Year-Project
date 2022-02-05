@@ -17,6 +17,12 @@ const EnvironmentAddressesSchema = new mongoose.Schema(
     environment_options: {
       type: [Object],
     },
+    status: {
+      type: String,
+    },
+    machine_type: {
+      type: String,
+    },
   },
   { collection: 'environmentsAddresses' }
 );

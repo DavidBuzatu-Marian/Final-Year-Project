@@ -2,7 +2,6 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import { Divider } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
-import EnvironmentsDataGrid from './environmentsDataGrid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -36,9 +35,6 @@ const EnvironmentsDataGridHeader = () => {
         </Stack>
       </Toolbar>
       <Divider />
-      <EnvironmentsDataGrid
-        data={[{ id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 }]}
-      />
     </Box>
   );
 };

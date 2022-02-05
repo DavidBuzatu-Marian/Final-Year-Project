@@ -4,9 +4,9 @@ import { useUser } from '../hooks/user';
 import Router from 'next/router';
 import DrawerMenu from '../components/dashboard/drawerMenu';
 import CircularProgress from '@mui/material/CircularProgress';
-
+import EnvironmentsDataGrid from '../components/dashboard/environmentsDataGrid';
 import EnvironmentsDataGridHeader from '../components/dashboard/environmentsDataGridHeader';
-import { Typography } from '@mui/material';
+
 const Dashboard = () => {
   const [user, { loading }] = useUser();
   useEffect(() => {
@@ -30,6 +30,7 @@ const Dashboard = () => {
           <DrawerMenu user={user} />
           <section style={{ width: '100%' }}>
             <EnvironmentsDataGridHeader />
+            <EnvironmentsDataGrid />
           </section>
         </>
       )}

@@ -9,6 +9,11 @@ export const useEnvironment = () => {
   );
 
   const loading = !data && !error;
-  const environment = data && !error ? data : null;
-  return [environment, { mutate, loading }, error];
+  const environments = data && !error ? data : null;
+  if (environments) {
+    environments = environments.map((environment) => {
+      return { ...environment, id: environment._id };
+    });
+  }
+  return [environments, { mutate, loading }, error];
 };
