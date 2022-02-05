@@ -9,6 +9,7 @@ import { handleClickShowPassword, handleMouseDownPassword } from './hooks';
 import axios from 'axios';
 import { getConfig } from '../../config/defaultConfig';
 import ClosableAlert from '../alert/closableAlert';
+import Router from 'next/router';
 
 export default function RegisterForm() {
   const [formValues, setFormValues] = React.useState({
@@ -91,23 +92,25 @@ export default function RegisterForm() {
 
     setFormValues({ ...formValues, loading: true });
     let onSubmitError = false;
+    let onSubmitSuccess = false;
     try {
-      const res = await axios.post(getConfig()['registerUrl'], {
+      await axios.post(getConfig()['registerUrl'], {
         email: formValues.email,
         password: formValues.password,
       });
-      // TODO: Redirect to dashboard
-      console.log(res);
+      onSubmitSuccess = true;
     } catch (err) {
       onSubmitError = true;
       console.log(err);
     } finally {
       setFormValues({
         ...formValues,
+        email: onSubmitSuccess ? '' : formValues.email,
         password: '',
         passwordConfirm: '',
         loading: false,
         onSubmitError,
+        onSubmitSuccess,
       });
     }
   };
@@ -130,7 +133,12 @@ export default function RegisterForm() {
             alertMessage={'Registration went wrong'}
           />
         )}
-
+        {formValues.onSubmitSuccess && (
+          <ClosableAlert
+            severity={'success'}
+            alertMessage={'Registration successful'}
+          />
+        )}
         <TextField
           id='outlined-required'
           label='Email'

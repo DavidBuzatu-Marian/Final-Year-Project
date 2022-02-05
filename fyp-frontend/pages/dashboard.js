@@ -23,17 +23,15 @@ const Dashboard = () => {
         mt: '4rem',
       }}
     >
-      {loading ? (
+      {loading || !user ? (
         <CircularProgress />
-      ) : user ? (
+      ) : (
         <>
           <DrawerMenu user={user} />
           <section style={{ width: '100%' }}>
             <EnvironmentsDataGridHeader />
           </section>
         </>
-      ) : (
-        <Typography variant='h3'>User not found</Typography>
       )}
     </Container>
   );

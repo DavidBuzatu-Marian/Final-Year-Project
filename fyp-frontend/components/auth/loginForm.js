@@ -41,6 +41,7 @@ export default function LoginForm() {
       const res = await axios.post(
         getConfig()['loginUrl'],
         {
+          username: formValues.email,
           email: formValues.email,
           password: formValues.password,
         },
