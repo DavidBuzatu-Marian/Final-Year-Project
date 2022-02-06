@@ -9,7 +9,6 @@ from bson.objectid import ObjectId
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
-sys.path.insert(2, "../../config")
 
 from environment_helpers import *
 from environment.environment import Environment
@@ -288,3 +287,41 @@ class TestEnvironmentHelpers(unittest.TestCase):
         self.assertEqual(
             test_dataset_distribution["distributions"], environment_dataset_distribution
         )
+
+
+def test_delete_data_distribution_for_user(self):
+    test_ips = {
+        "value": [
+            "86.26.152.234",
+            "91.141.197.126",
+            "65.252.196.198",
+            "225.252.227.246",
+            "186.31.110.169",
+            "51.81.67.248",
+            "148.74.192.211",
+        ]
+    }
+    test_environment = save_environment_for_user(
+        self.mongo.db,
+        self.test_user_id,
+        Environment(
+            {
+                "nr_instances": 1,
+                "environment_options": [{"id": 0, "probability_failure": 0.1}],
+                "machine_type": "e2-low",
+            }
+        ),
+    )
+    self.assertIsNotNone(test_environment)
+    test_environment_update = save_ips_for_user(
+        self.mongo.db, test_ips, self.test_user_id, test_environment.inserted_id
+    )
+    self.assertIsNotNone(test_environment_update)
+    test_environment_delete = delete_environment_train_distribution(
+        self.mongo.db, test_environment.inserted_id, self.test_user_id
+    )
+    self.assertIsNotNone(test_environment_delete)
+    test_environment_delete = delete_environment_data_distribution(
+        self.mongo.db, test_environment.inserted_id, self.test_user_id
+    )
+    self.assertIsNotNone(test_environment_delete)

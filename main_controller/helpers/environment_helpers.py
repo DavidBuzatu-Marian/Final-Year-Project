@@ -26,6 +26,7 @@ def update_environment_status(database, user_id, environment_id, status):
     )
     return update_result
 
+
 def create_environment_data_distribution_entry(database, ips, user_id, environment_id):
     distribution = [{"{}".format(ip): []} for ip in ips]
     environment_data_distribution_document = {
@@ -63,9 +64,16 @@ def delete_environment_for_user(database, environment_id, user_id):
     return delete_result
 
 
-def delete_environment_distribution(database, environment_id, user_id):
-    query = {"_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
+def delete_environment_train_distribution(database, environment_id, user_id):
+    query = {"environment_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
     delete_result = database.environmentsTrainingDataDistribution.delete_one(query)
+    error("Deleted entry: {}".format(delete_result.deleted_count))
+    return delete_result
+
+
+def delete_environment_data_distribution(database, environment_id, user_id):
+    query = {"environment_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
+    delete_result = database.environmentsDataDistribution.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
     return delete_result
 
@@ -80,7 +88,7 @@ def get_environment(database, environment_id, user_id):
 
 
 def get_environment_data_distribution(database, environment_id, user_id):
-    query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
+    query = {"user_id": ObjectId(user_id), "environment_id": ObjectId(environment_id)}
     data_distribution = database.environmentsTrainingDataDistribution.find_one(query)
     if data_distribution == None:
         raise ValueError("Environment distribution not found")
@@ -92,7 +100,7 @@ def save_environment_test_data_distribution(
 ):
     data_distribution_document = {
         "user_id": ObjectId(user_id),
-        "_id": ObjectId(environment_id),
+        "environment_id": ObjectId(environment_id),
         "distributions": distributions,
     }
     insert_result = database.environmentsTrainingDataDistribution.insert_one(

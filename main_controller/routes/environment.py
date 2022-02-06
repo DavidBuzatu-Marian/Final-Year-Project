@@ -42,7 +42,8 @@ def environment_delete():
     environment_id = get_environment_id(request.json)
     destroy_terraform(user_id)
     delete_environment_for_user(mongo.db, environment_id, user_id)
-    delete_environment_distribution(mongo.db, environment_id, user_id)
+    delete_environment_train_distribution(mongo.db, environment_id, user_id)
+    delete_environment_data_distribution(mongo.db, environment_id, user_id)
     return "Destroyed environemnt {} for user {}".format(environment_id, user_id)
 
 
