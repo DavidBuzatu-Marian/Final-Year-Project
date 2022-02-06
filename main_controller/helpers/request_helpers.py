@@ -74,6 +74,18 @@ def get_instance_data_for_key(files, data_distribution):
 
 def post_data_distribution(files, environment_data_distribution):
     instances_data = dict()
+
+    for environment_ip, data_distribution in environment_data_distribution.items():
+        instance_data = get_instance_data_from_files(files, data_distribution)
+        # post_to_instance(
+        #     "http://" + environment_ip + ":5000/dataset/add",
+        #     instance_data,
+        # )
+        add_data_to_instance_distribution(instances_data, instance_data, environment_ip)
+    return instances_data
+
+
+def add_data_to_instance_distribution(instances_data, instance_data, environment_ip):
     data_keys = {
         "train_data": "train_data_distribution",
         "train_labels": "train_labels_data_distribution",
@@ -82,29 +94,25 @@ def post_data_distribution(files, environment_data_distribution):
         "test_data": "test_data_distribution",
         "test_labels": "test_labels_data_distribution",
     }
-    for environment_ip, data_distribution in environment_data_distribution.items():
-        instance_data = get_instance_data_from_files(files, data_distribution)
-        # post_to_instance(
-        #     "http://" + environment_ip + ":5000/dataset/add",
-        #     instance_data,
-        # )
-        for filetype, instance_files in instance_data.items():
-            filenames = []
-            for file in instance_files:
-                filenames.append(file.filename)
-            if data_keys[filetype] in instances_data:
-                instances_data[data_keys[filetype]].append({environment_ip: filenames})
-            else:
-                instances_data[data_keys[filetype]] = [{environment_ip: filenames}]
-    return instances_data
+    for filetype, instance_files in instance_data.items():
+        filenames = []
+        for file in instance_files:
+            filenames.append(file.filename)
+        if data_keys[filetype] in instances_data:
+            instances_data[data_keys[filetype]].append({environment_ip: filenames})
+        else:
+            instances_data[data_keys[filetype]] = [{environment_ip: filenames}]
 
 
 def post_data_to_instance(files, environment_ips):
-    instances_data = get_instance_data_from_files(files, [])
+    instances_data = dict()
+    instance_data = get_instance_data_from_files(files, [])
     for environment_ip in environment_ips:
-        post_to_instance(
-            "http://" + environment_ip + ":5000/dataset/add", instances_data
-        )
+        # post_to_instance(
+        #     "http://" + environment_ip + ":5000/dataset/add", instance_data
+        # )
+        add_data_to_instance_distribution(instances_data, instance_data, environment_ip)
+    return instances_data
 
 
 def compute_losses(request_json, environment_ips):

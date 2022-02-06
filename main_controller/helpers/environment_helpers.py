@@ -19,7 +19,7 @@ def save_ips_for_user(database, ips, user_id, environment_id):
 
 
 def update_environment_status(database, user_id, environment_id, status):
-    environment_query = {"user_id": user_id, "_id": environment_id}
+    environment_query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
     environment_update = {"status": statuses[status]}
     update_result = database.environmentsAddresses.update_one(
         environment_query, {"$set": environment_update}
@@ -119,7 +119,6 @@ def save_environment_data_distribution(
     update_result = database.environmentsDataDistribution.update_one(
         data_distribution_query, {"$set": distributions}
     )
-    error(update_result.raw_result)
     return update_result
 
 
