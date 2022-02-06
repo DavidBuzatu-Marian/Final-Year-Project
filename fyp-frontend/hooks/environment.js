@@ -7,7 +7,6 @@ export const useEnvironment = () => {
     getConfig()['environmentAddressesUrl'],
     fetcher
   );
-
   const loading = !data && !error;
   const environments = data && !error ? data : null;
   if (environments) {
