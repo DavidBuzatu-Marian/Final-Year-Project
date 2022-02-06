@@ -3,13 +3,11 @@ import subprocess
 import json
 from bson.objectid import ObjectId
 from flask import abort
+from app import statuses
 
 
 def save_ips_for_user(database, ips, user_id, environment_id):
-    environment_update = {
-        "environment_ips": [],
-        "status": "Created",
-    }
+    environment_update = {"environment_ips": [], "status": statuses["1"]}
     environment_query = {"user_id": user_id, "_id": environment_id}
     for ip in ips["value"]:
         environment_update["environment_ips"].append(ip)
@@ -19,6 +17,14 @@ def save_ips_for_user(database, ips, user_id, environment_id):
     error("Updated entry: {}".format(environment_id))
     return update_result
 
+
+def update_environment_status(database, user_id, environment_id, status):
+    environment_query = {"user_id": user_id, "_id": environment_id}
+    environment_update = {"status": statuses[status]}
+    update_result = database.environmentsAddresses.update_one(
+        environment_query, {"$set": environment_update}
+    )
+    return update_result
 
 def create_environment_data_distribution_entry(database, ips, user_id, environment_id):
     distribution = [{"{}".format(ip): []} for ip in ips]
@@ -43,7 +49,7 @@ def save_environment_for_user(database, user_id, environment):
         "user_id": ObjectId(user_id),
         "environment_ips": [],
         "machine_type": environment.get_machine_type(),
-        "status": "Creating",
+        "status": statuses["0"],
         "environment_options": json.dumps(environment.get_environment_options()),
     }
     insert_result = database.environmentsAddresses.insert_one(environment_document)

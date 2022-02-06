@@ -9,6 +9,7 @@ from bson.objectid import ObjectId
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
+sys.path.insert(2, "../../config")
 
 from environment_helpers import *
 from environment.environment import Environment

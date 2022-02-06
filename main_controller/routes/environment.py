@@ -51,6 +51,7 @@ def environment_dataset_data():
     user_id = get_user_id(request.args)
     environment_id = get_environment_id(request.args)
     environment = get_environment(mongo.db, environment_id, user_id)
+    update_environment_status(mongo.db, user_id, environment_id, "2")
     environment_data_distribution = get_environment_data_distribution(
         mongo.db, environment_id, user_id
     )
@@ -60,7 +61,7 @@ def environment_dataset_data():
     post_data_distribution(
         request.files, environment_data_distribution["distributions"]
     )
-
+    update_environment_status(mongo.db, user_id, environment_id, "5")
     return "Saved data in instances"
 
 
@@ -69,8 +70,9 @@ def environment_dataset_validation():
     user_id = get_user_id(request.args)
     environment_id = get_environment_id(request.args)
     environment = get_environment(mongo.db, environment_id, user_id)
-
+    update_environment_status(mongo.db, user_id, environment_id, "2")
     post_data_to_instance(request.files, environment["environment_ips"])
+    update_environment_status(mongo.db, user_id, environment_id, "5")
     return "Saved validation data in instances"
 
 
@@ -79,8 +81,9 @@ def environment_dataset_test():
     user_id = get_user_id(request.args)
     environment_id = get_environment_id(request.args)
     environment = get_environment(mongo.db, environment_id, user_id)
-
+    update_environment_status(mongo.db, user_id, environment_id, "2")
     post_data_to_instance(request.files, environment["environment_ips"])
+    update_environment_status(mongo.db, user_id, environment_id, "5")
     return "Saved test data in instances"
 
 
