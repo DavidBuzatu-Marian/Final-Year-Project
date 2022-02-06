@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useEnvironment } from '../../hooks/environment';
+import { CircularProgress } from '@mui/material';
 
 const EnvironmentsDataGrid = () => {
   const [environments, { loading, mutate }] = useEnvironment();
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'id', headerName: 'ID', width: 220 },
     {
       field: 'environment_ips',
       headerName: 'Environment IP addresses',
@@ -35,13 +36,17 @@ const EnvironmentsDataGrid = () => {
 
   return (
     <div style={{ height: 480, width: '100%' }}>
-      <DataGrid
-        rows={environments}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        checkboxSelection
-      />
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <DataGrid
+          rows={environments}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          checkboxSelection
+        />
+      )}
     </div>
   );
 };

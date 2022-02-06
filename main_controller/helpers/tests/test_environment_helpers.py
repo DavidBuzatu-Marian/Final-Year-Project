@@ -5,11 +5,13 @@ from flask_pymongo import PyMongo
 from flask import Flask
 import os
 import random
+from bson.objectid import ObjectId
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
 
 from environment_helpers import *
+from environment.environment import Environment
 
 
 class TestEnvironmentHelpers(unittest.TestCase):
@@ -17,7 +19,7 @@ class TestEnvironmentHelpers(unittest.TestCase):
     app = Flask(__name__)
     app.config["MONGO_URI"] = os.getenv("MONGO_TEST_URI")
     mongo = PyMongo(app)
-    test_user_id = 1
+    test_user_id = ObjectId("61febbb5d4289b4b0b4a48d5")
 
     def test_save_ips_for_user(self):
         test_ips = {
@@ -34,11 +36,23 @@ class TestEnvironmentHelpers(unittest.TestCase):
                 "109.97.229.225",
             ]
         }
-
-        test_environment_ip = save_ips_for_user(
-            self.mongo.db, test_ips, self.test_user_id
+        test_environment = save_environment_for_user(
+            self.mongo.db,
+            self.test_user_id,
+            Environment(
+                {
+                    "nr_instances": 1,
+                    "environment_options": [{"id": 0, "probability_failure": 0.1}],
+                    "machine_type": "e2-low",
+                }
+            ),
         )
-        self.assertIsNotNone(test_environment_ip)
+
+        self.assertIsNotNone(test_environment)
+        test_environment_update = save_ips_for_user(
+            self.mongo.db, test_ips, self.test_user_id, test_environment.inserted_id
+        )
+        self.assertIsNotNone(test_environment_update)
 
     def test_delete_environment_for_user(self):
         test_ips = {
@@ -55,13 +69,26 @@ class TestEnvironmentHelpers(unittest.TestCase):
                 "109.97.229.225",
             ]
         }
-        test_environment_ip = save_ips_for_user(
-            self.mongo.db, test_ips, self.test_user_id
+        test_environment = save_environment_for_user(
+            self.mongo.db,
+            self.test_user_id,
+            Environment(
+                {
+                    "nr_instances": 1,
+                    "environment_options": [{"id": 0, "probability_failure": 0.1}],
+                    "machine_type": "e2-low",
+                }
+            ),
         )
-        self.assertIsNotNone(test_environment_ip)
-        delete_environment_for_user(
-            self.mongo.db, test_environment_ip, self.test_user_id
+        self.assertIsNotNone(test_environment)
+        test_environment_update = save_ips_for_user(
+            self.mongo.db, test_ips, self.test_user_id, test_environment.inserted_id
         )
+        self.assertIsNotNone(test_environment_update)
+        test_environment_delete = delete_environment_for_user(
+            self.mongo.db, test_environment.inserted_id, self.test_user_id
+        )
+        self.assertIsNotNone(test_environment_delete)
 
     def test_get_environment(self):
         test_ips = {
@@ -79,12 +106,25 @@ class TestEnvironmentHelpers(unittest.TestCase):
             ]
         }
 
-        test_environment_ip = save_ips_for_user(
-            self.mongo.db, test_ips, self.test_user_id
+        test_environment = save_environment_for_user(
+            self.mongo.db,
+            self.test_user_id,
+            Environment(
+                {
+                    "nr_instances": 1,
+                    "environment_options": [{"id": 0, "probability_failure": 0.1}],
+                    "machine_type": "e2-low",
+                }
+            ),
         )
-        self.assertIsNotNone(test_environment_ip)
+
+        self.assertIsNotNone(test_environment)
+        test_environment_update = save_ips_for_user(
+            self.mongo.db, test_ips, self.test_user_id, test_environment.inserted_id
+        )
+        self.assertIsNotNone(test_environment_update)
         environment_ips = get_environment(
-            self.mongo.db, str(test_environment_ip), self.test_user_id
+            self.mongo.db, str(test_environment.inserted_id), self.test_user_id
         )
         self.assertEqual(
             set(test_ips["value"]), set(environment_ips["environment_ips"])
@@ -105,10 +145,23 @@ class TestEnvironmentHelpers(unittest.TestCase):
                 "109.97.229.225",
             ]
         }
-        test_environment_ip = save_ips_for_user(
-            self.mongo.db, test_ips, self.test_user_id
+        test_environment = save_environment_for_user(
+            self.mongo.db,
+            self.test_user_id,
+            Environment(
+                {
+                    "nr_instances": 1,
+                    "environment_options": [{"id": 0, "probability_failure": 0.1}],
+                    "machine_type": "e2-low",
+                }
+            ),
         )
-        self.assertIsNotNone(test_environment_ip)
+
+        self.assertIsNotNone(test_environment)
+        test_environment_update = save_ips_for_user(
+            self.mongo.db, test_ips, self.test_user_id, test_environment.inserted_id
+        )
+        self.assertIsNotNone(test_environment_update)
         environment_dataset_distribution = {
             "86.226.152.234": 20,
             "91.141.197.126": 15,
@@ -128,7 +181,7 @@ class TestEnvironmentHelpers(unittest.TestCase):
             )
         test_distribution_id = save_environment_data_distribution(
             self.mongo.db,
-            str(test_environment_ip),
+            str(test_environment.inserted_id),
             self.test_user_id,
             environment_dataset_distribution,
         )
@@ -149,10 +202,23 @@ class TestEnvironmentHelpers(unittest.TestCase):
                 "109.97.229.225",
             ]
         }
-        test_environment_ip = save_ips_for_user(
-            self.mongo.db, test_ips, self.test_user_id
+        test_environment = save_environment_for_user(
+            self.mongo.db,
+            self.test_user_id,
+            Environment(
+                {
+                    "nr_instances": 1,
+                    "environment_options": [{"id": 0, "probability_failure": 0.1}],
+                    "machine_type": "e2-low",
+                }
+            ),
         )
-        self.assertIsNotNone(test_environment_ip)
+
+        self.assertIsNotNone(test_environment)
+        test_environment_update = save_ips_for_user(
+            self.mongo.db, test_ips, self.test_user_id, test_environment.inserted_id
+        )
+        self.assertIsNotNone(test_environment_update)
         environment_dataset_distribution = {
             "86.226.152.234": 20,
             "91.141.197.126": 15,
@@ -172,13 +238,13 @@ class TestEnvironmentHelpers(unittest.TestCase):
             )
         test_distribution_id = save_environment_data_distribution(
             self.mongo.db,
-            str(test_environment_ip),
+            str(test_environment.inserted_id),
             self.test_user_id,
             environment_dataset_distribution,
         )
         self.assertIsNotNone(test_distribution_id)
         test_dataset_distribution = get_environment_data_distribution(
-            self.mongo.db, str(test_environment_ip), self.test_user_id
+            self.mongo.db, str(test_environment.inserted_id), self.test_user_id
         )
         self.assertEqual(
             test_dataset_distribution["distributions"], environment_dataset_distribution

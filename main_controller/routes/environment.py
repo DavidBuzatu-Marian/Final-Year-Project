@@ -19,14 +19,17 @@ except ImportError as exc:
 
 @app.route("/environment/create", methods=["POST"])
 def environment_create():
-    environments = Environment(request.json)
+    environment = Environment(request.json)
     user_id = get_user_id(request.json)
-    apply_terraform(user_id, environments)
+    environment_id = save_environment_for_user(mongo.db, user_id, environment)
+    apply_terraform(user_id, environment)
     output = get_terraform_output()
     json_output = to_json(output)
-    save_ips_for_user(mongo.db, json_output["gci_instances_ids"], user_id)
+    save_ips_for_user(
+        mongo.db, json_output["gci_instances_ids"], user_id, environment_id
+    )
     return "Created {} environments with requested options. Environments are ready for receiving datasets".format(
-        environments.get_nr_instances()
+        environment.get_nr_instances()
     )
 
 
