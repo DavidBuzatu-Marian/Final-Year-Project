@@ -29,7 +29,10 @@ def environment_create():
         mongo.db, json_output["gci_instances_ids"], user_id, environment_id
     )
     create_environment_data_distribution_entry(
-        mongo.db, user_id, environment_id, json_output["gci_instances_ids"]
+        mongo.db,
+        json_output["gci_instances_ids"],
+        user_id,
+        environment_id,
     )
     return "Created {} environments with requested options. Environments are ready for receiving datasets".format(
         environment.get_nr_instances()
@@ -59,8 +62,11 @@ def environment_dataset_data():
     for environment_ip, _ in environment_data_distribution["distributions"].items():
         if not (environment_ip in environment["environment_ips"]):
             return (jsonify("Environment ip is invalid"), 400)
-    post_data_distribution(
+    instances_data = post_data_distribution(
         request.files, environment_data_distribution["distributions"]
+    )
+    save_environment_data_distribution(
+        mongo.db, user_id, environment_id, instances_data
     )
     update_environment_status(mongo.db, user_id, environment_id, "5")
     return "Saved data in instances"

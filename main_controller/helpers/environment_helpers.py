@@ -109,6 +109,20 @@ def save_environment_test_data_distribution(
     return insert_result.inserted_id
 
 
+def save_environment_data_distribution(
+    database, user_id, environment_id, distributions
+):
+    data_distribution_query = {
+        "user_id": ObjectId(user_id),
+        "environment_id": ObjectId(environment_id),
+    }
+    update_result = database.environmentsDataDistribution.update_one(
+        data_distribution_query, {"$set": distributions}
+    )
+    error(update_result.raw_result)
+    return update_result
+
+
 def get_data_distribution(request_json):
     data_distribution = request_json["data_distribution"]
     return data_distribution

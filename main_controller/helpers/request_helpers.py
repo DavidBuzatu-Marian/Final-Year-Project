@@ -73,12 +73,30 @@ def get_instance_data_for_key(files, data_distribution):
 
 
 def post_data_distribution(files, environment_data_distribution):
+    instances_data = dict()
+    data_keys = {
+        "train_data": "train_data_distribution",
+        "train_labels": "train_labels_data_distribution",
+        "validation_data": "validation_data_distribution",
+        "validation_labels": "validation_labels_data_distribution",
+        "test_data": "test_data_distribution",
+        "test_labels": "test_labels_data_distribution",
+    }
     for environment_ip, data_distribution in environment_data_distribution.items():
         instance_data = get_instance_data_from_files(files, data_distribution)
-        post_to_instance(
-            "http://" + environment_ip + ":5000/dataset/add",
-            instance_data,
-        )
+        # post_to_instance(
+        #     "http://" + environment_ip + ":5000/dataset/add",
+        #     instance_data,
+        # )
+        for filetype, instance_files in instance_data.items():
+            filenames = []
+            for file in instance_files:
+                filenames.append(file.filename)
+            if data_keys[filetype] in instances_data:
+                instances_data[data_keys[filetype]].append({environment_ip: filenames})
+            else:
+                instances_data[data_keys[filetype]] = [{environment_ip: filenames}]
+    return instances_data
 
 
 def post_data_to_instance(files, environment_ips):
