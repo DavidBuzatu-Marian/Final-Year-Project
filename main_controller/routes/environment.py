@@ -28,6 +28,9 @@ def environment_create():
     save_ips_for_user(
         mongo.db, json_output["gci_instances_ids"], user_id, environment_id
     )
+    create_environment_data_distribution_entry(
+        mongo.db, user_id, environment_id, json_output["gci_instances_ids"]
+    )
     return "Created {} environments with requested options. Environments are ready for receiving datasets".format(
         environment.get_nr_instances()
     )
@@ -89,13 +92,14 @@ def environment_dataset_distribution():
     environment_data_distribution = get_data_distribution(request.json)
     dataset_length = get_dataset_length(request.json)
 
+    # TODO: Choose between random distribution or given distribution
     for environment_ip, distribution in environment_data_distribution.items():
         if not (environment_ip in environment["environment_ips"]):
             return (jsonify("Environment ip is invalid"), 400)
         environment_data_distribution[environment_ip] = random.sample(
             range(1, dataset_length), distribution
         )
-    save_environment_data_distribution(
+    save_environment_test_data_distribution(
         mongo.db, environment_id, user_id, environment_data_distribution
     )
     return "Saved dataset distribution"

@@ -20,6 +20,24 @@ def save_ips_for_user(database, ips, user_id, environment_id):
     return update_result
 
 
+def create_environment_data_distribution_entry(database, ips, user_id, environment_id):
+    distribution = [{"{}".format(ip): []} for ip in ips]
+    environment_data_distribution_document = {
+        "user_id": ObjectId(user_id),
+        "environment_id": ObjectId(environment_id),
+        "test_data_distribution": distribution,
+        "test_labels_data_distribution": distribution,
+        "train_data_distribution": distribution,
+        "train_labels_data_distribution": distribution,
+        "validation_data_distribution": distribution,
+        "validation_labels_data_distribution": distribution,
+    }
+    insert_result = database.environmentsDataDistribution.insert_one(
+        environment_data_distribution_document
+    )
+    return insert_result
+
+
 def save_environment_for_user(database, user_id, environment):
     environment_document = {
         "user_id": ObjectId(user_id),
@@ -41,7 +59,7 @@ def delete_environment_for_user(database, environment_id, user_id):
 
 def delete_environment_distribution(database, environment_id, user_id):
     query = {"_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
-    delete_result = database.environments_data_distribution.delete_one(query)
+    delete_result = database.environmentsTrainingDataDistribution.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
     return delete_result
 
@@ -57,13 +75,13 @@ def get_environment(database, environment_id, user_id):
 
 def get_environment_data_distribution(database, environment_id, user_id):
     query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
-    data_distribution = database.environments_data_distribution.find_one(query)
+    data_distribution = database.environmentsTrainingDataDistribution.find_one(query)
     if data_distribution == None:
         raise ValueError("Environment distribution not found")
     return data_distribution
 
 
-def save_environment_data_distribution(
+def save_environment_test_data_distribution(
     database, environment_id, user_id, distributions
 ):
     data_distribution_document = {
@@ -71,7 +89,7 @@ def save_environment_data_distribution(
         "_id": ObjectId(environment_id),
         "distributions": distributions,
     }
-    insert_result = database.environments_data_distribution.insert_one(
+    insert_result = database.environmentsTrainingDataDistribution.insert_one(
         data_distribution_document
     )
     return insert_result.inserted_id
