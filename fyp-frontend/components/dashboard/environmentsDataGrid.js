@@ -13,6 +13,15 @@ const EnvironmentsDataGrid = () => {
       field: 'environment_ips',
       headerName: 'Environment IP addresses',
       width: 250,
+      renderCell: (params) => {
+        return (
+          <ModalHandler
+            modalTitle={'Environment instances'}
+            modalContent={params.value}
+            modalButtonText={'Open environment instances'}
+          />
+        );
+      },
     },
     {
       field: 'environment_options',
