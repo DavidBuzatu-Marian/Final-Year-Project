@@ -4,4 +4,8 @@ export const urls = {
   authenticatedUrl: 'http://localhost:5002/api/auth/authenticated',
   logoutUrl: 'http://localhost:5002/api/auth/logout',
   environmentAddressesUrl: 'http://localhost:5002/backend/api/environment',
+  environmentsDataDistributionUrl:
+    'http://localhost:5002/backend/api/dataset/data',
+  environmentsTrainingDistributionUrl:
+    'http://localhost:5002/backend/api/dataset/distribution',
 };
