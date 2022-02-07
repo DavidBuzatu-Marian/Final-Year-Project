@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import { useUser } from '../hooks/user';
 import Router from 'next/router';
@@ -9,6 +9,8 @@ import EnvironmentsDataGridHeader from '../components/dashboard/environmentsData
 
 const Dashboard = () => {
   const [user, { loading }] = useUser();
+  const [selectedRows, setSelectedRows] = useState([]);
+
   useEffect(() => {
     if (!user || user === null) {
       Router.push('/auth/login?afterLoginRedirect=/dashboard');
@@ -29,8 +31,8 @@ const Dashboard = () => {
         <>
           <DrawerMenu user={user} />
           <section style={{ width: '100%' }}>
-            <EnvironmentsDataGridHeader />
-            <EnvironmentsDataGrid />
+            <EnvironmentsDataGridHeader selectedRows={selectedRows} />
+            <EnvironmentsDataGrid setSelectedRows={setSelectedRows} />
           </section>
         </>
       )}

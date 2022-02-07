@@ -4,6 +4,7 @@ import json
 from bson.objectid import ObjectId
 from flask import abort
 from app import statuses
+from datetime import datetime
 
 
 def save_ips_for_user(database, ips, user_id, environment_id):
@@ -52,6 +53,7 @@ def save_environment_for_user(database, user_id, environment):
         "machine_type": environment.get_machine_type(),
         "status": statuses["0"],
         "environment_options": json.dumps(environment.get_environment_options()),
+        "date": datetime.utcnow().timestamp(),
     }
     insert_result = database.environmentsAddresses.insert_one(environment_document)
     return insert_result

@@ -6,7 +6,11 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-const EnvironmentsDataGridHeader = () => {
+const EnvironmentsDataGridHeader = ({ selectedRows }) => {
+  const deleteEnvironments = () => {
+    // TODO: Add button
+    console.log(selectedRows);
+  };
   return (
     <Box
       component='main'
@@ -29,6 +33,7 @@ const EnvironmentsDataGridHeader = () => {
           <Button
             variant='contained'
             startIcon={<span className='material-icons'>delete</span>}
+            onClick={() => deleteEnvironments()}
           >
             Delete environment
           </Button>

@@ -4,7 +4,7 @@ import { useEnvironment } from '../../hooks/environment';
 import { CircularProgress, Box } from '@mui/material';
 import ModalHandler from './modalHandler';
 
-const EnvironmentsDataGrid = () => {
+const EnvironmentsDataGrid = ({ setSelectedRows }) => {
   const [environments, { loading, mutate }] = useEnvironment();
 
   const columns = [
@@ -63,7 +63,13 @@ const EnvironmentsDataGrid = () => {
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
-          checkboxSelection
+          onSelectionModelChange={(ids) => {
+            const selectedIDs = new Set(ids);
+            const selectedRowData = environments.filter((row) =>
+              selectedIDs.has(row._id)
+            );
+            setSelectedRows(selectedRowData);
+          }}
         />
       )}
     </div>
