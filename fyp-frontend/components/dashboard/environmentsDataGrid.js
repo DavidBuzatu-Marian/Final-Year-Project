@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useEnvironment } from '../../hooks/environment';
 import { CircularProgress, Box } from '@mui/material';
-import ModalHandler from './modalHandler';
+import ModalHandler from '../utils/modalHandler';
 
 const EnvironmentsDataGrid = ({ setSelectedRows }) => {
   const [environments, { loading, mutate }] = useEnvironment();

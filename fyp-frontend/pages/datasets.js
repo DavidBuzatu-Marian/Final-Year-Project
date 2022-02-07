@@ -31,8 +31,8 @@ const Datasets = () => {
         <>
           <DrawerMenu user={user} />
           <section style={{ width: '100%' }}>
-            <DatasetsDataGrid selectedRows={selectedRows} />
             <DatasetsDataGridHeader setSelectedRows={setSelectedRows} />
+            <DatasetsDataGrid selectedRows={selectedRows} />
           </section>
         </>
       )}

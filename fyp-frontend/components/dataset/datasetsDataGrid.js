@@ -1,24 +1,27 @@
-import React, { useEffect } from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import React, { useEffect, useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 import {
   useDatasetDataDistribution,
   useDatasetTrainingDistribution,
 } from '../../hooks/dataset';
 import { CircularProgress, Box } from '@mui/material';
-import ModalHandler from './modalHandler';
+import ModalHandler from '../utils/modalHandler';
 
 const DatasetsDataGrid = () => {
-  const [environmentsDataDistribution, { loadingDataDistribution, mutate }] =
+  const [environmentsDataDistribution, { loadingDataDistribution }] =
     useDatasetDataDistribution();
-  const [
-    environmentsTrainingDistribution,
-    { loadingTrainingDistribution, mutate },
-  ] = useDatasetTrainingDistribution();
+  const [environmentsTrainingDistribution, { loadingTrainingDistribution }] =
+    useDatasetTrainingDistribution();
   const [environmentsDataDistributions, setEnvironmentsDataDistributions] =
     useState([]);
 
   useEffect(() => {
-    if (!loadingDataDistribution && !loadingTrainingDistribution) {
+    if (
+      !loadingDataDistribution &&
+      !loadingTrainingDistribution &&
+      environmentsDataDistribution &&
+      environmentsTrainingDistribution
+    ) {
       const distributionMap = new Map();
       environmentsDataDistribution.map((distribution) => {
         distributionMap.set(
@@ -38,7 +41,12 @@ const DatasetsDataGrid = () => {
       console.log(distributionMap);
       setEnvironmentsDataDistributions(distributionMap);
     }
-  }, [environmentsDataDistribution, environmentsTrainingDistribution, loadin]);
+  }, [
+    environmentsDataDistribution,
+    environmentsTrainingDistribution,
+    loadingDataDistribution,
+    loadingTrainingDistribution,
+  ]);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 220 },
@@ -155,7 +163,7 @@ const DatasetsDataGrid = () => {
 
   return (
     <div style={{ height: 480, width: '100%' }}>
-      {loading ? (
+      {loadingTrainingDistribution || loadingDataDistribution ? (
         <CircularProgress />
       ) : (
         <DataGrid

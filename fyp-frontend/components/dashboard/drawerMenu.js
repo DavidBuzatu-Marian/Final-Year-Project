@@ -12,12 +12,17 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { logout } from '../auth/hooks';
 import { useUser } from '../../hooks/user';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const drawerWidth = 240;
 
 const DrawerMenu = ({ user }) => {
   const [_, { mutate }] = useUser();
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const router = useRouter();
+  const [selectedIndex, setSelectedIndex] = React.useState(
+    router.pathname === '/dashboard' ? 0 : 1
+  );
   // As guided from documentation: https://mui.com/components/lists/
   const onClick = (event, index) => {
     setSelectedIndex(index);
@@ -64,19 +69,21 @@ const DrawerMenu = ({ user }) => {
           <Divider />
           <List>
             {[
-              ['Environments', 'grid_view'],
-              ['Datasets', 'storage'],
+              ['Environments', 'grid_view', '/dashboard'],
+              ['Datasets', 'storage', '/datasets'],
             ].map((item, index) => (
-              <ListItemButton
-                key={index}
-                selected={selectedIndex === index}
-                onClick={(event) => onClick(event, index)}
-              >
-                <ListItemIcon>
-                  <span className='material-icons'>{item[1]}</span>
-                </ListItemIcon>
-                <ListItemText primary={item[0]} />
-              </ListItemButton>
+              <Link href={`${item[2]}`}>
+                <ListItemButton
+                  key={index}
+                  selected={selectedIndex === index}
+                  onClick={(event) => onClick(event, index)}
+                >
+                  <ListItemIcon>
+                    <span className='material-icons'>{item[1]}</span>
+                  </ListItemIcon>
+                  <ListItemText primary={item[0]} />
+                </ListItemButton>
+              </Link>
             ))}
           </List>
           <Divider />

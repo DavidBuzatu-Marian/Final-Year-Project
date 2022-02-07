@@ -18,7 +18,7 @@ export const useDatasetDataDistribution = () => {
   }
   return [
     environmentsDataDistribution,
-    { mutate, loadingDataDistribution },
+    { mutateDataDistribution: mutate, loadingDataDistribution },
     error,
   ];
 };
@@ -39,7 +39,7 @@ export const useDatasetTrainingDistribution = () => {
   }
   return [
     environmentsTrainingDistribution,
-    { mutate, loadingTrainingDistribution },
+    { mutateTrainigDistribution: mutate, loadingTrainingDistribution },
     error,
   ];
 };
