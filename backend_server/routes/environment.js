@@ -16,6 +16,7 @@ const {
   environmentDeleteQueue,
 } = require('../workers/environment/environment_delete');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 const storage = multer.diskStorage({
   destination: './temp/',
@@ -103,7 +104,7 @@ router.get('/dataset/:id', async (req, res) => {
 router.get('/', async (req, res) => {
   const userId = req.headers['x-auth'];
   const environmentAddresses = await EnvironmentAddresses.find({
-    user_id: userId,
+    user_id: mongoose.mongo.ObjectId(userId),
   });
   return res.send(environmentAddresses);
 });

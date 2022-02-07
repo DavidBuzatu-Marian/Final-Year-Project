@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const EnvironmentAddressesSchema = new mongoose.Schema(
   {
     user_id: {
-      type: String,
+      type: mongoose.Types.ObjectId,
       ref: 'users',
     },
     date: {
