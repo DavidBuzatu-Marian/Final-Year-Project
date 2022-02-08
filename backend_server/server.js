@@ -24,6 +24,7 @@ app.use(express.json());
 app.use('/api/environment', require('./routes/environment'));
 app.use('/api/health', require('./routes/health'));
 app.use('/api/model', require('./routes/model'));
+app.use('/api/dataset', require('./routes/dataset'));
 // Start server
 const PORT = config.get('port') || 5005;
 app.listen(PORT, (err) => {
