@@ -21,7 +21,10 @@ const DrawerMenu = ({ user }) => {
   const [_, { mutate }] = useUser();
   const router = useRouter();
   const [selectedIndex, setSelectedIndex] = React.useState(
-    router.pathname === '/dashboard' ? 0 : 1
+    router.pathname.includes('/dashboard') ||
+      router.pathname.includes('/environment')
+      ? 0
+      : 1
   );
   // As guided from documentation: https://mui.com/components/lists/
   const onClick = (event, index) => {
