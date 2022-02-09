@@ -72,9 +72,8 @@ const DrawerMenu = ({ user }) => {
               ['Environments', 'grid_view', '/dashboard'],
               ['Datasets', 'storage', '/datasets'],
             ].map((item, index) => (
-              <Link href={`${item[2]}`}>
+              <Link key={index} href={`${item[2]}`}>
                 <ListItemButton
-                  key={index}
                   selected={selectedIndex === index}
                   onClick={(event) => onClick(event, index)}
                 >

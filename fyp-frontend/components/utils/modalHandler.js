@@ -14,15 +14,18 @@ const ModalHandler = ({ modalButtonText, modalTitle, modalContent }) => {
         onClose={handleClose}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
+        sx={{ overflow: 'scroll', display: 'flex', justifyContent: 'center' }}
       >
         <Box
           sx={{
             position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            top: '10%',
+            m: 1,
+            mx: 'auto',
+            minWidth: '50%',
             bgcolor: 'background.paper',
             boxShadow: 24,
+            overflowX: 'scroll',
             p: 4,
           }}
         >

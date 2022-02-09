@@ -5,7 +5,7 @@ export const urls = {
   logoutUrl: 'http://localhost:5002/api/auth/logout',
   environmentAddressesUrl: 'http://localhost:5002/backend/api/environment',
   environmentsDataDistributionUrl:
-    'http://localhost:5002/backend/api/dataset/data',
-  environmentsTrainingDistributionUrl:
     'http://localhost:5002/backend/api/dataset/distribution',
+  environmentsTrainingDistributionUrl:
+    'http://localhost:5002/backend/api/dataset/training/distribution',
 };

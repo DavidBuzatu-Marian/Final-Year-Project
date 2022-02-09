@@ -38,15 +38,9 @@ const DatasetsDataGrid = () => {
           });
         }
       });
-      console.log(distributionMap);
-      setEnvironmentsDataDistributions(distributionMap);
+      setEnvironmentsDataDistributions([...distributionMap.values()]);
     }
-  }, [
-    environmentsDataDistribution,
-    environmentsTrainingDistribution,
-    loadingDataDistribution,
-    loadingTrainingDistribution,
-  ]);
+  }, [loadingDataDistribution, loadingTrainingDistribution]);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 220 },
@@ -56,34 +50,32 @@ const DatasetsDataGrid = () => {
       width: 250,
     },
     {
-      field: 'training_data_distribution',
+      field: 'train_data_distribution',
       headerName: 'Environment training data distribution',
       renderCell: (params) => {
         return (
           <ModalHandler
             modalTitle={'Environment training data distribution'}
             modalContent={params.value}
-            modalButtonText={'Open environment training data distribution'}
+            modalButtonText={'Open'}
           />
         );
       },
-      width: 350,
+      width: 300,
     },
     {
-      field: 'training_labels_data_distribution',
+      field: 'train_labels_data_distribution',
       headerName: 'Environment training labels data distribution',
       renderCell: (params) => {
         return (
           <ModalHandler
             modalTitle={'Environment training labels data distribution'}
             modalContent={params.value}
-            modalButtonText={
-              'Open environment training labels data distribution'
-            }
+            modalButtonText={'Open'}
           />
         );
       },
-      width: 350,
+      width: 300,
     },
     {
       field: 'validation_data_distribution',
@@ -93,11 +85,11 @@ const DatasetsDataGrid = () => {
           <ModalHandler
             modalTitle={'Environment validation data distribution'}
             modalContent={params.value}
-            modalButtonText={'Open environment validation data distribution'}
+            modalButtonText={'Open'}
           />
         );
       },
-      width: 350,
+      width: 300,
     },
     {
       field: 'validation_labels_data_distribution',
@@ -107,13 +99,11 @@ const DatasetsDataGrid = () => {
           <ModalHandler
             modalTitle={'Environment validation labels data distribution'}
             modalContent={params.value}
-            modalButtonText={
-              'Open environment validation labels data distribution'
-            }
+            modalButtonText={'Open'}
           />
         );
       },
-      width: 350,
+      width: 300,
     },
     {
       field: 'test_data_distribution',
@@ -123,11 +113,11 @@ const DatasetsDataGrid = () => {
           <ModalHandler
             modalTitle={'Environment test data distribution'}
             modalContent={params.value}
-            modalButtonText={'Open environment test data distribution'}
+            modalButtonText={'Open'}
           />
         );
       },
-      width: 350,
+      width: 300,
     },
     {
       field: 'test_labels_data_distribution',
@@ -137,11 +127,11 @@ const DatasetsDataGrid = () => {
           <ModalHandler
             modalTitle={'Environment test labels data distribution'}
             modalContent={params.value}
-            modalButtonText={'Open environment test labels data distribution'}
+            modalButtonText={'Open'}
           />
         );
       },
-      width: 350,
+      width: 300,
     },
     {
       field: 'distributions',
@@ -150,14 +140,12 @@ const DatasetsDataGrid = () => {
         return (
           <ModalHandler
             modalTitle={'Environment training data distribution split'}
-            modalContent={params.value}
-            modalButtonText={
-              'Open environment training data distribution split'
-            }
+            modalContent={params.value ? params.value : []}
+            modalButtonText={'Open'}
           />
         );
       },
-      width: 400,
+      width: 300,
     },
   ];
 
