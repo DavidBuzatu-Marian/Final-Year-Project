@@ -167,3 +167,26 @@ export const machineTypesN2 = [
     label: 'n2-highcpu-80 (80vCPU, 80GB memory)',
   },
 ];
+
+export const machineTypesC2 = [
+  {
+    value: 'c2-standard-4',
+    label: 'c2-standard-4 (4vCPU, 16GB memory)',
+  },
+  {
+    value: 'c2-standard-8',
+    label: 'c2-standard-8 (8vCPU, 32GB memory)',
+  },
+  {
+    value: 'c2-standard-16',
+    label: 'c2-standard-16 (16vCPU, 64GB memory)',
+  },
+  {
+    value: 'c2-standard-30',
+    label: 'c2-standard-30 (30vCPU, 120GB memory)',
+  },
+  {
+    value: 'c2-standard-60',
+    label: 'c2-standard-60 (60vCPU, 240GB memory)',
+  },
+];

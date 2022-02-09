@@ -1,4 +1,10 @@
-import { Box, FormControl, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Divider,
+  FormControl,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import React from 'react';
 import EnvironmentSelectionTabs from './environmentSelectionTabs';
@@ -21,7 +27,9 @@ const CreateEnvironmentForm = () => {
           type={'number'}
           sx={{ mt: '1rem !important' }}
         />
+        <Divider />
         <EnvironmentSelectionTabs />
+        <Divider />
       </FormControl>
     </Box>
   );
