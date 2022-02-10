@@ -16,10 +16,9 @@ export default function LoginForm() {
     email: '',
     password: '',
     showPassword: false,
-    loading: false,
     onSubmitError: '',
   });
-  const [user, { mutate }, error] = useUser();
+  const [user, { mutate, loading }, error] = useUser();
 
   const handleChange = (prop) => (event) => {
     setFormValues({
@@ -35,7 +34,6 @@ export default function LoginForm() {
   const onSubmit = async (event) => {
     event.preventDefault();
 
-    setFormValues({ ...formValues, loading: true });
     let onSubmitError = false;
     try {
       const res = await axios.post(
@@ -54,7 +52,6 @@ export default function LoginForm() {
       setFormValues({
         ...formValues,
         password: '',
-        loading: false,
         onSubmitError,
       });
     }
@@ -113,7 +110,7 @@ export default function LoginForm() {
           variant='outlined'
           disabled={checkErrors()}
           loadingPosition='end'
-          loading={formValues.loading}
+          loading={loading}
           endIcon={<span className='material-icons'>login</span>}
           sx={{ mt: '1rem' }}
           onClick={(event) => onSubmit(event)}

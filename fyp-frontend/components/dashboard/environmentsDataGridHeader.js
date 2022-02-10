@@ -26,6 +26,7 @@ const EnvironmentsDataGridHeader = ({ selectedRows }) => {
         <Stack direction='row' spacing={2} sx={{ ml: 4 }}>
           <Button
             variant='outlined'
+            href='/environment/createEnvironment'
             startIcon={<span className='material-icons'>add</span>}
           >
             Create environment

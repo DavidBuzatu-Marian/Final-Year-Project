@@ -108,7 +108,6 @@ const EnvironmentOptions = () => {
           </div>
         );
       })}
-      <Divider sx={{ mt: 1 }} />
       <Button onClick={() => addFormFields()}>Add options</Button>
     </Box>
   );

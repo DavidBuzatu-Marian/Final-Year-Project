@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Divider,
   FormControl,
   TextField,
@@ -32,6 +33,18 @@ const CreateEnvironmentForm = () => {
         <EnvironmentSelectionTabs />
         <Divider />
         <EnvironmentOptions />
+        <Divider />
+        <Button variant='outlined' sx={{ mt: '1rem' }}>
+          Create
+        </Button>
+        <Button
+          variant='contained'
+          sx={{ mt: '1rem' }}
+          color='error'
+          href='/dashboard'
+        >
+          Cancel
+        </Button>
       </FormControl>
     </Box>
   );
