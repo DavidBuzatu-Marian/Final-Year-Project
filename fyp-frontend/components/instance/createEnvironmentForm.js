@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 
 import React from 'react';
+import EnvironmentOptions from './environmentOptions';
 import EnvironmentSelectionTabs from './environmentSelectionTabs';
 
 const CreateEnvironmentForm = () => {
@@ -30,6 +31,7 @@ const CreateEnvironmentForm = () => {
         <Divider />
         <EnvironmentSelectionTabs />
         <Divider />
+        <EnvironmentOptions />
       </FormControl>
     </Box>
   );
