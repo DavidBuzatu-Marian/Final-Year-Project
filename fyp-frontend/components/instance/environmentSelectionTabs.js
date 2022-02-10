@@ -12,7 +12,7 @@ import {
   generalPurposeSeries,
 } from '../utils/machineSeries';
 
-const EnvironmentSelectionTabs = () => {
+const EnvironmentSelectionTabs = ({ formValues, setFormValues }) => {
   const [value, setValue] = React.useState('1');
 
   const handleChange = (event, newValue) => {
@@ -31,12 +31,16 @@ const EnvironmentSelectionTabs = () => {
           <GoogleMachineTypeSelector
             machineSeriesList={generalPurposeSeries}
             machineTypesObject={{ e2: machineTypesE2, n2: machineTypesN2 }}
+            formValues={formValues}
+            setFormValues={setFormValues}
           />
         </TabPanel>
         <TabPanel value='2' sx={{ p: 0, mt: 2 }}>
           <GoogleMachineTypeSelector
             machineSeriesList={computeOptimizedSeries}
             machineTypesObject={{ c2: machineTypesC2 }}
+            formValues={formValues}
+            setFormValues={setFormValues}
           />
         </TabPanel>
       </TabContext>

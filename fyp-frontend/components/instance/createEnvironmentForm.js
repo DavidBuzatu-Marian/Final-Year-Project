@@ -12,6 +12,12 @@ import EnvironmentOptions from './environmentOptions';
 import EnvironmentSelectionTabs from './environmentSelectionTabs';
 
 const CreateEnvironmentForm = () => {
+  const [formValues, setFormValues] = React.useState({
+    nr_instances: 1,
+    environment_options: [],
+    machine_series: '',
+    machine_type: '',
+  });
   return (
     <Box
       component='form'
@@ -27,10 +33,17 @@ const CreateEnvironmentForm = () => {
           id='outlined-required'
           label='Number of instances'
           type={'number'}
+          value={formValues.nr_instances}
+          onChange={(event) =>
+            setFormValues({ ...formValues, nr_instances: event.target.value })
+          }
           sx={{ mt: '1rem !important' }}
         />
         <Divider />
-        <EnvironmentSelectionTabs />
+        <EnvironmentSelectionTabs
+          setFormValues={setFormValues}
+          formValues={formValues}
+        />
         <Divider />
         <EnvironmentOptions />
         <Divider />

@@ -6,6 +6,8 @@ import MenuItem from '@mui/material/MenuItem';
 const GoogleMachineTypeSelector = ({
   machineTypesObject,
   machineSeriesList,
+  formValues,
+  setFormValues,
 }) => {
   const [machineSeries, setMachineSeries] = React.useState(
     machineSeriesList[0].value
