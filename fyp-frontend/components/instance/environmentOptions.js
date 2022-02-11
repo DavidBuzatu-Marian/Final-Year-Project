@@ -2,9 +2,11 @@ import { Typography, TextField, Divider, Button } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
 
-const EnvironmentOptions = () => {
-  //TODO: Get max nr of instances as prop
-
+const EnvironmentOptions = ({
+  setParentFormValues,
+  parentFormValues,
+  nrInstances,
+}) => {
   const [formFields, setFormFields] = React.useState([
     [
       {
@@ -12,7 +14,7 @@ const EnvironmentOptions = () => {
         type: 'number',
         name: 'instanceNumber',
         min: 1,
-        max: 10,
+        max: 0,
       },
       {
         label: 'Probability of failure',
@@ -20,6 +22,7 @@ const EnvironmentOptions = () => {
         name: 'probabilityOfFailure',
         min: 1,
         max: 100,
+        endAdornment: <span className='material-icons'>percent</span>,
       },
     ],
   ]);
@@ -36,7 +39,7 @@ const EnvironmentOptions = () => {
           type: 'number',
           name: 'instanceNumber',
           min: 1,
-          max: 10,
+          max: 0,
         },
         {
           label: 'Probability of failure',
@@ -44,6 +47,7 @@ const EnvironmentOptions = () => {
           name: 'probabilityOfFailure',
           min: 1,
           max: 100,
+          endAdornment: <span className='material-icons'>percent</span>,
         },
       ],
     ]);
@@ -53,16 +57,38 @@ const EnvironmentOptions = () => {
     ]);
   };
 
-  const onChange = (event, index) => {
+  const onChange = (event, index, min, max) => {
+    if (event.target.value.length === 0) {
+      updateFormValues(event.target.name, index, '');
+      return;
+    }
+    const value = parseInt(event.target.value, 10);
+    if (value < min) {
+      value = min;
+    } else if (value > max) {
+      value = max;
+    }
+    updateFormValues(event.target.name, index, value);
+  };
+
+  const updateFormValues = (name, index, value) => {
     const formValuesCopy = [...formValues];
-    formValuesCopy[index][event.target.name] = event.target.value;
+    formValuesCopy[index][name] = value;
     setFormValues(formValuesCopy);
+    setParentFormValues({
+      ...parentFormValues,
+      environment_options: formValuesCopy,
+    });
   };
 
   const removeFormFields = (index) => {
     const formValuesCopy = [...formValues];
     formValuesCopy.splice(index, 1);
     setFormValues(formValuesCopy);
+    setParentFormValues({
+      ...parentFormValues,
+      environment_options: formValuesCopy,
+    });
     const formFieldsCopy = [...formFields];
     formFieldsCopy.splice(index, 1);
     setFormFields(formFieldsCopy);
@@ -83,18 +109,18 @@ const EnvironmentOptions = () => {
                   type={field.type}
                   name={field.name}
                   value={formValues[idx][field.name]}
-                  onChange={(event) => onChange(event, idx)}
+                  onChange={(event) =>
+                    onChange(
+                      event,
+                      idx,
+                      field.min,
+                      field.max === 0 ? nrInstances : field.max
+                    )
+                  }
                   sx={{ mt: '1rem !important', mr: 1 }}
-                  inputProps={{ min: field.min, max: field.max }}
-                  //   onChange={(e) => {
-                  //     const value = parseInt(e.target.value, 10);
-                  //     if (value < min) {
-                  //       // set value to min
-                  //     } else if (value > max) {
-                  //       // set value to max
-                  //     }
-                  //     // update state
-                  //   }}
+                  InputProps={{
+                    endAdornment: field.endAdornment && field.endAdornment,
+                  }}
                 />
               );
             })}

@@ -21,12 +21,14 @@ const GoogleMachineTypeSelector = ({
 
   const handleMachineTypeChange = (event) => {
     setMachineType(event.target.value);
+    setFormValues({ ...formValues, machine_type: event.target.value });
   };
 
   const handleMachineSeriesChange = (event) => {
     setMachineSeries(event.target.value);
     setMachineType(machineTypesObject[event.target.value][0].value);
     setMachineTypesList(machineTypesObject[event.target.value]);
+    setFormValues({ ...formValues, machine_series: event.target.value });
   };
 
   return (
