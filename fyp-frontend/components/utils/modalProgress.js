@@ -24,6 +24,7 @@ const ModalProgress = ({
     redirectDisabled: true,
     errorMessage: null,
     loading: true,
+    successMessage: null,
   });
 
   useEffect(() => {
@@ -39,8 +40,13 @@ const ModalProgress = ({
           clearInterval(scheduledRequest);
           setModalState({
             redirectDisabled: false,
-            errorMessage: task.jobFailReason,
+            errorMessage:
+              task.jobState === 'failed' ? task.jobFailReason : null,
             loading: false,
+            successMessage:
+              task.jobState === 'active'
+                ? 'Environment creation has started!'
+                : null,
           });
         }
       }, 1000);
@@ -77,6 +83,12 @@ const ModalProgress = ({
             <ClosableAlert
               severity={'error'}
               alertMessage={modalState.errorMessage}
+            />
+          )}
+          {modalState.successMessage && (
+            <ClosableAlert
+              severity={'success'}
+              alertMessage={modalState.successMessage}
             />
           )}
           <Typography id='modal-modal-title' variant='h6' component='h2'>
