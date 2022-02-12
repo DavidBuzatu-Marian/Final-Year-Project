@@ -16,3 +16,9 @@ export const useEnvironment = () => {
   }
   return [environments, { mutate, loading }, error];
 };
+
+export const getTask = async (jobLink) => {
+  const res = await fetcher(getConfig()['gatewayBackendUrl'] + jobLink);
+
+  return res;
+};

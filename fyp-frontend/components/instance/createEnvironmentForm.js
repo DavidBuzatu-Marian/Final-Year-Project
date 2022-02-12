@@ -13,6 +13,7 @@ import EnvironmentSelectionTabs from './environmentSelectionTabs';
 import axios from 'axios';
 import { getConfig } from '../../config/defaultConfig';
 import Link from 'next/link';
+import ModalProgress from '../utils/modalProgress';
 
 const CreateEnvironmentForm = () => {
   const [formValues, setFormValues] = React.useState({
@@ -21,9 +22,12 @@ const CreateEnvironmentForm = () => {
     machine_series: 'e2',
     machine_type: 'e2-micro',
   });
+  const [progressModal, setProgressModal] = React.useState({
+    isVisible: false,
+    jobLink: null,
+  });
 
   const onSubmit = async (event) => {
-    // event.preventDefault();
     try {
       const res = await axios.post(
         getConfig()['environmentCreateUrl'],
@@ -32,6 +36,7 @@ const CreateEnvironmentForm = () => {
         },
         { withCredentials: true }
       );
+      setProgressModal({ isVisible: true, ...res.data });
     } catch (error) {
       console.log(error);
     }
@@ -67,15 +72,13 @@ const CreateEnvironmentForm = () => {
           nrInstances={formValues.nr_instances}
         />
         <Divider />
-        <Link href='/dashboard'>
-          <Button
-            variant='outlined'
-            sx={{ mt: '1rem' }}
-            onClick={(event) => onSubmit(event)}
-          >
-            Create
-          </Button>
-        </Link>
+        <Button
+          variant='outlined'
+          sx={{ mt: '1rem' }}
+          onClick={(event) => onSubmit(event)}
+        >
+          Create
+        </Button>
         <Button
           variant='contained'
           sx={{ mt: '1rem' }}
@@ -85,6 +88,14 @@ const CreateEnvironmentForm = () => {
           Cancel
         </Button>
       </FormControl>
+      <ModalProgress
+        isOpen={progressModal.isVisible}
+        modalButtonText={'Go to Dashboard'}
+        modalTitle={'Environment creation progress'}
+        modalContent={'Creating environment...'}
+        redirectUrl={'/dashboard'}
+        jobLink={progressModal.jobLink}
+      />
     </Box>
   );
 };
