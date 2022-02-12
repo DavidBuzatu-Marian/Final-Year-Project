@@ -25,17 +25,18 @@ const CreateEnvironmentForm = () => {
     React.useState({});
 
   const onSubmit = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     console.log(formValues);
     try {
       const res = await axios.post(
-        getConfig()['environmentCreate'],
+        getConfig()['environmentCreateUrl'],
         {
           ...formValues,
         },
         { withCredentials: true }
       );
-      setEnvironmentCreateTaskLink(...res.data);
+      console.log(res.data);
+      setEnvironmentCreateTaskLink(res.data);
     } catch (error) {
       console.log(error);
     }

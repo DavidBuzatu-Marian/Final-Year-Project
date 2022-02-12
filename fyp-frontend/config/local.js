@@ -8,4 +8,5 @@ export const urls = {
     'http://localhost:5002/backend/api/dataset/distribution',
   environmentsTrainingDistributionUrl:
     'http://localhost:5002/backend/api/dataset/training/distribution',
+  environmentCreateUrl: 'http://localhost:5002/backend/api/environment/create',
 };

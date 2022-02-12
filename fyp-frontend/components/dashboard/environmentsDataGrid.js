@@ -4,14 +4,14 @@ import { useEnvironment } from '../../hooks/environment';
 import { CircularProgress, Box } from '@mui/material';
 import ModalHandler from '../utils/modalHandler';
 
-export const getServerSideProps = async (context) => {
+export async function getServerSideProps(context) {
   console.log(context.query);
   return {
     props: {
       ...context.query,
     },
   };
-};
+}
 
 const EnvironmentsDataGrid = ({ setSelectedRows, jobLink }) => {
   const [environments, { loading, mutate }] = useEnvironment();

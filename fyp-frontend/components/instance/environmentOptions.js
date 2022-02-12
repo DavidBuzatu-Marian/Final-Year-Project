@@ -99,7 +99,7 @@ const EnvironmentOptions = ({
       <Typography variant='h6'>Environment options</Typography>
       {formFields.map((fields, idx) => {
         return (
-          <div style={{ alignItems: 'center', display: 'flex' }}>
+          <div key={idx} style={{ alignItems: 'center', display: 'flex' }}>
             {fields.map((field, id) => {
               return (
                 <TextField
