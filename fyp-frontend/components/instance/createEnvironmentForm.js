@@ -29,6 +29,7 @@ const CreateEnvironmentForm = () => {
 
   const onSubmit = async (event) => {
     try {
+      setProgressModal({ isVisible: true });
       const res = await axios.post(
         getConfig()['environmentCreateUrl'],
         {

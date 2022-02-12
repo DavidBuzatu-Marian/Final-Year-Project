@@ -6,10 +6,27 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import ModalProgress from '../utils/modalProgress';
+import axios from 'axios';
+import { getConfig } from '../../config/defaultConfig';
+
 const EnvironmentsDataGridHeader = ({ selectedRows }) => {
-  const deleteEnvironments = () => {
-    // TODO: Add button
-    console.log(selectedRows);
+  const [progressModal, setProgressModal] = React.useState({
+    isVisible: false,
+    jobLink: null,
+  });
+
+  const deleteEnvironments = async () => {
+    setProgressModal({ isVisible: true });
+    try {
+      const res = await axios.delete(getConfig()['environmentDeleteUrl'], {
+        withCredentials: true,
+        data: { environment_id: selectedRows[0]._id },
+      });
+      setProgressModal({ isVisible: true, ...res.data });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Box
@@ -36,10 +53,18 @@ const EnvironmentsDataGridHeader = ({ selectedRows }) => {
             variant='contained'
             startIcon={<span className='material-icons'>delete</span>}
             onClick={() => deleteEnvironments()}
+            disabled={selectedRows.length === 0}
           >
             Delete environment
           </Button>
         </Stack>
+        <ModalProgress
+          isOpen={progressModal.isVisible}
+          modalButtonText={'Close'}
+          modalTitle={'Environment deletion progress'}
+          modalContent={'Deleting environment...'}
+          jobLink={progressModal.jobLink}
+        />
       </Toolbar>
       <Divider />
     </Box>

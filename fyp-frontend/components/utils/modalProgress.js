@@ -109,16 +109,22 @@ const ModalProgress = ({
               </>
             )}
           </Box>
-          <Link href={redirectUrl}>
-            <Button
-              variant='outlined'
-              onClick={handleClose}
-              disabled={modalState.redirectDisabled}
-              sx={{ mt: 1 }}
-            >
+          {redirectUrl ? (
+            <Link href={redirectUrl}>
+              <Button
+                variant='outlined'
+                onClick={handleClose}
+                disabled={modalState.redirectDisabled}
+                sx={{ mt: 1 }}
+              >
+                {modalButtonText}
+              </Button>
+            </Link>
+          ) : (
+            <Button variant='outlined' onClick={handleClose} sx={{ mt: 1 }}>
               {modalButtonText}
             </Button>
-          </Link>
+          )}
         </Box>
       </Modal>
     </>
