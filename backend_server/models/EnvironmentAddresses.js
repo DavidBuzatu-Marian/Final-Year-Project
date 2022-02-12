@@ -23,6 +23,9 @@ const EnvironmentAddressesSchema = new mongoose.Schema(
     machine_type: {
       type: String,
     },
+    machine_series: {
+      type: String,
+    },
   },
   { collection: 'environmentsAddresses' }
 );

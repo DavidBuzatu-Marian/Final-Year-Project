@@ -59,7 +59,6 @@ const ModalProgress = ({
     <>
       <Modal
         open={open}
-        onClose={handleClose}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
         sx={{ overflow: 'hidden', display: 'flex', justifyContent: 'center' }}

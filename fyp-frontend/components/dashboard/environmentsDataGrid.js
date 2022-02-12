@@ -41,6 +41,7 @@ const EnvironmentsDataGrid = ({ setSelectedRows }) => {
       headerName: 'Status',
       width: 150,
     },
+    { field: 'machine_series', headerName: 'Instances series', width: 200 },
     { field: 'machine_type', headerName: 'Instances type', width: 200 },
     {
       field: 'date',
