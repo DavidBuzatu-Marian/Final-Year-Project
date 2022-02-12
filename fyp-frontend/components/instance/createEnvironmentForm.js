@@ -10,6 +10,9 @@ import {
 import React from 'react';
 import EnvironmentOptions from './environmentOptions';
 import EnvironmentSelectionTabs from './environmentSelectionTabs';
+import axios from 'axios';
+import { getConfig } from '../../config/defaultConfig';
+import Link from 'next/link';
 
 const CreateEnvironmentForm = () => {
   const [formValues, setFormValues] = React.useState({
@@ -18,9 +21,24 @@ const CreateEnvironmentForm = () => {
     machine_series: 'e2',
     machine_type: 'e2-micro',
   });
+  const [environmentCreateTaskLink, setEnvironmentCreateTaskLink] =
+    React.useState({});
 
-  const onSubmit = () => {
+  const onSubmit = async (event) => {
+    event.preventDefault();
     console.log(formValues);
+    try {
+      const res = await axios.post(
+        getConfig()['environmentCreate'],
+        {
+          ...formValues,
+        },
+        { withCredentials: true }
+      );
+      setEnvironmentCreateTaskLink(...res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -53,13 +71,22 @@ const CreateEnvironmentForm = () => {
           nrInstances={formValues.nr_instances}
         />
         <Divider />
-        <Button
-          variant='outlined'
-          sx={{ mt: '1rem' }}
-          onClick={(event) => onSubmit()}
+        <Link
+          href={{
+            pathname: '/dashboard',
+            query: {
+              environmentCreateTaskLink,
+            },
+          }}
         >
-          Create
-        </Button>
+          <Button
+            variant='outlined'
+            sx={{ mt: '1rem' }}
+            onClick={(event) => onSubmit(event)}
+          >
+            Create
+          </Button>
+        </Link>
         <Button
           variant='contained'
           sx={{ mt: '1rem' }}

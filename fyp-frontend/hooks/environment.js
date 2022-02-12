@@ -16,3 +16,13 @@ export const useEnvironment = () => {
   }
   return [environments, { mutate, loading }, error];
 };
+
+export const useEnvironmentState = (shouldFetch, environmentCreateTaskLink) => {
+  const { data, mutate, error } = useSWR(
+    shouldFetch ? environmentCreateTaskLink : null,
+    fetcher
+  );
+  const loading = !data && !error;
+  const completed = data && !error ? data : null;
+  return [completed, { mutate, loading }, error];
+};
