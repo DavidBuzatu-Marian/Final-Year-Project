@@ -21,12 +21,9 @@ const CreateEnvironmentForm = () => {
     machine_series: 'e2',
     machine_type: 'e2-micro',
   });
-  const [environmentCreateTaskLink, setEnvironmentCreateTaskLink] =
-    React.useState({});
 
   const onSubmit = async (event) => {
     // event.preventDefault();
-    console.log(formValues);
     try {
       const res = await axios.post(
         getConfig()['environmentCreateUrl'],
@@ -35,8 +32,6 @@ const CreateEnvironmentForm = () => {
         },
         { withCredentials: true }
       );
-      console.log(res.data);
-      setEnvironmentCreateTaskLink(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -72,14 +67,7 @@ const CreateEnvironmentForm = () => {
           nrInstances={formValues.nr_instances}
         />
         <Divider />
-        <Link
-          href={{
-            pathname: '/dashboard',
-            query: {
-              environmentCreateTaskLink,
-            },
-          }}
-        >
+        <Link href='/dashboard'>
           <Button
             variant='outlined'
             sx={{ mt: '1rem' }}

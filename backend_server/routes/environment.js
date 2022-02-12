@@ -103,10 +103,10 @@ router.get('/dataset/:id', async (req, res) => {
 
 router.get('/', async (req, res) => {
   const userId = req.headers['x-auth'];
-  const environmentAddresses = await EnvironmentAddresses.find({
+  const environmentsAddresses = await EnvironmentAddresses.find({
     user_id: mongoose.mongo.ObjectId(userId),
   });
-  return res.send(environmentAddresses);
+  return res.send(environmentsAddresses);
 });
 
 module.exports = router;
