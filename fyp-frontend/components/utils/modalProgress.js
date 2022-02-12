@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { getTask } from '../../hooks/environment';
+import ClosableAlert from '../alert/closableAlert';
 
 const ModalProgress = ({
   isOpen,
@@ -19,7 +20,11 @@ const ModalProgress = ({
 }) => {
   const [open, setOpen] = React.useState(isOpen);
   const handleClose = () => setOpen(false);
-  const [redirectDisabled, setRedirectDisabled] = React.useState(true);
+  const [modalState, setModalState] = React.useState({
+    redirectDisabled: true,
+    errorMessage: null,
+    loading: true,
+  });
 
   useEffect(() => {
     setOpen(isOpen);
@@ -29,9 +34,14 @@ const ModalProgress = ({
     if (jobLink) {
       const scheduledRequest = setInterval(async () => {
         const task = await getTask(jobLink);
+        console.log(task);
         if (task.jobState === 'failed' || task.jobState === 'active') {
           clearInterval(scheduledRequest);
-          setRedirectDisabled(false);
+          setModalState({
+            redirectDisabled: false,
+            errorMessage: task.jobFailReason,
+            loading: false,
+          });
         }
       }, 1000);
     }
@@ -63,6 +73,12 @@ const ModalProgress = ({
             p: 4,
           }}
         >
+          {modalState.errorMessage && (
+            <ClosableAlert
+              severity={'error'}
+              alertMessage={modalState.errorMessage}
+            />
+          )}
           <Typography id='modal-modal-title' variant='h6' component='h2'>
             {modalTitle}
           </Typography>
@@ -75,14 +91,18 @@ const ModalProgress = ({
               alignItems: 'center',
             }}
           >
-            <CircularProgress />
-            <Typography variant='p'>{modalContent}</Typography>
+            {modalState.loading && (
+              <>
+                <CircularProgress />
+                <Typography variant='p'>{modalContent}</Typography>
+              </>
+            )}
           </Box>
           <Link href={redirectUrl}>
             <Button
               variant='outlined'
               onClick={handleClose}
-              disabled={redirectDisabled}
+              disabled={modalState.redirectDisabled}
               sx={{ mt: 1 }}
             >
               {modalButtonText}
