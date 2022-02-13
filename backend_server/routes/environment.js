@@ -5,6 +5,7 @@ const {
   createJobBody,
   createJobHeader,
 } = require('../hooks/environment');
+const EnvironmentAddresses = require('../models/EnvironmentAddresses');
 const {
   environmentCreateQueue,
 } = require('../workers/environment/environment_create');
@@ -15,6 +16,7 @@ const {
   environmentDeleteQueue,
 } = require('../workers/environment/environment_delete');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 const storage = multer.diskStorage({
   destination: './temp/',
@@ -97,6 +99,14 @@ router.get('/dataset/:id', async (req, res) => {
   const id = req.params.id;
   const job = await environmentDatasetQueue.getJob(id);
   return await handleJobResponse(res, id, job);
+});
+
+router.get('/', async (req, res) => {
+  const userId = req.headers['x-auth'];
+  const environmentsAddresses = await EnvironmentAddresses.find({
+    user_id: mongoose.mongo.ObjectId(userId),
+  });
+  return res.send(environmentsAddresses);
 });
 
 module.exports = router;

@@ -1,39 +1,88 @@
 from logging import debug, error
 import subprocess
 import json
-import jsons
 from bson.objectid import ObjectId
 from flask import abort
+from app import statuses
+from datetime import datetime
 
 
-def save_ips_for_user(database, ips, user_id):
-    db = database
-    environments_document = {"user_id": ObjectId(user_id), "environment_ips": []}
+def save_ips_for_user(database, ips, user_id, environment_id):
+    environment_update = {"environment_ips": [], "status": statuses["1"]}
+    environment_query = {"user_id": user_id, "_id": environment_id}
     for ip in ips["value"]:
-        environments_document["environment_ips"].append(ip)
-    insert_result = db.environments_addresses.insert_one(environments_document)
-    error("Created entry: {}".format(insert_result.inserted_id))
-    return insert_result.inserted_id
+        environment_update["environment_ips"].append(ip)
+    update_result = database.environmentsAddresses.update_one(
+        environment_query, {"$set": environment_update}
+    )
+    error("Updated entry: {}".format(environment_id))
+    return update_result
+
+
+def update_environment_status(database, user_id, environment_id, status):
+    environment_query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
+    environment_update = {"status": statuses[status]}
+    update_result = database.environmentsAddresses.update_one(
+        environment_query, {"$set": environment_update}
+    )
+    return update_result
+
+
+def create_environment_data_distribution_entry(database, ips, user_id, environment_id):
+    distribution = [{"{}".format(ip): []} for ip in ips]
+    environment_data_distribution_document = {
+        "user_id": ObjectId(user_id),
+        "environment_id": ObjectId(environment_id),
+        "test_data_distribution": distribution,
+        "test_labels_data_distribution": distribution,
+        "train_data_distribution": distribution,
+        "train_labels_data_distribution": distribution,
+        "validation_data_distribution": distribution,
+        "validation_labels_data_distribution": distribution,
+    }
+    insert_result = database.environmentsDataDistribution.insert_one(
+        environment_data_distribution_document
+    )
+    return insert_result
+
+
+def save_environment_for_user(database, user_id, environment):
+    environment_document = {
+        "user_id": ObjectId(user_id),
+        "environment_ips": [],
+        "machine_type": environment.get_machine_type(),
+        "status": statuses["0"],
+        "environment_options": json.dumps(environment.get_environment_options()),
+        "date": datetime.utcnow().timestamp(),
+    }
+    insert_result = database.environmentsAddresses.insert_one(environment_document)
+    return insert_result
 
 
 def delete_environment_for_user(database, environment_id, user_id):
-    db = database
     query = {"_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
-    delete_result = db.environments_addresses.delete_one(query)
+    delete_result = database.environmentsAddresses.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
+    return delete_result
 
 
-def delete_environment_distribution(database, environment_id, user_id):
-    db = database
-    query = {"_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
-    delete_result = db.environments_data_distribution.delete_one(query)
+def delete_environment_train_distribution(database, environment_id, user_id):
+    query = {"environment_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
+    delete_result = database.environmentsTrainingDataDistribution.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
+    return delete_result
+
+
+def delete_environment_data_distribution(database, environment_id, user_id):
+    query = {"environment_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
+    delete_result = database.environmentsDataDistribution.delete_one(query)
+    error("Deleted entry: {}".format(delete_result.deleted_count))
+    return delete_result
 
 
 def get_environment(database, environment_id, user_id):
-    db = database
     query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
-    environment = db.environments_addresses.find_one(query)
+    environment = database.environmentsAddresses.find_one(query)
     if environment == None:
         raise ValueError("Environment not found")
     environment["environment_ips"] = set(environment["environment_ips"])
@@ -41,26 +90,38 @@ def get_environment(database, environment_id, user_id):
 
 
 def get_environment_data_distribution(database, environment_id, user_id):
-    db = database
-    query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
-    data_distribution = db.environments_data_distribution.find_one(query)
+    query = {"user_id": ObjectId(user_id), "environment_id": ObjectId(environment_id)}
+    data_distribution = database.environmentsTrainingDataDistribution.find_one(query)
     if data_distribution == None:
         raise ValueError("Environment distribution not found")
     return data_distribution
 
 
-def save_environment_data_distribution(
+def save_environment_test_data_distribution(
     database, environment_id, user_id, distributions
 ):
     data_distribution_document = {
         "user_id": ObjectId(user_id),
-        "_id": ObjectId(environment_id),
+        "environment_id": ObjectId(environment_id),
         "distributions": distributions,
     }
-    insert_result = database.environments_data_distribution.insert_one(
+    insert_result = database.environmentsTrainingDataDistribution.insert_one(
         data_distribution_document
     )
     return insert_result.inserted_id
+
+
+def save_environment_data_distribution(
+    database, user_id, environment_id, distributions
+):
+    data_distribution_query = {
+        "user_id": ObjectId(user_id),
+        "environment_id": ObjectId(environment_id),
+    }
+    update_result = database.environmentsDataDistribution.update_one(
+        data_distribution_query, {"$set": distributions}
+    )
+    return update_result
 
 
 def get_data_distribution(request_json):
