@@ -17,7 +17,7 @@ const ModalTrainingDistribution = ({
   modalButtonText,
   modalContent,
   modalForm,
-  environment_id,
+  initialFormValues,
 }) => {
   const [open, setOpen] = React.useState(isOpen);
   const [modalState, setModalState] = React.useState({
@@ -25,11 +25,7 @@ const ModalTrainingDistribution = ({
     loading: false,
     successMessage: null,
   });
-  const [formValues, setFormValues] = React.useState({
-    environment_id: environment_id,
-    data_distribution: {},
-    dataset_length: 0,
-  });
+  const [formValues, setFormValues] = React.useState(initialFormValues);
 
   const handleClose = () => setOpen(false);
 
@@ -37,6 +33,10 @@ const ModalTrainingDistribution = ({
     setOpen(isOpen);
   }, [isOpen]);
 
+  useEffect(() => {
+    setFormValues(initialFormValues);
+  }, [initialFormValues]);
+  console.log(initialFormValues);
   const onSubmit = async () => {
     try {
       setModalState({ ...modalState, loading: true });
@@ -69,6 +69,9 @@ const ModalTrainingDistribution = ({
       console.log(error);
     }
   };
+
+  const ModalForm = modalForm;
+
   return (
     <>
       <Modal
@@ -116,7 +119,7 @@ const ModalTrainingDistribution = ({
               alignItems: 'center',
             }}
           >
-            {modalForm}
+            <ModalForm formValues={formValues} setFormValues={setFormValues} />
             {modalState.loading && (
               <>
                 <CircularProgress />

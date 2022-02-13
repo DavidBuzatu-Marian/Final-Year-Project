@@ -48,9 +48,17 @@ const DatasetsDataGridHeader = ({ selectedRow }) => {
         isOpen={progressModal.isVisible}
         modalTitle={'Add environment training data distribution'}
         modalContent={'Saving environment training data distribution...'}
-        modalForm={<AddTrainingDataDistributionForm />}
-        environment_id={selectedRow.environment_id}
+        modalForm={AddTrainingDataDistributionForm}
         modalButtonText={'Close'}
+        initialFormValues={{
+          environment_id: selectedRow.environment_id,
+          data_distribution:
+            Object.keys(selectedRow).length &&
+            selectedRow.train_data_distribution.map((distribution) => {
+              return { [Object.keys(distribution)[0]]: 0 };
+            }),
+          dataset_length: 0,
+        }}
       />
       <Divider />
     </Box>
