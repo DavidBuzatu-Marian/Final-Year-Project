@@ -11,7 +11,7 @@ import { getConfig } from '../../config/defaultConfig';
 import { getTask } from '../../hooks/environment';
 import ClosableAlert from '../alert/closableAlert';
 
-const ModalTrainingDistribution = ({
+const ModalDistributionForm = ({
   isOpen,
   modalTitle,
   modalButtonText,
@@ -70,7 +70,6 @@ const ModalTrainingDistribution = ({
   };
 
   const ModalForm = modalForm;
-  console.log(modalState);
   return (
     <>
       <Modal
@@ -150,4 +149,4 @@ const ModalTrainingDistribution = ({
   );
 };
 
-export default ModalTrainingDistribution;
+export default ModalDistributionForm;

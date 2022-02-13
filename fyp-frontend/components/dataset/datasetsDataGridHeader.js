@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import ModalTrainingDistribution from './modalTrainingDistribution';
+import ModalDistributionForm from './modalDistributionForm';
 import AddTrainingDataDistributionForm from './addTrainingDataDistributionForm';
 
 const DatasetsDataGridHeader = ({ selectedRow }) => {
@@ -44,7 +44,7 @@ const DatasetsDataGridHeader = ({ selectedRow }) => {
           </Button>
         </Stack>
       </Toolbar>
-      <ModalTrainingDistribution
+      <ModalDistributionForm
         isOpen={progressModal.isVisible}
         modalTitle={'Add environment training data distribution'}
         modalContent={'Saving environment training data distribution...'}
