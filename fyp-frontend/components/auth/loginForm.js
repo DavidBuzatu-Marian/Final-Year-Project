@@ -17,6 +17,7 @@ export default function LoginForm() {
     password: '',
     showPassword: false,
     onSubmitError: '',
+    alertId: 0,
     loading: false,
   });
   const [user, { mutate }, error] = useUser();
@@ -55,6 +56,7 @@ export default function LoginForm() {
         password: '',
         onSubmitError,
         loading: false,
+        alertId: formValues.alertId + 1,
       });
     }
   };
@@ -72,6 +74,7 @@ export default function LoginForm() {
       <FormControl>
         {formValues.onSubmitError && (
           <ClosableAlert
+            key={formValues.id}
             severity={'error'}
             alertMessage={'Signing in went wrong. Invalid email or password'}
           />

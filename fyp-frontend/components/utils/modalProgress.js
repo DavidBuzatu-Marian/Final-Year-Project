@@ -47,6 +47,7 @@ const ModalProgress = ({
               task.jobState === 'active'
                 ? 'Environment creation has started!'
                 : null,
+            alertId: task.id,
           });
         }
       }, 1000);
@@ -80,12 +81,14 @@ const ModalProgress = ({
         >
           {modalState.errorMessage && (
             <ClosableAlert
+              key={modalState.alertId}
               severity={'error'}
               alertMessage={modalState.errorMessage}
             />
           )}
           {modalState.successMessage && (
             <ClosableAlert
+              key={modalState.alertId}
               severity={'success'}
               alertMessage={modalState.successMessage}
             />

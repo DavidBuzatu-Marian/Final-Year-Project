@@ -36,7 +36,7 @@ const ModalTrainingDistribution = ({
   useEffect(() => {
     setFormValues(initialFormValues);
   }, [initialFormValues]);
-  console.log(initialFormValues);
+
   const onSubmit = async () => {
     try {
       setModalState({ ...modalState, loading: true });
@@ -47,14 +47,12 @@ const ModalTrainingDistribution = ({
         },
         { withCredentials: true }
       );
-      const jobLink = res.data;
+      const jobLink = res.data.jobLink;
       const scheduledRequest = setInterval(async () => {
         const task = await getTask(jobLink);
-        console.log(task);
         if (task.jobState === 'completed' || task.jobState === 'failed') {
           clearInterval(scheduledRequest);
           setModalState({
-            redirectDisabled: false,
             errorMessage:
               task.jobState === 'failed' ? task.jobFailReason : null,
             loading: false,
@@ -62,6 +60,7 @@ const ModalTrainingDistribution = ({
               task.jobState === 'completed'
                 ? 'Environment training data distribution set!'
                 : null,
+            alertId: task.id,
           });
         }
       }, 1000);
@@ -71,7 +70,7 @@ const ModalTrainingDistribution = ({
   };
 
   const ModalForm = modalForm;
-
+  console.log(modalState);
   return (
     <>
       <Modal
@@ -97,12 +96,14 @@ const ModalTrainingDistribution = ({
         >
           {modalState.errorMessage && (
             <ClosableAlert
+              key={modalState.alertId}
               severity={'error'}
               alertMessage={modalState.errorMessage}
             />
           )}
           {modalState.successMessage && (
             <ClosableAlert
+              key={modalState.alertId}
               severity={'success'}
               alertMessage={modalState.successMessage}
             />
@@ -127,7 +128,20 @@ const ModalTrainingDistribution = ({
               </>
             )}
           </Box>
-          <Button variant='outlined' onClick={handleClose} sx={{ mt: 1 }}>
+          <Button
+            variant='contained'
+            onClick={(event) => onSubmit()}
+            sx={{ mt: 1, width: '35ch' }}
+            disabled={modalState.loading}
+          >
+            Save
+          </Button>
+          <Button
+            variant='outlined'
+            color='error'
+            onClick={handleClose}
+            sx={{ mt: 1, width: '35ch' }}
+          >
             {modalButtonText}
           </Button>
         </Box>

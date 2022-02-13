@@ -4,9 +4,11 @@ import React from 'react';
 
 const AddTrainingDataDistributionForm = ({ formValues, setFormValues }) => {
   const handleChange = (field, subField, idx) => (event) => {
+    const newValue =
+      event.target.value.length === 0 ? 0 : parseInt(event.target.value);
     if (subField) {
       const newProp = formValues[field];
-      newProp[idx][subField] = parseInt(event.target.value);
+      newProp[idx][subField] = newValue;
       setFormValues({
         ...formValues,
         newProp,
@@ -14,7 +16,7 @@ const AddTrainingDataDistributionForm = ({ formValues, setFormValues }) => {
     } else {
       setFormValues({
         ...formValues,
-        [field]: event.target.value,
+        [field]: newValue,
       });
     }
   };
@@ -27,9 +29,15 @@ const AddTrainingDataDistributionForm = ({ formValues, setFormValues }) => {
         mt: 1,
         mx: 'auto',
       }}
-      autoComplete='off'
     >
       <FormControl>
+        <TextField
+          id='outlined-required'
+          label='Dataset length'
+          type='number'
+          value={formValues.dataset_length}
+          onChange={handleChange('dataset_length')}
+        />
         {formValues.data_distribution.map((instance, idx) => (
           <TextField
             id='outlined-required'

@@ -22,6 +22,7 @@ export default function RegisterForm() {
     emailErrorText: '',
     loading: false,
     onSubmitError: false,
+    alertId: 0,
   });
 
   /* Added as per described in official documentation: https://mui.com/components/text-fields/#form-props
@@ -111,6 +112,7 @@ export default function RegisterForm() {
         loading: false,
         onSubmitError,
         onSubmitSuccess,
+        alertId: formValues.alertId + 1,
       });
     }
   };
