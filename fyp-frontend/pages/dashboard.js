@@ -9,7 +9,7 @@ import EnvironmentsDataGridHeader from '../components/dashboard/environmentsData
 
 const Dashboard = () => {
   const [user, { loading }] = useUser();
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRow, setSelectedRow] = useState({});
 
   useEffect(() => {
     if (!user || user === null) {
@@ -31,8 +31,8 @@ const Dashboard = () => {
         <>
           <DrawerMenu user={user} />
           <section style={{ width: '100%' }}>
-            <EnvironmentsDataGridHeader selectedRows={selectedRows} />
-            <EnvironmentsDataGrid setSelectedRows={setSelectedRows} />
+            <EnvironmentsDataGridHeader selectedRow={selectedRow} />
+            <EnvironmentsDataGrid setSelectedRow={setSelectedRow} />
           </section>
         </>
       )}

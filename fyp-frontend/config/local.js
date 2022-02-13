@@ -11,4 +11,6 @@ export const urls = {
   environmentCreateUrl: 'http://localhost:5002/backend/api/environment/create',
   gatewayBackendUrl: 'http://localhost:5002/backend',
   environmentDeleteUrl: 'http://localhost:5002/backend/api/environment/delete',
+  environmentTrainingDistributionAddUrl:
+    'http://localhost:5002/backend/api/environment/dataset/distribution',
 };

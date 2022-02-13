@@ -4,7 +4,7 @@ import { useEnvironment } from '../../hooks/environment';
 import { CircularProgress, Box } from '@mui/material';
 import ModalHandler from '../utils/modalHandler';
 
-const EnvironmentsDataGrid = ({ setSelectedRows }) => {
+const EnvironmentsDataGrid = ({ setSelectedRow }) => {
   const [environments, { loading, mutate }] = useEnvironment();
   const columns = [
     { field: 'id', headerName: 'ID', width: 220 },
@@ -68,7 +68,7 @@ const EnvironmentsDataGrid = ({ setSelectedRows }) => {
             const selectedRowData = environments.filter((row) =>
               selectedIDs.has(row._id)
             );
-            setSelectedRows(selectedRowData);
+            setSelectedRow(...selectedRowData);
           }}
         />
       )}

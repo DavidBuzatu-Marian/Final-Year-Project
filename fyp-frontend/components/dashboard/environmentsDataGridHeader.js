@@ -10,7 +10,7 @@ import ModalProgress from '../utils/modalProgress';
 import axios from 'axios';
 import { getConfig } from '../../config/defaultConfig';
 
-const EnvironmentsDataGridHeader = ({ selectedRows }) => {
+const EnvironmentsDataGridHeader = ({ selectedRow }) => {
   const [progressModal, setProgressModal] = React.useState({
     isVisible: false,
     jobLink: null,
@@ -21,7 +21,7 @@ const EnvironmentsDataGridHeader = ({ selectedRows }) => {
     try {
       const res = await axios.delete(getConfig()['environmentDeleteUrl'], {
         withCredentials: true,
-        data: { environment_id: selectedRows[0]._id },
+        data: { environment_id: selectedRow._id },
       });
       setProgressModal({ isVisible: true, ...res.data });
     } catch (error) {
@@ -53,7 +53,7 @@ const EnvironmentsDataGridHeader = ({ selectedRows }) => {
             variant='contained'
             startIcon={<span className='material-icons'>delete</span>}
             onClick={() => deleteEnvironments()}
-            disabled={selectedRows.length === 0}
+            disabled={Object.keys(selectedRow).length === 0}
           >
             Delete environment
           </Button>

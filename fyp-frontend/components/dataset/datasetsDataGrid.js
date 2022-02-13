@@ -7,7 +7,7 @@ import {
 import { CircularProgress, Box } from '@mui/material';
 import ModalHandler from '../utils/modalHandler';
 
-const DatasetsDataGrid = () => {
+const DatasetsDataGrid = ({ setSelectedRow }) => {
   const [environmentsDataDistribution, { loadingDataDistribution }] =
     useDatasetDataDistribution();
   const [environmentsTrainingDistribution, { loadingTrainingDistribution }] =
@@ -159,12 +159,13 @@ const DatasetsDataGrid = () => {
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
-          // onSelectionModelChange={(ids) => {
-          //   const selectedIDs = new Set(ids);
-          //   const selectedRowData = datasets.filter((row) =>
-          //     selectedIDs.has(row._id)
-          //   );
-          // }}
+          onSelectionModelChange={(ids) => {
+            const selectedIDs = new Set(ids);
+            const selectedRowData = environmentsDataDistributions.filter(
+              (row) => selectedIDs.has(row._id)
+            );
+            setSelectedRow(...selectedRowData);
+          }}
         />
       )}
     </div>

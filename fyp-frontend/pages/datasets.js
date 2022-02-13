@@ -9,7 +9,7 @@ import DatasetsDataGridHeader from '../components/dataset/datasetsDataGridHeader
 
 const Datasets = () => {
   const [user, { loading }] = useUser();
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRow, setSelectedRow] = useState({});
 
   useEffect(() => {
     if (!user || user === null) {
@@ -31,8 +31,8 @@ const Datasets = () => {
         <>
           <DrawerMenu user={user} />
           <section style={{ width: '100%' }}>
-            <DatasetsDataGridHeader setSelectedRows={setSelectedRows} />
-            <DatasetsDataGrid selectedRows={selectedRows} />
+            <DatasetsDataGridHeader selectedRow={selectedRow} />
+            <DatasetsDataGrid setSelectedRow={setSelectedRow} />
           </section>
         </>
       )}
