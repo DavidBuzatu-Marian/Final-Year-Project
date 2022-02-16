@@ -70,4 +70,4 @@ ssl-certs/
 
 .next
 
-/logs/
+*.log

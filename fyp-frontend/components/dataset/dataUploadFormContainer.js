@@ -7,23 +7,39 @@ const dataNameMap = {
   1: {
     dataName: "train_data",
     labelsName: "train_labels",
+    url: "environmentDataDistributionTrainAddUrl",
   },
   2: {
     dataName: "validation_data",
     labelsName: "validation_labels",
+    url: "environmentDataDistributionValidationAddUrl",
   },
   3: {
     dataName: "test_data",
     labelsName: "test_labels",
+    url: "environmentDataDistributionTestAddUrl",
   },
 };
 
-const DataUploadFormContainer = ({ formValues, setFormValues }) => {
+const DataUploadFormContainer = ({
+  formValues,
+  setFormValues,
+  headerModals,
+  setHeaderModalsState,
+  activeHeaderModal,
+}) => {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     setFormValues({ ...formValues, ...dataNameMap[newValue] });
+    setHeaderModalsState({
+      ...headerModals,
+      [activeHeaderModal]: {
+        ...headerModals[activeHeaderModal],
+        url: dataNameMap[newValue].url,
+      },
+    });
   };
 
   return (

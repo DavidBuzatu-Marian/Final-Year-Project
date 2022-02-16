@@ -34,7 +34,10 @@ const ModalDistributionForm = ({
     setOpen(false);
     setHeaderModalsState({
       ...headerModals,
-      [activeHeaderModal]: { isVisible: false },
+      [activeHeaderModal]: {
+        ...headerModals[activeHeaderModal],
+        isVisible: false,
+      },
     });
   };
 
@@ -84,6 +87,7 @@ const ModalDistributionForm = ({
     }
   };
   const ModalForm = modalForm;
+
   return (
     <>
       <Modal
@@ -132,7 +136,13 @@ const ModalDistributionForm = ({
               alignItems: "center",
             }}
           >
-            <ModalForm formValues={formValues} setFormValues={setFormValues} />
+            <ModalForm
+              formValues={formValues}
+              setFormValues={setFormValues}
+              headerModals={headerModals}
+              setHeaderModalsState={setHeaderModalsState}
+              activeHeaderModal={activeHeaderModal}
+            />
             {modalState.loading && (
               <>
                 <CircularProgress />

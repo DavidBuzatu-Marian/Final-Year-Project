@@ -13,9 +13,11 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
   const [modals, setModals] = React.useState({
     trainingDistribution: {
       isVisible: false,
+      url: "environmentTrainingDistributionAddUrl",
     },
     dataDistribution: {
       isVisible: false,
+      url: "environmentDataDistributionTrainAddUrl",
     },
   });
 
@@ -40,6 +42,7 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
               setModals({
                 ...modals,
                 dataDistribution: {
+                  ...modals["dataDistribution"],
                   isVisible: true,
                 },
               })
@@ -55,6 +58,7 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
               setModals({
                 ...modals,
                 trainingDistribution: {
+                  ...modals["trainingDistribution"],
                   isVisible: true,
                 },
               })
