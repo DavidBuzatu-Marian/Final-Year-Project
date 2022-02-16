@@ -3,11 +3,27 @@ import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import AddDataForm from "./addDataForm";
 
+const dataNameMap = {
+  1: {
+    dataName: "train_data",
+    labelsName: "train_labels",
+  },
+  2: {
+    dataName: "validation_data",
+    labelsName: "validation_labels",
+  },
+  3: {
+    dataName: "test_data",
+    labelsName: "test_labels",
+  },
+};
+
 const DataUploadFormContainer = ({ formValues, setFormValues }) => {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    setFormValues({ ...formValues, ...dataNameMap[newValue] });
   };
 
   return (

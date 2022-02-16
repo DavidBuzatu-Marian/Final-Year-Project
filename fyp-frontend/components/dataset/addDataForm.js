@@ -13,7 +13,7 @@ const AddDataForm = ({ formValues, setFormValues }) => {
 
   const handleChange = (event, name) => {
     const filesUploaded = event.target.files;
-    console.log(filesUploaded);
+    setFormValues({ ...formValues, [name]: filesUploaded });
   };
 
   return (
@@ -51,6 +51,19 @@ const AddDataForm = ({ formValues, setFormValues }) => {
             style={{ display: "none" }}
             multiple
           />
+          <span
+            className="material-icons"
+            style={{
+              color: "#002884",
+              marginLeft: "1rem",
+              display:
+                Object.keys(formValues[formValues.dataName]).length === 0
+                  ? "none"
+                  : "block",
+            }}
+          >
+            file_download_done
+          </span>
         </Stack>
         <Stack
           direction="row"
@@ -72,6 +85,19 @@ const AddDataForm = ({ formValues, setFormValues }) => {
             style={{ display: "none" }}
             multiple
           />
+          <span
+            className="material-icons"
+            style={{
+              color: "#002884",
+              marginLeft: "1rem",
+              display:
+                Object.keys(formValues[formValues.labelsName]).length === 0
+                  ? "none"
+                  : "block",
+            }}
+          >
+            file_download_done
+          </span>
         </Stack>
       </FormControl>
     </Box>

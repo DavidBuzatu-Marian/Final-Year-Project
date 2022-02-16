@@ -9,7 +9,7 @@ import ModalDistributionForm from "./modalDistributionForm";
 import AddTrainingDataDistributionForm from "./addTrainingDataDistributionForm";
 import DataUploadFormContainer from "./dataUploadFormContainer";
 
-const DatasetsDataGridHeader = ({ selectedRow }) => {
+const DatasetsDataGridHeader = ({ selectedRow, user }) => {
   const [modals, setModals] = React.useState({
     trainingDistribution: {
       isVisible: false,
@@ -92,6 +92,15 @@ const DatasetsDataGridHeader = ({ selectedRow }) => {
         modalButtonText={"Close"}
         initialFormValues={{
           environment_id: selectedRow.environment_id,
+          user: user,
+          dataName: "train_data",
+          labelsName: "train_labels",
+          train_data: {},
+          train_labels: {},
+          validation_data: {},
+          validation_labels: {},
+          test_data: {},
+          test_labels: {},
         }}
       />
       <Divider />
