@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   Modal,
   Box,
   Typography,
   Button,
   CircularProgress,
-} from '@mui/material';
-import axios from 'axios';
-import { getConfig } from '../../config/defaultConfig';
-import { getTask } from '../../hooks/environment';
-import ClosableAlert from '../alert/closableAlert';
+} from "@mui/material";
+import axios from "axios";
+import { getConfig } from "../../config/defaultConfig";
+import { getTask } from "../../hooks/environment";
+import ClosableAlert from "../alert/closableAlert";
 
 const ModalDistributionForm = ({
   isOpen,
@@ -18,6 +18,9 @@ const ModalDistributionForm = ({
   modalContent,
   modalForm,
   initialFormValues,
+  headerModals,
+  setHeaderModalsState,
+  activeHeaderModal,
 }) => {
   const [open, setOpen] = React.useState(isOpen);
   const [modalState, setModalState] = React.useState({
@@ -27,7 +30,13 @@ const ModalDistributionForm = ({
   });
   const [formValues, setFormValues] = React.useState(initialFormValues);
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setHeaderModalsState({
+      ...headerModals,
+      [activeHeaderModal]: { isVisible: false },
+    });
+  };
 
   useEffect(() => {
     setOpen(isOpen);
@@ -41,7 +50,7 @@ const ModalDistributionForm = ({
     try {
       setModalState({ ...modalState, loading: true });
       const res = await axios.post(
-        getConfig()['environmentTrainingDistributionAddUrl'],
+        getConfig()["environmentTrainingDistributionAddUrl"],
         {
           ...formValues,
         },
@@ -50,15 +59,15 @@ const ModalDistributionForm = ({
       const jobLink = res.data.jobLink;
       const scheduledRequest = setInterval(async () => {
         const task = await getTask(jobLink);
-        if (task.jobState === 'completed' || task.jobState === 'failed') {
+        if (task.jobState === "completed" || task.jobState === "failed") {
           clearInterval(scheduledRequest);
           setModalState({
             errorMessage:
-              task.jobState === 'failed' ? task.jobFailReason : null,
+              task.jobState === "failed" ? task.jobFailReason : null,
             loading: false,
             successMessage:
-              task.jobState === 'completed'
-                ? 'Environment training data distribution set!'
+              task.jobState === "completed"
+                ? "Environment training data distribution set!"
                 : null,
             alertId: task.id,
           });
@@ -74,72 +83,72 @@ const ModalDistributionForm = ({
     <>
       <Modal
         open={open}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-        sx={{ overflow: 'hidden', display: 'flex', justifyContent: 'center' }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{ overflow: "hidden", display: "flex", justifyContent: "center" }}
       >
         <Box
           sx={{
-            position: 'absolute',
-            top: '40%',
+            position: "absolute",
+            top: "20%",
             m: 1,
-            mx: 'auto',
-            minWidth: '30%',
-            bgcolor: 'background.paper',
+            mx: "auto",
+            minWidth: "30%",
+            bgcolor: "background.paper",
             boxShadow: 24,
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'column',
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
             p: 4,
           }}
         >
           {modalState.errorMessage && (
             <ClosableAlert
               key={modalState.alertId}
-              severity={'error'}
+              severity={"error"}
               alertMessage={modalState.errorMessage}
             />
           )}
           {modalState.successMessage && (
             <ClosableAlert
               key={modalState.alertId}
-              severity={'success'}
+              severity={"success"}
               alertMessage={modalState.successMessage}
             />
           )}
-          <Typography id='modal-modal-title' variant='h6' component='h2'>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
             {modalTitle}
           </Typography>
           <Box
-            id='modal-modal-description'
+            id="modal-modal-description"
             sx={{
               mt: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
             <ModalForm formValues={formValues} setFormValues={setFormValues} />
             {modalState.loading && (
               <>
                 <CircularProgress />
-                <Typography variant='p'>{modalContent}</Typography>
+                <Typography variant="p">{modalContent}</Typography>
               </>
             )}
           </Box>
           <Button
-            variant='contained'
+            variant="contained"
             onClick={(event) => onSubmit()}
-            sx={{ mt: 1, width: '35ch' }}
+            sx={{ mt: 1, width: "35ch" }}
             disabled={modalState.loading}
           >
             Save
           </Button>
           <Button
-            variant='outlined'
-            color='error'
+            variant="outlined"
+            color="error"
             onClick={handleClose}
-            sx={{ mt: 1, width: '35ch' }}
+            sx={{ mt: 1, width: "35ch" }}
           >
             {modalButtonText}
           </Button>

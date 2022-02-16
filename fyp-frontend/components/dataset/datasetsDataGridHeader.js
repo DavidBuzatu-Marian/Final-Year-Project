@@ -13,11 +13,9 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
   const [modals, setModals] = React.useState({
     trainingDistribution: {
       isVisible: false,
-      jobLink: null,
     },
     dataDistribution: {
       isVisible: false,
-      jobLink: null,
     },
   });
 
@@ -42,7 +40,6 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
               setModals({
                 ...modals,
                 dataDistribution: {
-                  ...modals.dataDistribution,
                   isVisible: true,
                 },
               })
@@ -58,7 +55,6 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
               setModals({
                 ...modals,
                 trainingDistribution: {
-                  ...modals.trainingDistribution,
                   isVisible: true,
                 },
               })
@@ -83,6 +79,9 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
             }),
           dataset_length: 0,
         }}
+        headerModals={modals}
+        setHeaderModalsState={setModals}
+        activeHeaderModal={"trainingDistribution"}
       />
       <ModalDistributionForm
         isOpen={modals.dataDistribution.isVisible}
@@ -102,6 +101,9 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
           test_data: {},
           test_labels: {},
         }}
+        headerModals={modals}
+        setHeaderModalsState={setModals}
+        activeHeaderModal={"dataDistribution"}
       />
       <Divider />
     </Box>
