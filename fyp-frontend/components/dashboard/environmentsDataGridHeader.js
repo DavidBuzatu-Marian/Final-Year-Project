@@ -21,6 +21,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
   const [modals, setModals] = React.useState({
     model: {
       isVisible: false,
+      url: "environmentModelAddUrl",
     },
   });
 
@@ -72,6 +73,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
               setModals({
                 ...modals,
                 model: {
+                  ...modals.model,
                   isVisible: true,
                 },
               })
@@ -95,7 +97,10 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           modalForm={AddModelForm}
           modalButtonText={"Close"}
           initialFormValues={{
-            environment_id: selectedRow.environment_id,
+            environment_id: selectedRow.id,
+            environment_model_network_options: {
+              network: [],
+            },
           }}
           headerModals={modals}
           setHeaderModalsState={setModals}

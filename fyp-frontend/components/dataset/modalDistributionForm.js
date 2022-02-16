@@ -50,7 +50,7 @@ const ModalDistributionForm = ({
     try {
       setModalState({ ...modalState, loading: true });
       const res = await axios.post(
-        getConfig()["environmentTrainingDistributionAddUrl"],
+        getConfig()[headerModals[activeHeaderModal].url],
         {
           ...formValues,
         },
@@ -75,9 +75,14 @@ const ModalDistributionForm = ({
       }, 1000);
     } catch (error) {
       console.log(error);
+      setModalState({
+        ...modalState,
+        errorMessage: "Request could not be made",
+        loading: false,
+        alertId: crypto.randomUUID(),
+      });
     }
   };
-
   const ModalForm = modalForm;
   return (
     <>
@@ -90,7 +95,6 @@ const ModalDistributionForm = ({
         <Box
           sx={{
             position: "absolute",
-            top: "20%",
             m: 1,
             mx: "auto",
             minWidth: "30%",
