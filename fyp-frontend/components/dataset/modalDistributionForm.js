@@ -49,16 +49,42 @@ const ModalDistributionForm = ({
     setFormValues(initialFormValues);
   }, [initialFormValues]);
 
-  const onSubmit = async () => {
-    try {
-      setModalState({ ...modalState, loading: true });
-      const res = await axios.post(
-        getConfig()[headerModals[activeHeaderModal].url],
+  const performRequest = async (activeModal, formValues) => {
+    if (activeModal.hasOwnProperty("isMultipartForm")) {
+      const formData = new FormData();
+      for (const file of formValues[formValues.dataName]) {
+        formData.append(formValues.dataName, file);
+      }
+      for (const file of formValues[formValues.labelsName]) {
+        console.log(formValues.labelsName, file);
+        formData.append(formValues.labelsName, file);
+      }
+      console.log(formData);
+      return await axios.post(getConfig()[activeModal.url], formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    } else {
+      return await axios.post(
+        getConfig()[activeModal.url],
         {
           ...formValues,
         },
         { withCredentials: true }
       );
+    }
+  };
+
+  const onSubmit = async () => {
+    try {
+      setModalState({ ...modalState, loading: true });
+      const res = await performRequest(
+        headerModals[activeHeaderModal],
+        formValues
+      );
+      console.log(res);
       const jobLink = res.data.jobLink;
       const scheduledRequest = setInterval(async () => {
         const task = await getTask(jobLink);

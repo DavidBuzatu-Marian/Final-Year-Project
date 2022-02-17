@@ -18,6 +18,7 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
     dataDistribution: {
       isVisible: false,
       url: "environmentDataDistributionTrainAddUrl",
+      isMultipartForm: true,
     },
   });
 
