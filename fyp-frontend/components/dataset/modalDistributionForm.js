@@ -59,12 +59,13 @@ const ModalDistributionForm = ({
         console.log(formValues.labelsName, file);
         formData.append(formValues.labelsName, file);
       }
-      console.log(formData);
+
       return await axios.post(getConfig()[activeModal.url], formData, {
         withCredentials: true,
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": `multipart/form-data;boundary=${formData.getBoundary()}`,
         },
+        maxContentLength: Infinity,
       });
     } else {
       return await axios.post(

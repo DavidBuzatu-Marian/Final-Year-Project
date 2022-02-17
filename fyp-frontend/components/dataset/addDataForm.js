@@ -50,6 +50,7 @@ const AddDataForm = ({ formValues, setFormValues }) => {
             onChange={(event) => handleChange(event, formValues.dataName)}
             style={{ display: "none" }}
             multiple
+            accept=".jpg, .png, .jpeg, .gif"
           />
           <span
             className="material-icons"
@@ -84,6 +85,7 @@ const AddDataForm = ({ formValues, setFormValues }) => {
             onChange={(event) => handleChange(event, formValues.labelsName)}
             style={{ display: "none" }}
             multiple
+            accept=".jpg, .png, .jpeg, .gif"
           />
           <span
             className="material-icons"
