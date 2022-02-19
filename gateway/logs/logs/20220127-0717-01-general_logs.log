@@ -1,4 +1,0 @@
-::1 - - [26/Jan/2022:14:27:43 +0000] "GET /api/auth/secret HTTP/1.1" 401 20 "-" "PostmanRuntime/7.29.0"
-::1 - - [26/Jan/2022:21:06:55 +0000] "GET /api/auth/secret HTTP/1.1" 401 20 "-" "PostmanRuntime/7.29.0"
-::1 - - [26/Jan/2022:21:07:01 +0000] "GET /backend/api/auth/secret HTTP/1.1" 504 - "-" "PostmanRuntime/7.29.0"
-::1 - - [26/Jan/2022:21:08:42 +0000] "GET /backend/api/auth/secret HTTP/1.1" 504 - "-" "PostmanRuntime/7.29.0"
