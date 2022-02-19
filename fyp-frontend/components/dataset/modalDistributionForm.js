@@ -96,9 +96,7 @@ const ModalDistributionForm = ({
               task.jobState === "failed" ? task.jobFailReason : null,
             loading: false,
             successMessage:
-              task.jobState === "completed"
-                ? "Environment training data distribution set!"
-                : null,
+              task.jobState === "completed" ? "Task completed" : null,
             alertId: task.id,
           });
         }

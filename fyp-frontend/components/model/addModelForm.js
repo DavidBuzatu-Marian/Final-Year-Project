@@ -1,7 +1,8 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Badge } from "@mui/material";
 import React from "react";
 import JSONInput from "react-json-editor-ajrm";
 import locale from "react-json-editor-ajrm/locale/en";
+import Link from "next/link";
 
 const AddModelForm = ({ formValues, setFormValues }) => {
   return (
@@ -12,8 +13,16 @@ const AddModelForm = ({ formValues, setFormValues }) => {
         mx: "auto",
       }}
     >
-      <Typography variant="h6" sx={{ whiteSpace: "pre-wrap" }}>
-        Specify your options using the following structure:
+      <Typography variant="h6" sx={{ whiteSpace: "pre-wrap", mb: 1 }}>
+        Specify your options using the following structure{" "}
+        <a href="https://pytorch.org/docs/stable/nn.html" target="_blank">
+          <Badge color="secondary" variant="dot" sx={{ cursor: "pointer" }}>
+            <span className="material-icons" style={{ color: "#002884" }}>
+              help
+            </span>
+          </Badge>
+        </a>{" "}
+        :
       </Typography>
       <JSONInput
         id="a_unique_id"
