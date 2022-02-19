@@ -119,7 +119,7 @@ const ModalDistributionForm = ({
         open={open}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        sx={{ overflow: "hidden", display: "flex", justifyContent: "center" }}
+        sx={{ display: "flex", justifyContent: "center", overflow: "scroll" }}
       >
         <Box
           sx={{
