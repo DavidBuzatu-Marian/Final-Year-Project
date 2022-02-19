@@ -9,7 +9,7 @@ import Link from "next/link";
 import ModalProgress from "../utils/modalProgress";
 import axios from "axios";
 import { getConfig } from "../../config/defaultConfig";
-import ModalDistributionForm from "../dataset/modalDistributionForm";
+import ModalCompletedStatusForm from "../dataset/modalCompletedStatusForm";
 import AddModelForm from "../model/addModelForm";
 
 const EnvironmentsDataGridHeader = ({ selectedRow }) => {
@@ -90,7 +90,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           modalContent={"Deleting environment..."}
           jobLink={progressModal.jobLink}
         />
-        <ModalDistributionForm
+        <ModalCompletedStatusForm
           isOpen={modals.model.isVisible}
           modalTitle={"Add model layers"}
           modalContent={"Saving model layers..."}

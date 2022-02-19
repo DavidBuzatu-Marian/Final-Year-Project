@@ -11,7 +11,7 @@ import { getConfig } from "../../config/defaultConfig";
 import { getTask } from "../../hooks/environment";
 import ClosableAlert from "../alert/closableAlert";
 
-const ModalDistributionForm = ({
+const ModalCompletedStatusForm = ({
   isOpen,
   modalTitle,
   modalButtonText,
@@ -197,4 +197,4 @@ const ModalDistributionForm = ({
   );
 };
 
-export default ModalDistributionForm;
+export default ModalCompletedStatusForm;

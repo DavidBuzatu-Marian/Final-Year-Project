@@ -5,7 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import ModalDistributionForm from "./modalDistributionForm";
+import ModalCompletedStatusForm from "./modalCompletedStatusForm";
 import AddTrainingDataDistributionForm from "./addTrainingDataDistributionForm";
 import DataUploadFormContainer from "./dataUploadFormContainer";
 
@@ -69,7 +69,7 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
           </Button>
         </Stack>
       </Toolbar>
-      <ModalDistributionForm
+      <ModalCompletedStatusForm
         isOpen={modals.trainingDistribution.isVisible}
         modalTitle={"Add environment training data distribution"}
         modalContent={"Saving environment training data distribution..."}
@@ -88,7 +88,7 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
         setHeaderModalsState={setModals}
         activeHeaderModal={"trainingDistribution"}
       />
-      <ModalDistributionForm
+      <ModalCompletedStatusForm
         isOpen={modals.dataDistribution.isVisible}
         modalTitle={"Add environment data distribution"}
         modalContent={"Saving environment data distribution..."}

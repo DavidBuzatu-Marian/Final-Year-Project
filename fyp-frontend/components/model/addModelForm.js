@@ -2,7 +2,7 @@ import { Box, Typography, Badge } from "@mui/material";
 import React from "react";
 import JSONInput from "react-json-editor-ajrm";
 import locale from "react-json-editor-ajrm/locale/en";
-import ModelLayersList from "./modelLayersList";
+import OptionsDynamicList from "./optionsDynamicList";
 
 const AddModelForm = ({ formValues, setFormValues }) => {
   return (
@@ -13,7 +13,7 @@ const AddModelForm = ({ formValues, setFormValues }) => {
         mx: "auto",
       }}
     >
-      <ModelLayersList
+      <OptionsDynamicList
         listOptionsInit={{
           listOptions: [
             {

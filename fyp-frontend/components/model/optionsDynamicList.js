@@ -7,7 +7,7 @@ import {
   Collapse,
 } from "@mui/material/";
 
-const ModelLayersList = ({ listOptionsInit, title }) => {
+const OptionsDynamicList = ({ listOptionsInit, title }) => {
   const [listValues, setListValues] = React.useState(listOptionsInit);
 
   const handleClick = (listItemName) => {
@@ -66,4 +66,4 @@ const ModelLayersList = ({ listOptionsInit, title }) => {
   );
 };
 
-export default ModelLayersList;
+export default OptionsDynamicList;
