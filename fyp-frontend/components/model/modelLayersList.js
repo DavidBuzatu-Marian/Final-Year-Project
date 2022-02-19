@@ -7,7 +7,7 @@ import {
   Collapse,
 } from "@mui/material/";
 
-const ModelLayersList = ({ listOptionsInit }) => {
+const ModelLayersList = ({ listOptionsInit, title }) => {
   const [listValues, setListValues] = React.useState(listOptionsInit);
 
   const handleClick = (listItemName) => {
@@ -25,7 +25,7 @@ const ModelLayersList = ({ listOptionsInit }) => {
       aria-labelledby="nested-list-subheader"
       subheader={
         <ListSubheader component="div" id="nested-list-subheader">
-          Layer types and the available options
+          {title}
         </ListSubheader>
       }
     >
@@ -36,26 +36,30 @@ const ModelLayersList = ({ listOptionsInit }) => {
             {listValues.collapsables.hasOwnProperty(option.name) && (
               <>
                 {!listValues.collapsables[option.name] ? (
-                  <span class="material-icons">chevron_right</span>
+                  <span class="material-icons">expand_more</span>
                 ) : (
-                  <span class="material-icons">chevron_left</span>
+                  <span class="material-icons">expand_less</span>
                 )}
-                <Collapse
-                  in={listValues.collapsables[option.name]}
-                  timeout="auto"
-                  unmountOnExit
-                >
-                  <List component="div" disablePadding>
-                    {option.values.map((value) => (
-                      <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemText primary={value} />
-                      </ListItemButton>
-                    ))}
-                  </List>
-                </Collapse>
               </>
             )}
           </ListItemButton>
+          {listValues.collapsables.hasOwnProperty(option.name) && (
+            <>
+              <Collapse
+                in={listValues.collapsables[option.name]}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List component="div" disablePadding>
+                  {option.values.map((value) => (
+                    <ListItemButton sx={{ pl: 4 }}>
+                      <ListItemText primary={value} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
+            </>
+          )}
         </>
       ))}
     </List>

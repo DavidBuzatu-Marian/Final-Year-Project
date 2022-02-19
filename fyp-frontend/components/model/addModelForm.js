@@ -64,6 +64,7 @@ const AddModelForm = ({ formValues, setFormValues }) => {
             Linear: false,
           },
         }}
+        title={"Layer types and the available options"}
       />
       <Typography variant="h6" sx={{ whiteSpace: "pre-wrap", mb: 1 }}>
         Specify your options using the following structure{" "}
