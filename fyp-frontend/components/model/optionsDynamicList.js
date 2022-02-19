@@ -36,9 +36,9 @@ const OptionsDynamicList = ({ listOptionsInit, title }) => {
             {listValues.collapsables.hasOwnProperty(option.name) && (
               <>
                 {!listValues.collapsables[option.name] ? (
-                  <span class="material-icons">expand_more</span>
+                  <span className="material-icons">expand_more</span>
                 ) : (
-                  <span class="material-icons">expand_less</span>
+                  <span className="material-icons">expand_less</span>
                 )}
               </>
             )}

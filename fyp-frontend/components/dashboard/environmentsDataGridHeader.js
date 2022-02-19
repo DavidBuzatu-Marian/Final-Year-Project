@@ -11,6 +11,7 @@ import axios from "axios";
 import { getConfig } from "../../config/defaultConfig";
 import ModalCompletedStatusForm from "../dataset/modalCompletedStatusForm";
 import AddModelForm from "../model/addModelForm";
+import ModalTrainModel from "./modalTrainModel";
 
 const EnvironmentsDataGridHeader = ({ selectedRow }) => {
   const [progressModal, setProgressModal] = React.useState({
@@ -22,6 +23,9 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
     model: {
       isVisible: false,
       url: "environmentModelAddUrl",
+    },
+    modelTrain: {
+      isVisible: false,
     },
   });
 
@@ -82,6 +86,23 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           >
             Add model
           </Button>
+          <Button
+            variant="contained"
+            startIcon={<span className="material-icons">fitness_center</span>}
+            onClick={() =>
+              setModals({
+                ...modals,
+                modelTrain: { isVisible: true },
+              })
+            }
+            disabled={
+              Object.keys(selectedRow).length === 0 ||
+              (Object.keys(selectedRow).length > 0 &&
+                selectedRow.status !== "Ready to train")
+            }
+          >
+            Add model
+          </Button>
         </Stack>
         <ModalProgress
           isOpen={progressModal.isVisible}
@@ -105,6 +126,18 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           headerModals={modals}
           setHeaderModalsState={setModals}
           activeHeaderModal={"model"}
+        />
+
+        <ModalTrainModel
+          isOpen={modals.modelTrain.isVisible}
+          initialFormValues={{
+            environment_id: selectedRow.id,
+            training_iterations: 1,
+            environment_parameters: {},
+          }}
+          headerModals={modals}
+          setHeaderModalsState={setModals}
+          activeHeaderModal={"modelTrain"}
         />
       </Toolbar>
       <Divider />
