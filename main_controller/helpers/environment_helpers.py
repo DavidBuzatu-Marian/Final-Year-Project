@@ -56,7 +56,7 @@ def save_environment_for_user(database, user_id, environment):
         "date": datetime.utcnow().timestamp(),
     }
     insert_result = database.environmentsAddresses.insert_one(environment_document)
-    return insert_result
+    return insert_result.inserted_id
 
 
 def delete_environment_for_user(database, environment_id, user_id):
