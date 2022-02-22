@@ -29,7 +29,8 @@ def update_environment_status(database, user_id, environment_id, status):
 
 
 def create_environment_data_distribution_entry(database, ips, user_id, environment_id):
-    distribution = [{"{}".format(ip): []} for ip in ips]
+    distribution = [{"{}".format(ip): []} for ip in ips["value"]]
+    error(distribution)
     environment_data_distribution_document = {
         "user_id": ObjectId(user_id),
         "environment_id": ObjectId(environment_id),
@@ -151,6 +152,11 @@ def apply_terraform(user_id, environments):
     )
     if terraform_apply_result.returncode != 0:
         destroy_terraform(user_id)
+        error( "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
+                terraform_apply_result.stderr,
+                terraform_apply_result.returncode,
+                terraform_apply_result.stdout,
+            ))
         abort(
             500,
             "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(

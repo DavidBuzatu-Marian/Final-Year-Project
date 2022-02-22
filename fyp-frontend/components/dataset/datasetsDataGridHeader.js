@@ -22,6 +22,18 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
     },
   });
 
+  const [dataDistribution, setDataDistribution] = React.useState({});
+
+  React.useEffect(() => {
+    if (Object.keys(selectedRow).length > 0) {
+      const dataDistributionObject = {};
+      selectedRow.train_data_distribution.forEach((distribution) => {
+        dataDistributionObject[Object.keys(distribution)[0]] = 0;
+      });
+      setDataDistribution(dataDistributionObject);
+    }
+  }, [selectedRow]);
+
   return (
     <Box
       component="main"
@@ -78,10 +90,7 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
         initialFormValues={{
           environment_id: selectedRow.environment_id,
           data_distribution:
-            Object.keys(selectedRow).length &&
-            selectedRow.train_data_distribution.map((distribution) => {
-              return { [Object.keys(distribution)[0]]: 0 };
-            }),
+            Object.keys(selectedRow).length && dataDistribution,
           dataset_length: 0,
         }}
         headerModals={modals}
