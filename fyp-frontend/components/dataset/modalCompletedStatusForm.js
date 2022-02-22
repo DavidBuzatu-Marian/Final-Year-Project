@@ -56,7 +56,6 @@ const ModalCompletedStatusForm = ({
         formData.append(formValues.dataName, file);
       }
       for (const file of formValues[formValues.labelsName]) {
-        console.log(formValues.labelsName, file);
         formData.append(formValues.labelsName, file);
       }
 
@@ -85,7 +84,6 @@ const ModalCompletedStatusForm = ({
         headerModals[activeHeaderModal],
         formValues
       );
-      console.log(res);
       const jobLink = res.data.jobLink;
       const scheduledRequest = setInterval(async () => {
         const task = await getTask(jobLink);

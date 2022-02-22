@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   Modal,
   Box,
   Typography,
   Button,
   CircularProgress,
-} from '@mui/material';
-import Link from 'next/link';
-import { getTask } from '../../hooks/environment';
-import ClosableAlert from '../alert/closableAlert';
+} from "@mui/material";
+import Link from "next/link";
+import { getTask } from "../../hooks/environment";
+import ClosableAlert from "../alert/closableAlert";
 
 const ModalProgress = ({
   isOpen,
@@ -35,17 +35,16 @@ const ModalProgress = ({
     if (jobLink) {
       const scheduledRequest = setInterval(async () => {
         const task = await getTask(jobLink);
-        console.log(task);
-        if (task.jobState === 'failed' || task.jobState === 'active') {
+        if (task.jobState === "failed" || task.jobState === "active") {
           clearInterval(scheduledRequest);
           setModalState({
             redirectDisabled: false,
             errorMessage:
-              task.jobState === 'failed' ? task.jobFailReason : null,
+              task.jobState === "failed" ? task.jobFailReason : null,
             loading: false,
             successMessage:
-              task.jobState === 'active'
-                ? 'Environment creation has started!'
+              task.jobState === "active"
+                ? "Environment creation has started!"
                 : null,
             alertId: task.id,
           });
@@ -60,62 +59,62 @@ const ModalProgress = ({
     <>
       <Modal
         open={open}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-        sx={{ overflow: 'hidden', display: 'flex', justifyContent: 'center' }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{ overflow: "hidden", display: "flex", justifyContent: "center" }}
       >
         <Box
           sx={{
-            position: 'absolute',
-            top: '40%',
+            position: "absolute",
+            top: "40%",
             m: 1,
-            mx: 'auto',
-            minWidth: '20%',
-            bgcolor: 'background.paper',
+            mx: "auto",
+            minWidth: "20%",
+            bgcolor: "background.paper",
             boxShadow: 24,
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'column',
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
             p: 4,
           }}
         >
           {modalState.errorMessage && (
             <ClosableAlert
               key={modalState.alertId}
-              severity={'error'}
+              severity={"error"}
               alertMessage={modalState.errorMessage}
             />
           )}
           {modalState.successMessage && (
             <ClosableAlert
               key={modalState.alertId}
-              severity={'success'}
+              severity={"success"}
               alertMessage={modalState.successMessage}
             />
           )}
-          <Typography id='modal-modal-title' variant='h6' component='h2'>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
             {modalTitle}
           </Typography>
           <Box
-            id='modal-modal-description'
+            id="modal-modal-description"
             sx={{
               mt: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
             {modalState.loading && (
               <>
                 <CircularProgress />
-                <Typography variant='p'>{modalContent}</Typography>
+                <Typography variant="p">{modalContent}</Typography>
               </>
             )}
           </Box>
           {redirectUrl ? (
             <Link href={redirectUrl}>
               <Button
-                variant='outlined'
+                variant="outlined"
                 onClick={handleClose}
                 disabled={modalState.redirectDisabled}
                 sx={{ mt: 1 }}
@@ -124,7 +123,7 @@ const ModalProgress = ({
               </Button>
             </Link>
           ) : (
-            <Button variant='outlined' onClick={handleClose} sx={{ mt: 1 }}>
+            <Button variant="outlined" onClick={handleClose} sx={{ mt: 1 }}>
               {modalButtonText}
             </Button>
           )}

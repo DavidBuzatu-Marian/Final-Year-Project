@@ -9,13 +9,13 @@ from datetime import datetime
 
 def save_ips_for_user(database, ips, user_id, environment_id):
     environment_update = {"environment_ips": [], "status": statuses["1"]}
-    environment_query = {"user_id": user_id, "_id": environment_id}
+    environment_query = {"user_id": ObjectId(user_id), "_id": environment_id}
     for ip in ips["value"]:
         environment_update["environment_ips"].append(ip)
     update_result = database.environmentsAddresses.update_one(
         environment_query, {"$set": environment_update}
     )
-    error("Updated entry: {}".format(environment_id))
+    error("Mathces: {}. Modified: {}".format(update_result.matched_count, update_result.modified_count))
     return update_result
 
 
@@ -51,9 +51,10 @@ def save_environment_for_user(database, user_id, environment):
         "user_id": ObjectId(user_id),
         "environment_ips": [],
         "machine_type": environment.get_machine_type(),
+        "machine_series": environment.get_machine_series(),
         "status": statuses["0"],
         "environment_options": json.dumps(environment.get_environment_options()),
-        "date": datetime.utcnow().timestamp(),
+        "date": int(datetime.now().timestamp()),
     }
     insert_result = database.environmentsAddresses.insert_one(environment_document)
     return insert_result.inserted_id
