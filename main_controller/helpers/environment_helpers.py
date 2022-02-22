@@ -54,7 +54,7 @@ def save_environment_for_user(database, user_id, environment):
         "machine_series": environment.get_machine_series(),
         "status": statuses["0"],
         "environment_options": json.dumps(environment.get_environment_options()),
-        "date": int(datetime.now().timestamp()),
+        "date": int(datetime.utcnow().timestamp()),
     }
     insert_result = database.environmentsAddresses.insert_one(environment_document)
     return insert_result.inserted_id

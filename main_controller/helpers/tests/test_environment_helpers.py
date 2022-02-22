@@ -44,6 +44,7 @@ class TestEnvironmentHelpers(unittest.TestCase):
                     "nr_instances": 2,
                     "environment_options": [{"id": 0, "probability_failure": 0.1}],
                     "machine_type": "e2-low",
+                    "machine_series": 'e2'
                 }
             ),
         )

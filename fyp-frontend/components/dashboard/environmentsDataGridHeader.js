@@ -101,7 +101,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
                 selectedRow.status !== "Ready to train")
             }
           >
-            Add model
+            Train model
           </Button>
         </Stack>
         <ModalProgress
