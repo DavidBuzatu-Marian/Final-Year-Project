@@ -69,3 +69,5 @@ default.json
 ssl-certs/
 
 .next
+
+*.log

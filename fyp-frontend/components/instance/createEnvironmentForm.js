@@ -5,22 +5,22 @@ import {
   FormControl,
   TextField,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import React from 'react';
-import EnvironmentOptions from './environmentOptions';
-import EnvironmentSelectionTabs from './environmentSelectionTabs';
-import axios from 'axios';
-import { getConfig } from '../../config/defaultConfig';
-import Link from 'next/link';
-import ModalProgress from '../utils/modalProgress';
+import React from "react";
+import EnvironmentOptions from "./environmentOptions";
+import EnvironmentSelectionTabs from "./environmentSelectionTabs";
+import axios from "axios";
+import { getConfig } from "../../config/defaultConfig";
+import Link from "next/link";
+import ModalProgress from "../utils/modalProgress";
 
 const CreateEnvironmentForm = () => {
   const [formValues, setFormValues] = React.useState({
     nr_instances: 1,
     environment_options: [],
-    machine_series: 'e2',
-    machine_type: 'e2-micro',
+    machine_series: "e2",
+    machine_type: "e2-micro",
   });
   const [progressModal, setProgressModal] = React.useState({
     isVisible: false,
@@ -31,7 +31,7 @@ const CreateEnvironmentForm = () => {
     try {
       setProgressModal({ isVisible: true });
       const res = await axios.post(
-        getConfig()['environmentCreateUrl'],
+        getConfig()["environmentCreateUrl"],
         {
           ...formValues,
         },
@@ -45,27 +45,30 @@ const CreateEnvironmentForm = () => {
 
   return (
     <Box
-      component='form'
+      component="form"
       sx={{
-        '& .MuiTextField-root': { width: '35ch', my: 1 },
+        "& .MuiTextField-root": { width: "35ch", my: 1 },
         mt: 1,
         ml: 3,
       }}
     >
       <FormControl>
-        <Typography variant='h5'>Machines configuration</Typography>
+        <Typography variant="h5">Machines configuration</Typography>
         <TextField
-          id='outlined-required'
-          label='Number of instances'
-          type={'number'}
+          id="outlined-required"
+          label="Number of instances"
+          type={"number"}
           value={formValues.nr_instances}
           onChange={(event) =>
             setFormValues({ ...formValues, nr_instances: event.target.value })
           }
-          sx={{ mt: '1rem !important' }}
+          sx={{ mt: "1rem !important" }}
         />
         <Divider />
-        <EnvironmentSelectionTabs />
+        <EnvironmentSelectionTabs
+          formValues={formValues}
+          setFormValues={setFormValues}
+        />
         <Divider />
         <EnvironmentOptions
           setParentFormValues={setFormValues}
@@ -74,27 +77,27 @@ const CreateEnvironmentForm = () => {
         />
         <Divider />
         <Button
-          variant='outlined'
-          sx={{ mt: '1rem' }}
+          variant="outlined"
+          sx={{ mt: "1rem" }}
           onClick={(event) => onSubmit(event)}
         >
           Create
         </Button>
         <Button
-          variant='contained'
-          sx={{ mt: '1rem' }}
-          color='error'
-          href='/dashboard'
+          variant="contained"
+          sx={{ mt: "1rem" }}
+          color="error"
+          href="/dashboard"
         >
           Cancel
         </Button>
       </FormControl>
       <ModalProgress
         isOpen={progressModal.isVisible}
-        modalButtonText={'Go to Dashboard'}
-        modalTitle={'Environment creation progress'}
-        modalContent={'Creating environment...'}
-        redirectUrl={'/dashboard'}
+        modalButtonText={"Go to Dashboard"}
+        modalTitle={"Environment creation progress"}
+        modalContent={"Creating environment..."}
+        redirectUrl={"/dashboard"}
         jobLink={progressModal.jobLink}
       />
     </Box>

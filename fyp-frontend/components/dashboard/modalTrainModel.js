@@ -6,70 +6,95 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-import Link from "next/link";
+import axios from "axios";
+import { getConfig } from "../../config/defaultConfig";
 import { getTask } from "../../hooks/environment";
 import ClosableAlert from "../alert/closableAlert";
+import TrainModelForm from "../model/trainModelForm";
 
-const ModalProgress = ({
+const ModalTrainModel = ({
   isOpen,
-  modalButtonText,
-  modalTitle,
-  modalContent,
-  redirectUrl,
-  jobLink,
+  initialFormValues,
+  setHeaderModalsState,
+  headerModals,
+  activeHeaderModal,
 }) => {
   const [open, setOpen] = React.useState(isOpen);
-  const handleClose = () => setOpen(false);
   const [modalState, setModalState] = React.useState({
-    redirectDisabled: true,
     errorMessage: null,
-    loading: true,
+    loading: false,
     successMessage: null,
   });
+  const [formValues, setFormValues] = React.useState(initialFormValues);
+
+  const handleClose = () => {
+    setOpen(false);
+    setHeaderModalsState({
+      ...headerModals,
+      [activeHeaderModal]: {
+        ...headerModals[activeHeaderModal],
+        isVisible: false,
+      },
+    });
+  };
 
   useEffect(() => {
     setOpen(isOpen);
   }, [isOpen]);
 
-  useEffect(() => {
-    if (jobLink) {
+  const performRequest = async (formValues) => {
+    return await axios.post(
+      getConfig()["environmentModelTrainUrl"],
+      {
+        ...formValues,
+      },
+      { withCredentials: true }
+    );
+  };
+
+  const onSubmit = async () => {
+    try {
+      setModalState({ ...modalState, loading: true });
+      const res = await performRequest(formValues);
+      const jobLink = res.data.jobLink;
       const scheduledRequest = setInterval(async () => {
         const task = await getTask(jobLink);
-        if (task.jobState === "failed" || task.jobState === "active") {
+        if (task.jobState === "active" || task.jobState === "failed") {
           clearInterval(scheduledRequest);
           setModalState({
-            redirectDisabled: false,
             errorMessage:
               task.jobState === "failed" ? task.jobFailReason : null,
             loading: false,
-            successMessage:
-              task.jobState === "active"
-                ? "Environment creation has started!"
-                : null,
+            successMessage: task.jobState === "active" ? "Task active" : null,
             alertId: task.id,
           });
         }
       }, 1000);
+    } catch (error) {
+      console.log(error);
+      setModalState({
+        ...modalState,
+        errorMessage: "Request could not be made",
+        loading: false,
+        alertId: crypto.randomUUID(),
+      });
     }
-    return () => {
-      clearInterval(scheduledRequest);
-    };
-  }, [jobLink]);
+  };
+
   return (
     <>
       <Modal
         open={open}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        sx={{ overflow: "hidden", display: "flex", justifyContent: "center" }}
+        sx={{ display: "flex", justifyContent: "center", overflow: "scroll" }}
       >
         <Box
           sx={{
             position: "absolute",
-            top: "40%",
             m: 1,
             mx: "auto",
-            minWidth: "20%",
+            minWidth: "30%",
             bgcolor: "background.paper",
             boxShadow: 24,
             alignItems: "center",
@@ -93,7 +118,7 @@ const ModalProgress = ({
             />
           )}
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            {modalTitle}
+            Train model on environment
           </Typography>
           <Box
             id="modal-modal-description"
@@ -104,33 +129,39 @@ const ModalProgress = ({
               alignItems: "center",
             }}
           >
+            <TrainModelForm
+              formValues={formValues}
+              setFormValues={setFormValues}
+            />
             {modalState.loading && (
               <>
                 <CircularProgress />
-                <Typography variant="p">{modalContent}</Typography>
+                <Typography variant="p">
+                  Starting training process...
+                </Typography>
               </>
             )}
           </Box>
-          {redirectUrl ? (
-            <Link href={redirectUrl}>
-              <Button
-                variant="outlined"
-                onClick={handleClose}
-                disabled={modalState.redirectDisabled}
-                sx={{ mt: 1 }}
-              >
-                {modalButtonText}
-              </Button>
-            </Link>
-          ) : (
-            <Button variant="outlined" onClick={handleClose} sx={{ mt: 1 }}>
-              {modalButtonText}
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            onClick={(event) => onSubmit()}
+            sx={{ mt: 1, width: "35ch" }}
+            disabled={modalState.loading}
+          >
+            Start training
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleClose}
+            sx={{ mt: 1, width: "35ch" }}
+          >
+            Close
+          </Button>
         </Box>
       </Modal>
     </>
   );
 };
 
-export default ModalProgress;
+export default ModalTrainModel;
