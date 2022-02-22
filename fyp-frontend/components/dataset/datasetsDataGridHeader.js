@@ -88,6 +88,7 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
         modalForm={AddTrainingDataDistributionForm}
         modalButtonText={"Close"}
         initialFormValues={{
+          user_id: user.user_id,
           environment_id: selectedRow.environment_id,
           data_distribution:
             Object.keys(selectedRow).length && dataDistribution,

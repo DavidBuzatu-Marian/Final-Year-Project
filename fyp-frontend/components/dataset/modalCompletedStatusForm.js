@@ -58,14 +58,17 @@ const ModalCompletedStatusForm = ({
       for (const file of formValues[formValues.labelsName]) {
         formData.append(formValues.labelsName, file);
       }
-
-      return await axios.post(getConfig()[activeModal.url], formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": `multipart/form-data;boundary=${formData.getBoundary()}`,
-        },
-        maxContentLength: Infinity,
-      });
+      console.log(formValues);
+      return await axios.post(
+        `${getConfig()[activeModal.url]}?user_id=${
+          formValues.user.user_id
+        }&environment_id=${formValues.environment_id}`,
+        formData,
+        {
+          withCredentials: true,
+          maxContentLength: Infinity,
+        }
+      );
     } else {
       return await axios.post(
         getConfig()[activeModal.url],
