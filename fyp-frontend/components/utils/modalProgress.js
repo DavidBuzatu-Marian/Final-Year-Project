@@ -9,6 +9,8 @@ import {
 import Link from "next/link";
 import { getTask } from "../../hooks/environment";
 import ClosableAlert from "../alert/closableAlert";
+import { useEnvironment } from "../../hooks/environment";
+import { getConfig } from "../../config/defaultConfig";
 
 const ModalProgress = ({
   isOpen,
@@ -18,6 +20,7 @@ const ModalProgress = ({
   redirectUrl,
   jobLink,
 }) => {
+  const [environments, { mutate }] = useEnvironment();
   const [open, setOpen] = React.useState(isOpen);
   const handleClose = () => setOpen(false);
   const [modalState, setModalState] = React.useState({
@@ -37,6 +40,7 @@ const ModalProgress = ({
         const task = await getTask(jobLink);
         if (task.jobState === "failed" || task.jobState === "active") {
           clearInterval(scheduledRequest);
+          mutate(getConfig()["environmentAddressesUrl"]);
           setModalState({
             redirectDisabled: false,
             errorMessage:

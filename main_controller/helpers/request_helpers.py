@@ -77,10 +77,10 @@ def post_data_distribution(files, environment_data_distribution):
 
     for environment_ip, data_distribution in environment_data_distribution.items():
         instance_data = get_instance_data_from_files(files, data_distribution)
-        # post_to_instance(
-        #     "http://" + environment_ip + ":5000/dataset/add",
-        #     instance_data,
-        # )
+        post_to_instance(
+            "http://" + environment_ip + ":5000/dataset/add",
+            instance_data,
+        )
         add_data_to_instance_distribution(instances_data, instance_data, environment_ip)
     return instances_data
 
@@ -108,9 +108,9 @@ def post_data_to_instance(files, environment_ips):
     instances_data = dict()
     instance_data = get_instance_data_from_files(files, [])
     for environment_ip in environment_ips:
-        # post_to_instance(
-        #     "http://" + environment_ip + ":5000/dataset/add", instance_data
-        # )
+        post_to_instance(
+            "http://" + environment_ip + ":5000/dataset/add", instance_data
+        )
         add_data_to_instance_distribution(instances_data, instance_data, environment_ip)
     return instances_data
 
