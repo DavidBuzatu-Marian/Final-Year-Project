@@ -10,6 +10,7 @@ import axios from "axios";
 import { getConfig } from "../../config/defaultConfig";
 import { getTask } from "../../hooks/environment";
 import ClosableAlert from "../alert/closableAlert";
+import { useDatasetDataDistribution } from "../../hooks/dataset";
 
 const ModalCompletedStatusForm = ({
   isOpen,
@@ -22,6 +23,8 @@ const ModalCompletedStatusForm = ({
   setHeaderModalsState,
   activeHeaderModal,
 }) => {
+  const [environmentsDataDistribution, { mutateDataDistribution: mutate }] =
+    useDatasetDataDistribution();
   const [open, setOpen] = React.useState(isOpen);
   const [modalState, setModalState] = React.useState({
     errorMessage: null,
@@ -44,10 +47,6 @@ const ModalCompletedStatusForm = ({
   useEffect(() => {
     setOpen(isOpen);
   }, [isOpen]);
-
-  useEffect(() => {
-    setFormValues(initialFormValues);
-  }, [initialFormValues]);
 
   const performRequest = async (activeModal, formValues) => {
     if (activeModal.hasOwnProperty("isMultipartForm")) {
@@ -92,6 +91,7 @@ const ModalCompletedStatusForm = ({
         const task = await getTask(jobLink);
         if (task.jobState === "completed" || task.jobState === "failed") {
           clearInterval(scheduledRequest);
+          mutate(null);
           setModalState({
             errorMessage:
               task.jobState === "failed" ? task.jobFailReason : null,
@@ -113,7 +113,6 @@ const ModalCompletedStatusForm = ({
     }
   };
   const ModalForm = modalForm;
-
   return (
     <>
       <Modal

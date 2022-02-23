@@ -1,14 +1,14 @@
-import { getConfig } from '../config/defaultConfig';
-import useSWR from 'swr';
-import { fetcher } from './user';
+import { getConfig } from "../config/defaultConfig";
+import useSWR from "swr";
+import { fetcher } from "./user";
 
 export const useEnvironment = () => {
   const { data, mutate, error } = useSWR(
-    getConfig()['environmentAddressesUrl'],
+    getConfig()["environmentAddressesUrl"],
     fetcher
   );
   const loading = !data && !error;
-  const environments = data && !error ? data : null;
+  const environments = data && !error && Array.isArray(data) ? data : null;
   if (environments) {
     environments = environments.map((environment) => {
       return { ...environment, id: environment._id };
@@ -18,7 +18,7 @@ export const useEnvironment = () => {
 };
 
 export const getTask = async (jobLink) => {
-  const res = await fetcher(getConfig()['gatewayBackendUrl'] + jobLink);
+  const res = await fetcher(getConfig()["gatewayBackendUrl"] + jobLink);
 
   return res;
 };
