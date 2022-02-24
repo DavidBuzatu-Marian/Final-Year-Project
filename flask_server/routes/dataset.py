@@ -5,10 +5,10 @@ import os
 import sys
 
 try:
+    from helpers.dataset_helpers import delete_data_from_path
     from helpers.dataset_helpers import delete_model_from_path, save_dataset
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
-import shutil
 
 from app import app
 
@@ -38,9 +38,6 @@ def dataset_remove():
         os.path.join(os.getenv("TEST_LABELS_PATH")),
     ]
     for path in dir_paths:
-        try:
-            shutil.rmtree(path)
-        except OSError as err:
-            error(err)
+        delete_data_from_path(path)
     # delete_model_from_path(os.getenv("MODEL_PATH"))
     return jsonify("Files and model deleted successfully")
