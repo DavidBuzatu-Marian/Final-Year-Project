@@ -22,6 +22,7 @@ const ModalCompletedStatusForm = ({
   headerModals,
   setHeaderModalsState,
   activeHeaderModal,
+  selectedRow,
 }) => {
   const [environmentsDataDistribution, { mutateDataDistribution: mutate }] =
     useDatasetDataDistribution();
@@ -48,6 +49,10 @@ const ModalCompletedStatusForm = ({
     setOpen(isOpen);
   }, [isOpen]);
 
+  useEffect(() => {
+    setFormValues(initialFormValues);
+  }, [selectedRow]);
+
   const performRequest = async (activeModal, formValues) => {
     if (activeModal.hasOwnProperty("isMultipartForm")) {
       const formData = new FormData();
@@ -57,7 +62,6 @@ const ModalCompletedStatusForm = ({
       for (const file of formValues[formValues.labelsName]) {
         formData.append(formValues.labelsName, file);
       }
-      console.log(formValues);
       return await axios.post(
         `${getConfig()[activeModal.url]}?user_id=${
           formValues.user.user_id
@@ -86,6 +90,7 @@ const ModalCompletedStatusForm = ({
         headerModals[activeHeaderModal],
         formValues
       );
+
       const jobLink = res.data.jobLink;
       const scheduledRequest = setInterval(async () => {
         const task = await getTask(jobLink);
@@ -100,6 +105,7 @@ const ModalCompletedStatusForm = ({
               task.jobState === "completed" ? "Task completed" : null,
             alertId: task.id,
           });
+          setFormValues(initialFormValues);
         }
       }, 1000);
     } catch (error) {
@@ -113,6 +119,7 @@ const ModalCompletedStatusForm = ({
     }
   };
   const ModalForm = modalForm;
+
   return (
     <>
       <Modal

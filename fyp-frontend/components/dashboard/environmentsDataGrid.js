@@ -81,9 +81,9 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
           rowsPerPageOptions={[5]}
           onSelectionModelChange={(ids) => {
             const selectedIDs = new Set(ids);
-            const selectedRowData = environments.filter((row) =>
-              selectedIDs.has(row._id)
-            );
+            const selectedRowData =
+              environments &&
+              environments.filter((row) => selectedIDs.has(row._id));
             if (selectedRowData.length === 0) {
               setSelectedRow({});
             } else {

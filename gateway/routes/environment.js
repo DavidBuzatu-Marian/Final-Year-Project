@@ -50,7 +50,7 @@ router.post(
       );
       return res.json(axiosRes.data);
     } catch (error) {
-      console.log(error);
+      console.log(`Error: ${error}`);
       res.sendStatus(500);
     } finally {
       deleteLocalFiles(req);

@@ -94,12 +94,14 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
             Object.keys(selectedRow).length && dataDistribution,
           dataset_length: 0,
         }}
+        selectedRow={selectedRow}
         headerModals={modals}
         setHeaderModalsState={setModals}
         activeHeaderModal={"trainingDistribution"}
       />
       <ModalCompletedStatusForm
         isOpen={modals.dataDistribution.isVisible}
+        selectedRow={selectedRow}
         modalTitle={"Add environment data distribution"}
         modalContent={"Saving environment data distribution..."}
         modalForm={DataUploadFormContainer}
