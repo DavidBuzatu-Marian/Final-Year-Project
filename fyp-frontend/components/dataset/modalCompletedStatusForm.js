@@ -43,6 +43,11 @@ const ModalCompletedStatusForm = ({
         isVisible: false,
       },
     });
+    setModalState({
+      errorMessage: null,
+      loading: false,
+      successMessage: null,
+    });
   };
 
   useEffect(() => {
@@ -51,7 +56,7 @@ const ModalCompletedStatusForm = ({
 
   useEffect(() => {
     setFormValues(initialFormValues);
-  }, [selectedRow]);
+  }, [selectedRow, activeHeaderModal]);
 
   const performRequest = async (activeModal, formValues) => {
     if (activeModal.hasOwnProperty("isMultipartForm")) {

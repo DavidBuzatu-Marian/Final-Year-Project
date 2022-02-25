@@ -5,7 +5,7 @@ import React from "react";
 const AddTrainingDataDistributionForm = ({ formValues, setFormValues }) => {
   const handleChange = (field, subField) => (event) => {
     const newValue =
-      event.target.value.length === 0 ? 0 : parseInt(event.target.value);
+      event.target.value.length === 0 ? "" : parseInt(event.target.value);
     if (subField) {
       const newProp = formValues[field];
       newProp[subField] = newValue;
