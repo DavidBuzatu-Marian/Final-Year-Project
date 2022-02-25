@@ -18,7 +18,7 @@ def save_dataset(request):
         ("test_labels", "TEST_LABELS_PATH"),
     ]
     for key, value in data_types:
-        if request.files.getlist(key).length > 0:
+        if len(request.files.getlist(key)) > 0:
             path = os.path.join(os.getenv(value))
             delete_data_from_path(path)
         for file in request.files.getlist(key):

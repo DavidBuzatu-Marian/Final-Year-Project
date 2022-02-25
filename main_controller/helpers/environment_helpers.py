@@ -107,10 +107,16 @@ def save_environment_test_data_distribution(
         "environment_id": ObjectId(environment_id),
         "distributions": distributions,
     }
-    insert_result = database.environmentsTrainingDataDistribution.insert_one(
-        data_distribution_document
+    data_distribution_query = {
+        "user_id": ObjectId(user_id),
+        "environment_id": ObjectId(environment_id),
+    }
+    insert_result = database.environmentsTrainingDataDistribution.update_one(
+        data_distribution_query,
+        {"$set": data_distribution_document},
+        upsert=True
     )
-    return insert_result.inserted_id
+    return insert_result
 
 
 def save_environment_data_distribution(

@@ -74,7 +74,6 @@ def get_instance_data_for_key(files, data_distribution):
 
 def post_data_distribution(files, environment_data_distribution):
     instances_data = dict()
-
     for environment_ip, data_distribution in environment_data_distribution.items():
         instance_data = get_instance_data_from_files(files, data_distribution)
         post_to_instance(

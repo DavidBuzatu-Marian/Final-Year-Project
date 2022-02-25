@@ -71,3 +71,5 @@ ssl-certs/
 .next
 
 *.log
+
+/temp

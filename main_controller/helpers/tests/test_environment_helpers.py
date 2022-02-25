@@ -218,13 +218,13 @@ class TestEnvironmentHelpers(unittest.TestCase):
             environment_dataset_distribution[environment_ip] = random.sample(
                 range(1, test_dataset_length), distribution
             )
-        test_distribution_id = save_environment_test_data_distribution(
+        test_distribution = save_environment_test_data_distribution(
             self.mongo.db,
             str(test_environment),
             self.test_user_id,
             environment_dataset_distribution,
         )
-        self.assertIsNotNone(test_distribution_id)
+        self.assertIsNotNone(test_distribution)
 
     def test_get_environment_data_distribution(self):
         test_ips = {
@@ -275,13 +275,13 @@ class TestEnvironmentHelpers(unittest.TestCase):
             environment_dataset_distribution[environment_ip] = random.sample(
                 range(1, test_dataset_length), distribution
             )
-        test_distribution_id = save_environment_test_data_distribution(
+        test_distribution = save_environment_test_data_distribution(
             self.mongo.db,
             str(test_environment),
             self.test_user_id,
             environment_dataset_distribution,
         )
-        self.assertIsNotNone(test_distribution_id)
+        self.assertIsNotNone(test_distribution)
         test_dataset_distribution = get_environment_data_distribution(
             self.mongo.db, str(test_environment), self.test_user_id
         )
