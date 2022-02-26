@@ -5,7 +5,7 @@ from flask.json import jsonify
 import json
 import os
 import sys
-
+from flask import abort
 import torch
 
 
@@ -13,6 +13,7 @@ try:
     from nn_model import NNModel
     from helpers.data_helpers import *
     from helpers.app_helpers import *
+    from helpers.model_helpers import is_failing
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -66,6 +67,7 @@ def model_train():
     optimizer = get_optimizer(request.json, model)
     hyperparameters = get_hyperparameters(request.json)
     processors = get_processors(request.json)
+    probability_of_failure = get_probability_of_failure(request.json)
 
     train_dataloader = get_dataloader(
         data_path=os.getenv("TRAIN_DATA_PATH"),
@@ -74,6 +76,8 @@ def model_train():
     )
 
     for _ in range(0, hyperparameters["epochs"]):
+        if is_failing(probability_of_failure):
+            abort(400, "Device failed during training")
         for data, label in train_dataloader:
             optimizer.zero_grad()
 

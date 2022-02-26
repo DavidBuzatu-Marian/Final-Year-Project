@@ -52,6 +52,8 @@ def get_hyperparameters(request_json):
     request_json["hyperparameters"].setdefault("shuffle", True)
     return request_json["hyperparameters"]
 
+def get_probability_of_failure(request_json):
+    return request_json["probability_of_failure"]
 
 def get_processors(request_json):
     # TODO: Find a way to encapsulate this
