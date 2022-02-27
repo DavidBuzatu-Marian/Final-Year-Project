@@ -82,7 +82,11 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
                 },
               })
             }
-            disabled={Object.keys(selectedRow).length === 0}
+            disabled={
+              Object.keys(selectedRow).length === 0 ||
+              (Object.keys(selectedRow).length > 0 &&
+                selectedRow.status === "Training")
+            }
           >
             Add model
           </Button>
@@ -98,7 +102,9 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
             disabled={
               Object.keys(selectedRow).length === 0 ||
               (Object.keys(selectedRow).length > 0 &&
-                selectedRow.status !== "Ready to train")
+                selectedRow.status !== "Ready to train") ||
+              (Object.keys(selectedRow).length > 0 &&
+                selectedRow.status === "Training")
             }
           >
             Train model

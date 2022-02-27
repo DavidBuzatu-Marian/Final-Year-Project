@@ -30,8 +30,6 @@ class NNModel(nn.Module):
                     )
                 elif component_type == "concatenate":
                     pass
-                elif component_type == "optimizer":
-                    pass
                 else:
                     raise Exception("Invalid component type")
 
