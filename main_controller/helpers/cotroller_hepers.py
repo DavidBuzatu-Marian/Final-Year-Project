@@ -88,11 +88,16 @@ def train_on_instances(instances, instance_training_parameters):
         response = post_json_to_instance(
             "http://{}:5000/model/train".format(instance_ip),
             instance_training_parameters,
+            True
         )
-        with open(
+        if not response.ok:
+            # Instance failed during training => remove instance from round of training
+            instances.remove(instance_ip)
+        else:
+            with open(
             "./models/model_{}.pth".format(instance_ip), "wb"
-        ) as instance_model_file:
-            instance_model_file.write(response.content)
+            ) as instance_model_file:
+                instance_model_file.write(response.content)
 
 
 def load_model_from_path(path):

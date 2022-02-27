@@ -16,13 +16,13 @@ connectToMongoDB();
 registerLoggerInApp(app);
 
 //CORS
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: config.get('originUrl'),
-//     exposedHeaders: ['set-cookie'],
-//   })
-// );
+app.use(
+  cors({
+    credentials: true,
+    origin: config.get("originUrl"),
+    exposedHeaders: ["set-cookie"],
+  })
+);
 
 // Set-up session
 app.use(

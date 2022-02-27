@@ -13,23 +13,19 @@ try:
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
-# TODO: Change this to a parameter during training
-MAX_TRIALS = 10
-REQUIRED_INSTANCES = 1
-
-
 @app.route("/model/train", methods=["POST"])
 def model_train():
     user_id = get_user_id(request.json)
     environment_id = get_environment_id(request.json)
     environment = get_environment(mongo.db, environment_id, user_id)
+    training_options = get_training_options(request.json)
     available_instances = get_available_instances(
-        environment, MAX_TRIALS, REQUIRED_INSTANCES
+        environment, training_options.max_trials, training_options.required_instances
     )
     training_iterations = get_training_iterations(request.json)
     instance_training_parameters = get_instance_training_parameters(request.json)
     return train_model(
-        random.sample(available_instances, REQUIRED_INSTANCES),
+        random.sample(available_instances, training_options.required_instances),
         training_iterations,
         instance_training_parameters,
     )

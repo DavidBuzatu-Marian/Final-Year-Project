@@ -216,5 +216,8 @@ def get_environment_id(request_json):
     return ObjectId(request_json["environment_id"])
 
 
+def get_training_options(request_json):
+    return request_json["training_options"]
+
 def to_json(object):
     return json.loads(object)

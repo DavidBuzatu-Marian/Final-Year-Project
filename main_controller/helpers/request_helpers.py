@@ -24,9 +24,9 @@ def post_to_instance(url, data):
     return response
 
 
-def post_json_to_instance(url, json):
+def post_json_to_instance(url, json, allow_failure=False):
     response = requests.post(url, json=json, timeout=10)
-    if not response.ok:
+    if not response.ok and not allow_failure:
         abort(
             response.status_code,
             "Posting data went wrong. Response: {}".format(response.content),
