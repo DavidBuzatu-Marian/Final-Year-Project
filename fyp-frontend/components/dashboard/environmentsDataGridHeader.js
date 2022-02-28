@@ -140,6 +140,10 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
             environment_id: selectedRow.id,
             training_iterations: 1,
             environment_parameters: {},
+            training_options: {
+              max_trials: 0,
+              required_instances: 1,
+            },
           }}
           headerModals={modals}
           setHeaderModalsState={setModals}

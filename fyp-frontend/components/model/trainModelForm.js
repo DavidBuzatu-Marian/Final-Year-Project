@@ -26,6 +26,38 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
         }
         sx={{ width: "100%" }}
       />
+      <TextField
+        id="outlined-required"
+        label="Maximum trials for device availability"
+        type={"number"}
+        value={formValues["training_options"].max_trials}
+        onChange={(event) =>
+          setFormValues({
+            ...formValues,
+            ["training_options"]: {
+              ...formValues["training_options"],
+              max_trials: event.target.value,
+            },
+          })
+        }
+        sx={{ width: "100%", mt: 4 }}
+      />
+      <TextField
+        id="outlined-required"
+        label="Minimum number of required devices"
+        type={"number"}
+        value={formValues["training_options"].required_instances}
+        onChange={(event) =>
+          setFormValues({
+            ...formValues,
+            ["training_options"]: {
+              ...formValues["training_options"],
+              required_instances: event.target.value,
+            },
+          })
+        }
+        sx={{ width: "100%", mt: 4 }}
+      />
       <OptionsDynamicList
         listOptionsInit={{
           listOptions: [
