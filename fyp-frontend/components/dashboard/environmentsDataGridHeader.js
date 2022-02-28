@@ -41,6 +41,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
       console.log(error);
     }
   };
+
   return (
     <Box
       component="main"
@@ -124,11 +125,12 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           modalForm={AddModelForm}
           modalButtonText={"Close"}
           initialFormValues={{
-            environment_id: selectedRow.id,
+            environment_id: selectedRow._id,
             environment_model_network_options: {
               network: [],
             },
           }}
+          selectedRow={selectedRow}
           headerModals={modals}
           setHeaderModalsState={setModals}
           activeHeaderModal={"model"}
@@ -137,7 +139,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
         <ModalTrainModel
           isOpen={modals.modelTrain.isVisible}
           initialFormValues={{
-            environment_id: selectedRow.id,
+            environment_id: selectedRow._id,
             training_iterations: 1,
             environment_parameters: {},
             training_options: {
@@ -148,6 +150,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           headerModals={modals}
           setHeaderModalsState={setModals}
           activeHeaderModal={"modelTrain"}
+          selectedRow={selectedRow}
         />
       </Toolbar>
       <Divider />

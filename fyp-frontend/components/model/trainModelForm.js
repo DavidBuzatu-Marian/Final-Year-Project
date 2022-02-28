@@ -36,7 +36,7 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
             ...formValues,
             ["training_options"]: {
               ...formValues["training_options"],
-              max_trials: event.target.value,
+              max_trials: parseInt(event.target.value),
             },
           })
         }
@@ -52,7 +52,7 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
             ...formValues,
             ["training_options"]: {
               ...formValues["training_options"],
-              required_instances: event.target.value,
+              required_instances: parseInt(event.target.value),
             },
           })
         }
@@ -103,7 +103,7 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
         }}
         title={"Losses, optimisers and hyperparameter options"}
       />
-      <Typography variant="h6" sx={{ whiteSpace: "pre-wrap", mb: 1 }}>
+      <Typography variant="p" sx={{ whiteSpace: "pre-wrap", mb: 1 }}>
         Specify your options using the following structure{" "}
         <a href="https://pytorch.org/docs/stable/nn.html" target="_blank">
           <Badge color="secondary" variant="dot" sx={{ cursor: "pointer" }}>
@@ -138,6 +138,7 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
         theme="light_mitsuketa_tribute"
         locale={locale}
         height="450px"
+        width="100%"
         onChange={(event) =>
           setFormValues({
             ...formValues,

@@ -21,7 +21,13 @@ const OptionsDynamicList = ({ listOptionsInit, title }) => {
   };
   return (
     <List
-      sx={{ width: "100%", bgcolor: "background.paper" }}
+      sx={{
+        width: "100%",
+        bgcolor: "background.paper",
+        mt: 2,
+        mb: 2,
+        "& .MuiListSubheader-root": { padding: 0 },
+      }}
       aria-labelledby="nested-list-subheader"
       subheader={
         <ListSubheader component="div" id="nested-list-subheader">
@@ -31,7 +37,10 @@ const OptionsDynamicList = ({ listOptionsInit, title }) => {
     >
       {listValues.listOptions.map((option) => (
         <>
-          <ListItemButton onClick={(event) => handleClick(option.name)}>
+          <ListItemButton
+            key={option.name}
+            onClick={(event) => handleClick(option.name)}
+          >
             <ListItemText primary={option.name} />
             {listValues.collapsables.hasOwnProperty(option.name) && (
               <>

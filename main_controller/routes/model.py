@@ -20,12 +20,12 @@ def model_train():
     environment = get_environment(mongo.db, environment_id, user_id)
     training_options = get_training_options(request.json)
     available_instances = get_available_instances(
-        environment, training_options.max_trials, training_options.required_instances
+        environment, training_options['max_trials'], training_options['required_instances']
     )
     training_iterations = get_training_iterations(request.json)
     instance_training_parameters = get_instance_training_parameters(request.json)
     return train_model(
-        random.sample(available_instances, training_options.required_instances),
+        random.sample(available_instances, training_options['required_instances']),
         training_iterations,
         instance_training_parameters,
     )

@@ -4,6 +4,7 @@ import torch
 from logging import error
 from flask.helpers import send_file
 from werkzeug.datastructures import FileStorage
+from flask import abort
 
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance
@@ -43,6 +44,8 @@ def get_model_network_options(request_json):
 def train_model(instances, training_iterations, instance_training_parameters):
     for _ in range(training_iterations):
         train_on_instances(instances, instance_training_parameters)
+        if len(instances) == 0 :
+            abort(400, "All devices crashed")
         aggregated_model = aggregate_models(instances)
         save_aggregated_model(aggregated_model)
         update_instances_model(instances)
