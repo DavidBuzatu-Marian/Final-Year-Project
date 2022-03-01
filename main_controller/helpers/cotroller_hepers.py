@@ -26,6 +26,8 @@ def get_available_instances(environment, max_trials, required_instances):
             if response.json()["availability"] == True:
                 available_instances.add(environment_ip)
         trials += 1
+    if len(available_instances) < required_instances:
+        abort(400, "Not enough available instances found")
     return list(available_instances)
 
 

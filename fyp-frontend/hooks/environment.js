@@ -19,6 +19,5 @@ export const useEnvironment = () => {
 
 export const getTask = async (jobLink) => {
   const res = await fetcher(getConfig()["gatewayBackendUrl"] + jobLink);
-
   return res;
 };

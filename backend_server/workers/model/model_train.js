@@ -27,7 +27,7 @@ modelTrainQueue.process(async (job, done) => {
     );
     done(null, { resData: res.data });
   } catch (err) {
-    return done(new Error(err));
+    return done(new Error(err.message));
   }
 });
 

@@ -84,7 +84,7 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
             const selectedRowData =
               environments &&
               environments.filter((row) => selectedIDs.has(row._id));
-            if (selectedRowData.length === 0) {
+            if (!selectedRowData || selectedRowData.length === 0) {
               setSelectedRow({});
             } else {
               setSelectedRow(...selectedRowData);

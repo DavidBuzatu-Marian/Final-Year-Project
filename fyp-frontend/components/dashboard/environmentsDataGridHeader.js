@@ -141,7 +141,25 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           initialFormValues={{
             environment_id: selectedRow._id,
             training_iterations: 1,
-            environment_parameters: {},
+            environment_parameters: {
+              loss: {
+                loss_type: "CrossEntropyLoss",
+                parameters: {},
+              },
+              optimizer: {
+                optimizer_type: "RMSprop",
+                parameters: {},
+              },
+              hyperparameters: {
+                epochs: 5,
+                batch_size: 5,
+                reshape: "5, 1, 96, 96",
+                normalizer: true,
+                normalizer_mean: "0.5",
+                normalizer_std: "0.5",
+                drop_last: true,
+              },
+            },
             training_options: {
               max_trials: 0,
               required_instances: 1,
