@@ -67,7 +67,7 @@ def model_train():
     optimizer = get_optimizer(request.json, model)
     hyperparameters = get_hyperparameters(request.json)
     processors = get_processors(request.json)
-    probability_of_failure = get_probability_of_failure(request.json)
+    probability_of_failure = get_instance_probability_of_failure()
 
     train_dataloader = get_dataloader(
         data_path=os.getenv("TRAIN_DATA_PATH"),

@@ -28,6 +28,7 @@ def environment_create():
     save_ips_for_user(
         mongo.db, json_output["gci_instances_ids"], user_id, environment_id
     )
+    send_options_to_instances(json_output["gci_instances_ids"]["value"], environment.get_environment_options())
     create_environment_data_distribution_entry(
         mongo.db,
         json_output["gci_instances_ids"],

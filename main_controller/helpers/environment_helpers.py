@@ -6,6 +6,8 @@ from flask import abort
 from app import statuses
 from datetime import datetime
 
+from helpers.request_helpers import post_json_to_instance
+
 
 def save_ips_for_user(database, ips, user_id, environment_id):
     environment_update = {"environment_ips": [], "status": statuses["1"]}
@@ -18,6 +20,11 @@ def save_ips_for_user(database, ips, user_id, environment_id):
     error("Mathces: {}. Modified: {}".format(update_result.matched_count, update_result.modified_count))
     return update_result
 
+def send_options_to_instances(ips, environment_options):
+    for option in environment_options:
+        post_json_to_instance("http://{}:5000/instance/probability-of-failure"
+         .format(ips[option['instanceNumber'] - 1]),
+         json.dumps(option['probabilityOfFailure']))
 
 def update_environment_status(database, user_id, environment_id, status):
     environment_query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}

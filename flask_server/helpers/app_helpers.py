@@ -7,6 +7,7 @@ from flask.json import jsonify
 from logging import error
 from werkzeug.utils import secure_filename
 from pathlib import Path
+from flask import abort
 
 
 def read_model_from_path(path):
@@ -53,7 +54,12 @@ def get_hyperparameters(request_json):
     return request_json["hyperparameters"]
 
 def get_probability_of_failure(request_json):
-    return request_json["probability_of_failure"]
+    return request_json["probabilityOfFailure"]
+
+def get_instance_probability_of_failure():
+    if not os.environ.has_key('PROBABILITY_OF_FAILURE'):
+        abort(400, "No probability of failure is set")
+    return os.environ.get('PROBABILITY_OF_FAILURE')
 
 def get_processors(request_json):
     # TODO: Find a way to encapsulate this
