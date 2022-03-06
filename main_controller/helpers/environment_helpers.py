@@ -2,9 +2,11 @@ from logging import debug, error
 import subprocess
 import json
 from bson.objectid import ObjectId
-from flask import abort
+from flask import abort, request
 from app import statuses
 from datetime import datetime
+
+from werkzeug.datastructures import ImmutableMultiDict
 
 from helpers.request_helpers import post_json_to_instance
 
@@ -34,6 +36,11 @@ def update_environment_status(database, user_id, environment_id, status):
     )
     return update_result
 
+def delete_environment(database, user_id, environment_id):
+    destroy_terraform(user_id)
+    delete_environment_for_user(database, environment_id, user_id)
+    delete_environment_train_distribution(database, environment_id, user_id)
+    delete_environment_data_distribution(database, environment_id, user_id)
 
 def create_environment_data_distribution_entry(database, ips, user_id, environment_id):
     distribution = [{"{}".format(ip): []} for ip in ips["value"]]
@@ -192,7 +199,7 @@ def destroy_terraform(user_id):
     if terraform_destroy_result.returncode != 0:
         abort(
             500,
-            "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
+            "Something went wrong when destroying environments. Error: {}. Return code: {}. Output: {}".format(
                 terraform_destroy_result.stderr,
                 terraform_destroy_result.returncode,
                 terraform_destroy_result.stdout,
@@ -219,8 +226,15 @@ def get_terraform_output():
     return output.stdout
 
 
-def get_environment_id(request_json):
-    return ObjectId(request_json["environment_id"])
+# as suggested by: https://stackoverflow.com/a/64187498/11023871
+def add_environment_id_to_request(environment_id):
+    http_args = request.args.to_dict()
+    http_args ['environment_id'] = environment_id
+
+    request.args = ImmutableMultiDict(http_args )
+
+def get_environment_id(request_args):
+    return ObjectId(request_args.get("environment_id"))
 
 
 def get_training_options(request_json):

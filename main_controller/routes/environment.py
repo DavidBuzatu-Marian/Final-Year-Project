@@ -9,20 +9,24 @@ from app import app
 from app import mongo
 
 
+
 try:
     from environment import Environment
     from helpers.environment_helpers import *
     from helpers.request_helpers import *
+    from routes.error_handlers.environment import return_500_environment_create_error
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
 @app.route("/environment/create", methods=["POST"])
+@return_500_environment_create_error
 def environment_create():
     environment = Environment(request.json)
     user_id = get_user_id(request.json)
     environment_id = save_environment_for_user(mongo.db, user_id, environment)
-    apply_terraform(user_id, environment)
+    add_environment_id_to_request(environment_id)
+    # apply_terraform(user_id, environment)
     output = get_terraform_output()
     json_output = to_json(output)
     save_ips_for_user(
@@ -45,11 +49,8 @@ def environment_delete():
     user_id = get_user_id(request.json)
     environment_id = get_environment_id(request.json)
     update_environment_status(mongo.db, user_id, environment_id, "6")
-    destroy_terraform(user_id)
-    delete_environment_for_user(mongo.db, environment_id, user_id)
-    delete_environment_train_distribution(mongo.db, environment_id, user_id)
-    delete_environment_data_distribution(mongo.db, environment_id, user_id)
-    return "Destroyed environemnt {} for user {}".format(environment_id, user_id)
+    delete_environment(mongo.db, user_id, environment_id)
+    return "Destroyed environment {} for user {}".format(environment_id, user_id)
 
 
 @app.route("/environment/dataset/data", methods=["POST"])
