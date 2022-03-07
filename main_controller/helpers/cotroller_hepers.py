@@ -1,5 +1,6 @@
 import sys
 import os
+from flask_server.routes import instance
 import torch
 from logging import error
 from flask.helpers import send_file
@@ -44,7 +45,9 @@ def get_model_network_options(request_json):
 
 
 def train_model(instances, training_iterations, instance_training_parameters):
-    for _ in range(training_iterations):
+    initial_instances = set(instances)
+    instances = set(instances)
+    for iteration in range(training_iterations):
         train_on_instances(instances, instance_training_parameters)
         if len(instances) == 0 :
             abort(400, "All devices crashed")
@@ -53,6 +56,16 @@ def train_model(instances, training_iterations, instance_training_parameters):
         update_instances_model(instances)
     return send_file(os.getenv("GLOBAL_MODEL"))
 
+def process_training_results(iteration, instances, initial_instances):
+    data = list()
+    for instance_ip in initial_instances:
+        training_result = "Contributed to current training round" if instance_ip in instances else "Does not contribute to training process anymore"
+        data.append("Instance IP: %s , Training result: %s , Other: None" % (instance_ip, training_result))
+    return data
+
+def write_to_train_log(train_log, data):
+    for log in data:
+        train_log.append(log)
 
 def update_instances_model(instances):
     model_file = open(os.getenv("GLOBAL_MODEL"), "rb")

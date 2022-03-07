@@ -24,7 +24,7 @@ def instance_availability():
     return jsonify({"availability": True})
 
 
-@app.route('/instance/probability-of-failure', methods=["POST"])
+@app.route('/instance/probabilityoffailure', methods=["POST"])
 def set_probability_of_failure():
     os.environ['PROBABILITY_OF_FAILURE'] = get_probability_of_failure(request.json)
     return "Saved probability of failure"

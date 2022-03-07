@@ -19,12 +19,12 @@ def save_ips_for_user(database, ips, user_id, environment_id):
     update_result = database.environmentsAddresses.update_one(
         environment_query, {"$set": environment_update}
     )
-    error("Mathces: {}. Modified: {}".format(update_result.matched_count, update_result.modified_count))
+    error("Matches: {}. Modified: {}".format(update_result.matched_count, update_result.modified_count))
     return update_result
 
 def send_options_to_instances(ips, environment_options):
     for option in environment_options:
-        post_json_to_instance("http://{}:5000/instance/probability-of-failure"
+        post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
          .format(ips[option['instanceNumber'] - 1]),
          json.dumps(option['probabilityOfFailure']))
 

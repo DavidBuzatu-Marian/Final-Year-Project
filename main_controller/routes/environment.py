@@ -26,7 +26,7 @@ def environment_create():
     user_id = get_user_id(request.json)
     environment_id = save_environment_for_user(mongo.db, user_id, environment)
     add_environment_id_to_request(environment_id)
-    # apply_terraform(user_id, environment)
+    apply_terraform(user_id, environment)
     output = get_terraform_output()
     json_output = to_json(output)
     save_ips_for_user(

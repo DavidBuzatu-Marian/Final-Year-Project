@@ -1,5 +1,6 @@
 #! /bin/bash
 
+sudo systemctl restart systemd-networkd.service
 sudo apt update
 sudo apt -y install docker.io
 sudo gcloud auth configure-docker -q
