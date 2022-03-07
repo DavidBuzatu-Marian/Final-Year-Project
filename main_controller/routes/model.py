@@ -9,7 +9,7 @@ from app import mongo
 try:
     from helpers.environment_helpers import *
     from helpers.request_helpers import *
-    from helpers.cotroller_hepers import *
+    from helpers.controller_hepers import *
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -26,6 +26,7 @@ def model_train():
     training_iterations = get_training_iterations(request.json)
     instance_training_parameters = get_instance_training_parameters(request.json)
     return train_model(
+        mongo.db,
         random.sample(list(available_instances), training_options['required_instances']),
         training_iterations,
         instance_training_parameters,

@@ -6,7 +6,6 @@ from flask.helpers import send_file
 from werkzeug.datastructures import FileStorage
 from flask import abort
 from bson.objectid import ObjectId
-from app import mongo
 
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance
@@ -45,7 +44,7 @@ def get_model_network_options(request_json):
     return request_json["environment_model_network_options"]
 
 
-def train_model(instances, training_iterations, instance_training_parameters, user_id,
+def train_model(database, instances, training_iterations, instance_training_parameters, user_id,
                 environment_id):
     initial_instances = instances
     train_log = list()
@@ -55,7 +54,7 @@ def train_model(instances, training_iterations, instance_training_parameters, us
             iteration, instances, initial_instances))
         if len(instances) == 0:
             write_to_train_log(train_log, ["All devices crashed"])
-            write_logs_to_database(mongo.db, train_log, user_id, environment_id)
+            write_logs_to_database(database, train_log, user_id, environment_id)
             abort(400, "All devices crashed")
         aggregated_model = aggregate_models(instances)
         write_to_train_log(train_log, ["Aggregated models from contributors"])
@@ -65,7 +64,7 @@ def train_model(instances, training_iterations, instance_training_parameters, us
             train_log,
             ["Updated model on contributors. Sent aggregated model to intances",
              "Preparing next round..."])
-    write_logs_to_database(mongo.db, train_log, user_id, environment_id)
+    write_logs_to_database(database, train_log, user_id, environment_id)
     return send_file(os.getenv("GLOBAL_MODEL"))
 
 
@@ -75,7 +74,12 @@ def write_logs_to_database(database, logs, user_id, environment_id):
         "environment_id": ObjectId(environment_id),
         "train_logs": logs
     }
-    insert_result = database.environmentLogs.insert_one(log_document)
+    log_document_query = {
+        "user_id": ObjectId(user_id),
+        "environment_id": ObjectId(environment_id),
+    }
+    insert_result = database.environmentsLogs.update_one(
+        log_document_query, {"$set": log_document}, upsert=True)
     return insert_result
 
 

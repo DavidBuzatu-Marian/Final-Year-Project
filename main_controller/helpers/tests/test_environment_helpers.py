@@ -1,5 +1,3 @@
-from environment.environment import Environment
-from environment_helpers import *
 import unittest
 import sys
 from dotenv import load_dotenv
@@ -11,6 +9,9 @@ from bson.objectid import ObjectId
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
+
+from environment.environment import Environment
+from environment_helpers import *
 
 
 class TestEnvironmentHelpers(unittest.TestCase):
