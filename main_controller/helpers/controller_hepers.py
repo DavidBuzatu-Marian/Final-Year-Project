@@ -1,11 +1,12 @@
 import sys
 import os
-from flask_server.routes import instance
 import torch
 from logging import error
 from flask.helpers import send_file
 from werkzeug.datastructures import FileStorage
 from flask import abort
+from bson.objectid import ObjectId
+from app import mongo
 
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance
@@ -29,7 +30,7 @@ def get_available_instances(environment, max_trials, required_instances):
         trials += 1
     if len(available_instances) < required_instances:
         abort(400, "Not enough available instances found")
-    return list(available_instances)
+    return available_instances
 
 
 def get_training_iterations(request_json):
@@ -44,28 +45,61 @@ def get_model_network_options(request_json):
     return request_json["environment_model_network_options"]
 
 
-def train_model(instances, training_iterations, instance_training_parameters):
-    initial_instances = set(instances)
-    instances = set(instances)
+def train_model(instances, training_iterations, instance_training_parameters, user_id,
+                environment_id):
+    initial_instances = instances
+    train_log = list()
     for iteration in range(training_iterations):
         train_on_instances(instances, instance_training_parameters)
-        if len(instances) == 0 :
+        write_to_train_log(train_log, process_training_results(
+            iteration, instances, initial_instances))
+        if len(instances) == 0:
+            write_to_train_log(train_log, ["All devices crashed"])
+            write_logs_to_database(mongo.db, train_log, user_id, environment_id)
             abort(400, "All devices crashed")
         aggregated_model = aggregate_models(instances)
+        write_to_train_log(train_log, ["Aggregated models from contributors"])
         save_aggregated_model(aggregated_model)
         update_instances_model(instances)
+        write_to_train_log(
+            train_log,
+            ["Updated model on contributors. Sent aggregated model to intances",
+             "Preparing next round..."])
+    write_logs_to_database(mongo.db, train_log, user_id, environment_id)
     return send_file(os.getenv("GLOBAL_MODEL"))
+
+
+def write_logs_to_database(database, logs, user_id, environment_id):
+    log_document = {
+        "user_id": ObjectId(user_id),
+        "environment_id": ObjectId(environment_id),
+        "train_logs": logs
+    }
+    insert_result = database.environmentLogs.insert_one(log_document)
+    return insert_result
+
 
 def process_training_results(iteration, instances, initial_instances):
     data = list()
+    data.append("Iteration nr: %d" % (iteration))
     for instance_ip in initial_instances:
-        training_result = "Contributed to current training round" if instance_ip in instances else "Does not contribute to training process anymore"
-        data.append("Instance IP: %s , Training result: %s , Other: None" % (instance_ip, training_result))
+        training_result = check_contribution(instance_ip, instances)
+        data.append("Instance IP: %s , Training result: %s , Other: None" % (
+            instance_ip, training_result))
     return data
+
+
+def check_contribution(instance_ip, instances):
+    if instance_ip in instances:
+        return "Contributed to current training round"
+    else:
+        return "Does not contribute to training process anymore"
+
 
 def write_to_train_log(train_log, data):
     for log in data:
         train_log.append(log)
+
 
 def update_instances_model(instances):
     model_file = open(os.getenv("GLOBAL_MODEL"), "rb")
@@ -84,7 +118,8 @@ def save_aggregated_model(aggregated_model):
 def aggregate_models(instances):
     aggregated_model = None
     for instance_ip in instances:
-        model = load_model_from_path("./models/model_{}.pth".format(instance_ip))
+        model = load_model_from_path(
+            "./models/model_{}.pth".format(instance_ip))
         if aggregated_model == None:
             aggregated_model = model
         else:
@@ -113,7 +148,7 @@ def train_on_instances(instances, instance_training_parameters):
             instances.remove(instance_ip)
         else:
             with open(
-            "./models/model_{}.pth".format(instance_ip), "wb"
+                "./models/model_{}.pth".format(instance_ip), "wb"
             ) as instance_model_file:
                 instance_model_file.write(response.content)
 
@@ -135,5 +170,6 @@ def delete_model_from_path(path):
 def create_model(environment_ips, model_network_options):
     for instance_ip in environment_ips:
         post_json_to_instance(
-            "http://{}:5000/model/create".format(instance_ip), model_network_options
+            "http://{}:5000/model/create".format(
+                instance_ip), model_network_options
         )

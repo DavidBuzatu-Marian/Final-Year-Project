@@ -13,6 +13,7 @@ try:
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
+
 @app.route("/model/train", methods=["POST"])
 def model_train():
     user_id = get_user_id(request.json)
@@ -25,9 +26,11 @@ def model_train():
     training_iterations = get_training_iterations(request.json)
     instance_training_parameters = get_instance_training_parameters(request.json)
     return train_model(
-        random.sample(available_instances, training_options['required_instances']),
+        random.sample(list(available_instances), training_options['required_instances']),
         training_iterations,
         instance_training_parameters,
+        user_id,
+        environment_id
     )
 
 

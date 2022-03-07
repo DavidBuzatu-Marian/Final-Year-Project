@@ -22,11 +22,13 @@ def save_ips_for_user(database, ips, user_id, environment_id):
     error("Matches: {}. Modified: {}".format(update_result.matched_count, update_result.modified_count))
     return update_result
 
+
 def send_options_to_instances(ips, environment_options):
     for option in environment_options:
         post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
-         .format(ips[option['instanceNumber'] - 1]),
-         json.dumps(option['probabilityOfFailure']))
+                              .format(ips[option['instanceNumber'] - 1]),
+                              json.dumps(option['probabilityOfFailure']))
+
 
 def update_environment_status(database, user_id, environment_id, status):
     environment_query = {"user_id": ObjectId(user_id), "_id": ObjectId(environment_id)}
@@ -36,15 +38,16 @@ def update_environment_status(database, user_id, environment_id, status):
     )
     return update_result
 
+
 def delete_environment(database, user_id, environment_id):
     destroy_terraform(user_id)
     delete_environment_for_user(database, environment_id, user_id)
     delete_environment_train_distribution(database, environment_id, user_id)
     delete_environment_data_distribution(database, environment_id, user_id)
 
+
 def create_environment_data_distribution_entry(database, ips, user_id, environment_id):
     distribution = [{"{}".format(ip): []} for ip in ips["value"]]
-    error(distribution)
     environment_data_distribution_document = {
         "user_id": ObjectId(user_id),
         "environment_id": ObjectId(environment_id),
@@ -172,11 +175,8 @@ def apply_terraform(user_id, environments):
     )
     if terraform_apply_result.returncode != 0:
         destroy_terraform(user_id)
-        error( "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
-                terraform_apply_result.stderr,
-                terraform_apply_result.returncode,
-                terraform_apply_result.stdout,
-            ))
+        error("Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
+            terraform_apply_result.stderr, terraform_apply_result.returncode, terraform_apply_result.stdout, ))
         abort(
             500,
             "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
@@ -229,9 +229,10 @@ def get_terraform_output():
 # as suggested by: https://stackoverflow.com/a/64187498/11023871
 def add_environment_id_to_request(environment_id):
     http_args = request.args.to_dict()
-    http_args ['environment_id'] = environment_id
+    http_args['environment_id'] = environment_id
 
-    request.args = ImmutableMultiDict(http_args )
+    request.args = ImmutableMultiDict(http_args)
+
 
 def get_environment_id(request_args):
     return ObjectId(request_args.get("environment_id"))
@@ -239,6 +240,7 @@ def get_environment_id(request_args):
 
 def get_training_options(request_json):
     return request_json["training_options"]
+
 
 def to_json(object):
     return json.loads(object)
