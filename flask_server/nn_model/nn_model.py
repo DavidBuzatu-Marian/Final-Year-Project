@@ -1,3 +1,4 @@
+from model.concatenate import Concatenate
 from nn_activation_factory import NNActivationFactory
 from nn_layer_factory import NNLayerFactory
 import torch
@@ -29,7 +30,11 @@ class NNModel(nn.Module):
                         )
                     )
                 elif component_type == "concatenate":
-                    pass
+                    self._model.append(
+                        Concatenate(
+                            component_details["previous_layer"],
+                            component_details["current_layer"],
+                            component_details["dim"]))
                 elif component_type == "optimizer":
                     pass
                 else:
