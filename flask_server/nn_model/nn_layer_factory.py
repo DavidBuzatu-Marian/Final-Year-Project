@@ -5,6 +5,7 @@ import torch.nn as nn
 from nn_factory.nn_convolution_layer_factory import NNConvolutionLayerFactory
 from nn_factory.nn_pooling_layer_factory import NNPoolingLayerFactory
 from nn_factory.nn_linear_layer_factory import NNLinearLayerFactory
+from nn_factory.nn_vision_layer_factory import NNVisionLayerFactory
 
 
 class NNLayerFactory:
