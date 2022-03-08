@@ -33,7 +33,6 @@ class NNModel(nn.Module):
                     self._model.append(
                         Concatenate(
                             component_details["previous_layer"],
-                            component_details["current_layer"],
                             component_details["dim"]))
                 elif component_type == "optimizer":
                     pass

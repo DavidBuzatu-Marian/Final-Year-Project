@@ -13,6 +13,7 @@ class NNLayerFactory:
             "Convolution": self.__build_convolution,
             "Pooling": self.__build_pooling,
             "Linear": self.__build_linear,
+            "Vision": self.__build_vision
         }
         if layer_type in options:
             return options[layer_type](subtype, parameters)
@@ -29,3 +30,7 @@ class NNLayerFactory:
     def __build_linear(self, subtype, parameters):
         linear_layer_factory = NNLinearLayerFactory()
         return linear_layer_factory.get_layer(subtype, parameters)
+
+    def __build_vision(self, subtype, parameters):
+        vision_layer_factory = NNVisionLayerFactory()
+        return vision_layer_factory.get_layer(subtype, parameters)
