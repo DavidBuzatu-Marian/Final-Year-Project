@@ -32,7 +32,7 @@ class NNModel(nn.Module):
                 elif component_type == "concatenate":
                     self._model.append(
                         Concatenate(
-                            component_details["previous_layer"],
+                            component_details["previous_layer_index"],
                             component_details["dim"]))
                 elif component_type == "optimizer":
                     pass
@@ -40,7 +40,14 @@ class NNModel(nn.Module):
                     raise Exception("Invalid component type")
 
     def forward(self, input_data):
+        computed_layers = list()
         prediction = input_data
         for component in self._model:
-            prediction = component(prediction)
+            if isinstance(component, Concatenate):
+                prediction = component(
+                    computed_layers[component.get_previous_layer_index()],
+                    prediction)
+            else:
+                prediction = component(prediction)
+            computed_layers.append(prediction)
         return prediction

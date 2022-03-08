@@ -3,9 +3,12 @@ import torch.nn as nn
 
 
 class Concatenate(nn.Module):
-    def __init__(self, previous_layer, dim):
-        self.previous_layer = previous_layer
+    def __init__(self, previous_layer_index, dim):
+        self.previous_layer_index = previous_layer_index
         self.dim = dim
 
-    def forward(self, current_layer):
-        return torch.cat([self.previous_layer, current_layer], dim=self.dim)
+    def get_previous_layer_index(self):
+        return self.previous_layer_index
+
+    def forward(self, previous_layer, current_layer):
+        return torch.cat([previous_layer, current_layer], dim=self.dim)
