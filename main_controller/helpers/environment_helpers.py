@@ -24,10 +24,17 @@ def save_ips_for_user(database, ips, user_id, environment_id):
 
 
 def send_options_to_instances(ips, environment_options):
+    ips_with_options = set()
     for option in environment_options:
         post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
                               .format(ips[option['instanceNumber'] - 1]),
                               json.dumps(option['probabilityOfFailure']))
+        ips_with_options.add(ips[option['instanceNumber'] - 1])
+    for ip in ips:
+        if ip not in ips_with_options:
+            post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
+                                  .format(ip),
+                                  json.dumps({"probabilityOfFailure": 0}))
 
 
 def update_environment_status(database, user_id, environment_id, status):
