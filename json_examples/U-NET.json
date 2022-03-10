@@ -299,6 +299,311 @@
                         "kernel_size": 2
                     }
                 }
+            },
+            
+            
+            {
+              "layer": {
+                "layer_type": "Vision",
+                "subtype": "Upsample",
+                "parameters": {
+                  "scale_factor": 2,
+                  "mode": "bilinear",
+                  "align_corners": true
+                }
+              }
+            },
+            {
+              "concatenate": {
+                "previous_layer_index": 24,
+                "dim": 1
+              }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 1536,
+                        "out_channels": 512,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 512,
+                        "out_channels": 512,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            
+             {
+              "layer": {
+                "layer_type": "Vision",
+                "subtype": "Upsample",
+                "parameters": {
+                  "scale_factor": 2,
+                  "mode": "bilinear",
+                  "align_corners": true
+                }
+              }
+            },
+            {
+              "concatenate": {
+                "previous_layer_index": 19,
+                "dim": 1
+              }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 768,
+                        "out_channels": 256,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 256,
+                        "out_channels": 256,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            
+            
+             {
+              "layer": {
+                "layer_type": "Vision",
+                "subtype": "Upsample",
+                "parameters": {
+                  "scale_factor": 2,
+                  "mode": "bilinear",
+                  "align_corners": true
+                }
+              }
+            },
+            {
+              "concatenate": {
+                "previous_layer_index": 14,
+                "dim": 1
+              }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 384,
+                        "out_channels": 128,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 128,
+                        "out_channels": 128,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            
+             {
+              "layer": {
+                "layer_type": "Vision",
+                "subtype": "Upsample",
+                "parameters": {
+                  "scale_factor": 2,
+                  "mode": "bilinear",
+                  "align_corners": true
+                }
+              }
+            },
+            {
+              "concatenate": {
+                "previous_layer_index": 9,
+                "dim": 1
+              }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 192,
+                        "out_channels": 64,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 64,
+                        "out_channels": 64,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            
+             {
+              "layer": {
+                "layer_type": "Vision",
+                "subtype": "Upsample",
+                "parameters": {
+                  "scale_factor": 2,
+                  "mode": "bilinear",
+                  "align_corners": true
+                }
+              }
+            },
+            {
+              "concatenate": {
+                "previous_layer_index": 4,
+                "dim": 1
+              }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 96,
+                        "out_channels": 32,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 32,
+                        "out_channels": 32,
+                        "kernel_size": 3,
+                        "padding": 1
+                    }
+                }
+            },
+            {
+              "activation": {
+                    "activation_type": "ReLU",
+                    "parameters": {
+                        "inplace": true
+                    }
+                }
+            },
+            
+            {
+                "layer": {
+                    "layer_type": "Convolution",
+                    "subtype": "Conv2d",
+                    "parameters": {
+                        "in_channels": 32,
+                        "out_channels": 4,
+                        "kernel_size": 1,
+                        "padding": 1
+                    }
+                }
             }
         ]
 }

@@ -6,9 +6,10 @@ from flask import abort, request
 from app import statuses
 from datetime import datetime
 
+import time
 from werkzeug.datastructures import ImmutableMultiDict
 
-from helpers.request_helpers import post_json_to_instance
+from helpers.request_helpers import post_json_to_instance, get_to_instance
 
 
 def save_ips_for_user(database, ips, user_id, environment_id):
@@ -24,6 +25,7 @@ def save_ips_for_user(database, ips, user_id, environment_id):
 
 
 def send_options_to_instances(ips, environment_options):
+    time.sleep(30)  # required for the cold start of docker container
     ips_with_options = set()
     for option in environment_options:
         post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
@@ -34,7 +36,7 @@ def send_options_to_instances(ips, environment_options):
         if ip not in ips_with_options:
             post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
                                   .format(ip),
-                                  json.dumps({"probabilityOfFailure": 0}))
+                                  {"probabilityOfFailure": "0"})
 
 
 def update_environment_status(database, user_id, environment_id, status):

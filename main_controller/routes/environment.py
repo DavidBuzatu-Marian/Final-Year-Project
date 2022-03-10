@@ -28,12 +28,12 @@ def environment_create():
     apply_terraform(user_id, environment)
     output = get_terraform_output()
     json_output = to_json(output)
-    save_ips_for_user(
-        mongo.db, json_output["gci_instances_ids"], user_id, environment_id
-    )
     send_options_to_instances(
         json_output["gci_instances_ids"]["value"],
         environment.get_environment_options())
+    save_ips_for_user(
+        mongo.db, json_output["gci_instances_ids"], user_id, environment_id
+    )
     create_environment_data_distribution_entry(
         mongo.db,
         json_output["gci_instances_ids"],
