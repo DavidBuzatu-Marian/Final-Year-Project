@@ -121,7 +121,7 @@ def environment_dataset_distribution():
         if not (environment_ip in environment["environment_ips"]):
             return (jsonify("Environment ip is invalid"), 400)
         environment_data_distribution[environment_ip] = random.sample(
-            range(1, dataset_length), distribution
+            range(0, dataset_length), distribution
         )
     save_environment_test_data_distribution(
         mongo.db, environment_id, user_id, environment_data_distribution

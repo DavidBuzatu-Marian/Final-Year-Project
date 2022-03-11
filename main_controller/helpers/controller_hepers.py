@@ -56,10 +56,10 @@ def train_model(database, instances, training_iterations, instance_training_para
             write_to_train_log(train_log, ["All devices crashed"])
             write_logs_to_database(database, train_log, user_id, environment_id)
             abort(400, "All devices crashed")
-        aggregated_model = aggregate_models(instances)
+        aggregated_model = aggregate_models(instances, environment_id, user_id)
         write_to_train_log(train_log, ["Aggregated models from contributors"])
-        save_aggregated_model(aggregated_model)
-        update_instances_model(instances)
+        save_aggregated_model(aggregated_model, environment_id, user_id)
+        update_instances_model(instances, environment_id, user_id)
         write_to_train_log(
             train_log,
             ["Updated model on contributors. Sent aggregated model to intances",
@@ -115,15 +115,15 @@ def update_instances_model(instances):
         )
 
 
-def save_aggregated_model(aggregated_model):
-    torch.save(aggregated_model, os.getenv("GLOBAL_MODEL"))
+def save_aggregated_model(aggregated_model, environment_id, user_id):
+    torch.save(aggregated_model, "{}/{}-{}.pth".format(os.getenv("GLOBAL_MODEL"), environment_id, user_id))
 
 
-def aggregate_models(instances):
+def aggregate_models(instances, environment_id, user_id):
     aggregated_model = None
     for instance_ip in instances:
         model = load_model_from_path(
-            "./models/model_{}.pth".format(instance_ip))
+            "./models/model-{}-{}-{}.pth".format(environment_id, user_id, instance_ip))
         if aggregated_model == None:
             aggregated_model = model
         else:
@@ -132,7 +132,8 @@ def aggregate_models(instances):
             for layer in state_aggregated:
                 state_aggregated[layer] += state_model[layer]
             aggregated_model.load_state_dict(state_aggregated)
-        delete_model_from_path("./models/model_{}.pth".format(instance_ip))
+        delete_model_from_path(
+            "./models/model-{}-{}-{}.pth".format(environment_id, user_id, instance_ip))
     state_aggregated = aggregated_model.state_dict()
     for layer in state_aggregated:
         state_aggregated[layer] /= len(instances)
@@ -140,7 +141,7 @@ def aggregate_models(instances):
     return aggregated_model
 
 
-def train_on_instances(instances, instance_training_parameters):
+def train_on_instances(instances, instance_training_parameters, environment_id, user_id):
     for instance_ip in instances:
         response = post_json_to_instance(
             "http://{}:5000/model/train".format(instance_ip),
@@ -152,7 +153,7 @@ def train_on_instances(instances, instance_training_parameters):
             instances.remove(instance_ip)
         else:
             with open(
-                "./models/model_{}.pth".format(instance_ip), "wb"
+                "./models/model-{}-{}-{}.pth".format(environment_id, user_id, instance_ip), "wb"
             ) as instance_model_file:
                 instance_model_file.write(response.content)
 
