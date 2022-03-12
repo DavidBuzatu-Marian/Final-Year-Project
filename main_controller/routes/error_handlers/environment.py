@@ -4,36 +4,48 @@ import sys
 from app import mongo, app
 import traceback
 
+
 try:
     from helpers.environment_helpers import delete_environment, get_user_id, get_environment_id, update_environment_status
+    from error_handlers.abort_handler import abort_with_text_response
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
-# inspired by answer: https://stackoverflow.com/a/53720325/11023871
-def return_500_environment_create_error(function):
+def return_500_on_uncaught_server_error(function):
     def wrapper(*args, **kwargs):
         try:
             return function(*args, **kwargs)
         except:
-            print_error()
+            log_error()
+
+            abort_with_text_response(500, "Internal Server Error")
+    wrapper.__name__ = function.__name__
+    return wrapper
+# inspired by answer: https://stackoverflow.com/a/53720325/11023871
+
+
+def return_500_environment_critical_error(function):
+    def wrapper(*args, **kwargs):
+        try:
+            return function(*args, **kwargs)
+        except:
+            log_error()
             request_json = flask.request.json
             user_id = get_user_id(request_json)
 
             environment_id = get_environment_id(flask.request.args)
             update_environment_status(mongo.db, user_id, environment_id, "4")
             delete_environment(mongo.db, user_id, environment_id)
-            response = {
-                'status_code': 500,
-                'status': 'Internal Server Error'
-            }
-            return flask.jsonify(response), 500
+
+            abort_with_text_response(500, "Internal Server Error")
+    wrapper.__name__ = function.__name__
     return wrapper
 
 # As suggested by: https://stackoverflow.com/a/49613561/11023871
 
 
-def print_error():
+def log_error():
     ex_type, ex_value, ex_traceback = sys.exc_info()
 
     # Extract unformatter stack traces as tuples

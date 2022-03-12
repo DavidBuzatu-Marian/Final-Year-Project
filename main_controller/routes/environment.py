@@ -13,13 +13,13 @@ try:
     from environment import Environment
     from helpers.environment_helpers import *
     from helpers.request_helpers import *
-    from routes.error_handlers.environment import return_500_environment_create_error
+    from routes.error_handlers.environment import return_500_environment_critical_error, return_500_on_uncaught_server_error
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
 @app.route("/environment/create", methods=["POST"])
-@return_500_environment_create_error
+@return_500_environment_critical_error
 def environment_create():
     environment = Environment(request.json)
     user_id = get_user_id(request.json)
@@ -46,6 +46,7 @@ def environment_create():
 
 
 @app.route("/environment/delete", methods=["DELETE"])
+@return_500_environment_critical_error
 def environment_delete():
     user_id = get_user_id(request.json)
     environment_id = get_environment_id(request.json)
@@ -55,6 +56,7 @@ def environment_delete():
 
 
 @app.route("/environment/dataset/data", methods=["POST"])
+@return_500_on_uncaught_server_error
 def environment_dataset_data():
     user_id = get_user_id(request.args)
     environment_id = get_environment_id(request.args)
@@ -77,6 +79,7 @@ def environment_dataset_data():
 
 
 @app.route("/environment/dataset/validation", methods=["POST"])
+@return_500_on_uncaught_server_error
 def environment_dataset_validation():
     user_id = get_user_id(request.args)
     environment_id = get_environment_id(request.args)
@@ -93,6 +96,7 @@ def environment_dataset_validation():
 
 
 @app.route("/environment/dataset/test", methods=["POST"])
+@return_500_on_uncaught_server_error
 def environment_dataset_test():
     user_id = get_user_id(request.args)
     environment_id = get_environment_id(request.args)
@@ -109,6 +113,7 @@ def environment_dataset_test():
 
 
 @app.route("/environment/dataset/distribution", methods=["POST"])
+@return_500_on_uncaught_server_error
 def environment_dataset_distribution():
     user_id = get_user_id(request.json)
     environment_id = get_environment_id(request.json)
@@ -119,7 +124,7 @@ def environment_dataset_distribution():
     # TODO: Choose between random distribution or given distribution
     for environment_ip, distribution in environment_data_distribution.items():
         if not (environment_ip in environment["environment_ips"]):
-            return (jsonify("Environment ip is invalid"), 400)
+            abort_with_text_response(400, "Environment IP is invalid")
         environment_data_distribution[environment_ip] = random.sample(
             range(0, dataset_length), distribution
         )
