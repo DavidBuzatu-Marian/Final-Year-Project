@@ -1,14 +1,13 @@
 import flask
 from logging import debug, error
 import sys
-from app import mongo
+from app import mongo, app
 import traceback
 
 try:
     from helpers.environment_helpers import delete_environment, get_user_id, get_environment_id, update_environment_status
 except ImportError as exc:
-     sys.stderr.write("Error: failed to import modules ({})".format(exc))
-
+    sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
 # inspired by answer: https://stackoverflow.com/a/53720325/11023871
@@ -32,6 +31,8 @@ def return_500_environment_create_error(function):
     return wrapper
 
 # As suggested by: https://stackoverflow.com/a/49613561/11023871
+
+
 def print_error():
     ex_type, ex_value, ex_traceback = sys.exc_info()
 
@@ -42,8 +43,9 @@ def print_error():
     stack_trace = list()
 
     for trace in trace_back:
-        stack_trace.append("File : %s , Line : %d, Func.Name : %s, Message : %s" % (trace[0], trace[1], trace[2], trace[3]))
+        stack_trace.append("File : %s , Line : %d, Func.Name : %s, Message : %s" %
+                           (trace[0], trace[1], trace[2], trace[3]))
 
-    error("Exception type : %s " % ex_type.__name__)
-    error("Exception message : %s" %ex_value)
-    error("Stack trace : %s" %stack_trace)
+    app.logger.error("Exception type : %s " % ex_type.__name__)
+    app.logger.error("Exception message : %s" % ex_value)
+    app.logger.error("Stack trace : %s" % stack_trace)

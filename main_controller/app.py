@@ -3,6 +3,7 @@ import sys
 import os
 from dotenv import load_dotenv
 from flask_pymongo import PyMongo
+import logs.logger
 import json
 
 sys.path.insert(0, "./environment/")
@@ -17,6 +18,7 @@ app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 mongo = PyMongo(app)
 
 statuses = json.load(open("./config/statuses.json"))
+
 
 import routes.environment
 import routes.model
