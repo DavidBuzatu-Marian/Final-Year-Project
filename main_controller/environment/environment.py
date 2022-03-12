@@ -9,15 +9,3 @@ class Environment:
         self.machine_series = request_json["machine_series"]
         for options in request_json["environment_options"]:
             self.environment_options.append(options)
-
-    def get_nr_instances(self):
-        return self.nr_instances
-
-    def get_machine_type(self):
-        return self.machine_type
-
-    def get_machine_series(self):
-        return self.machine_series
-
-    def get_environment_options(self):
-        return self.environment_options

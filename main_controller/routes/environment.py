@@ -1,4 +1,5 @@
 from logging import debug, error
+from re import T
 from flask import request
 import sys
 from flask.json import jsonify
@@ -7,10 +8,12 @@ import json
 
 from app import app
 from app import mongo
+from main_controller.environment import target_environment
 
 
 try:
     from environment import Environment
+    from environment.target_environment import TargetEnvironment
     from helpers.environment_helpers import *
     from helpers.request_helpers import *
     from routes.error_handlers.environment import return_500_environment_critical_error, return_500_on_uncaught_server_error
@@ -24,46 +27,49 @@ def environment_create():
     environment = Environment(request.json)
     user_id = get_user_id(request.json)
     environment_id = save_environment_for_user(mongo.db, user_id, environment)
+    target_environment = TargetEnvironment(user_id, environment_id)
     add_environment_id_to_request(environment_id)
     apply_terraform(user_id, environment)
     output = get_terraform_output()
     json_output = to_json(output)
     send_options_to_instances(
         json_output["gci_instances_ids"]["value"],
-        environment.get_environment_options())
+        environment.environment_options)
     save_ips_for_user(
-        mongo.db, json_output["gci_instances_ids"], user_id, environment_id
+        mongo.db, json_output["gci_instances_ids"], target_environment
     )
     create_environment_data_distribution_entry(
         mongo.db,
         json_output["gci_instances_ids"],
-        user_id,
-        environment_id,
+        target_environment
     )
     return "Created {} environments with requested options. Environments are ready for receiving datasets".format(
-        environment.get_nr_instances()
+        environment.nr_instances
     )
 
 
 @app.route("/environment/delete", methods=["DELETE"])
 @return_500_environment_critical_error
 def environment_delete():
-    user_id = get_user_id(request.json)
-    environment_id = get_environment_id(request.json)
-    update_environment_status(mongo.db, user_id, environment_id, "6")
-    delete_environment(mongo.db, user_id, environment_id)
-    return "Destroyed environment {} for user {}".format(environment_id, user_id)
+    target_environment = TargetEnvironment(
+        get_user_id(request.json),
+        get_environment_id(request.json))
+    update_environment_status(mongo.db, target_environment, "6")
+    delete_environment(mongo.db, target_environment)
+    return "Destroyed environment {} for user {}".format(
+        target_environment.id, target_environment.user_id)
 
 
 @app.route("/environment/dataset/data", methods=["POST"])
 @return_500_on_uncaught_server_error
 def environment_dataset_data():
-    user_id = get_user_id(request.args)
-    environment_id = get_environment_id(request.args)
-    environment = get_environment(mongo.db, environment_id, user_id)
-    update_environment_status(mongo.db, user_id, environment_id, "2")
+    target_environment = TargetEnvironment(
+        get_user_id(request.json),
+        get_environment_id(request.json))
+    environment = get_environment(mongo.db, target_environment)
+    update_environment_status(mongo.db, target_environment, "2")
     environment_data_distribution = get_environment_data_distribution(
-        mongo.db, environment_id, user_id
+        mongo.db, target_environment
     )
     for environment_ip, _ in environment_data_distribution["distributions"].items():
         if not (environment_ip in environment["environment_ips"]):
@@ -72,43 +78,45 @@ def environment_dataset_data():
         request.files, environment_data_distribution["distributions"]
     )
     save_environment_data_distribution(
-        mongo.db, user_id, environment_id, instances_data
+        mongo.db, target_environment, instances_data
     )
-    update_environment_status(mongo.db, user_id, environment_id, "5")
+    update_environment_status(mongo.db, target_environment, "5")
     return "Saved data in instances"
 
 
 @app.route("/environment/dataset/validation", methods=["POST"])
 @return_500_on_uncaught_server_error
 def environment_dataset_validation():
-    user_id = get_user_id(request.args)
-    environment_id = get_environment_id(request.args)
-    environment = get_environment(mongo.db, environment_id, user_id)
-    update_environment_status(mongo.db, user_id, environment_id, "2")
+    target_environment = TargetEnvironment(
+        get_user_id(request.json),
+        get_environment_id(request.json))
+    environment = get_environment(mongo.db, target_environment)
+    update_environment_status(mongo.db, target_environment, "2")
     instances_data = post_data_to_instance(
         request.files, environment["environment_ips"]
     )
     save_environment_data_distribution(
-        mongo.db, user_id, environment_id, instances_data
+        mongo.db, target_environment, instances_data
     )
-    update_environment_status(mongo.db, user_id, environment_id, "5")
+    update_environment_status(mongo.db, target_environment, "5")
     return "Saved validation data in instances"
 
 
 @app.route("/environment/dataset/test", methods=["POST"])
 @return_500_on_uncaught_server_error
 def environment_dataset_test():
-    user_id = get_user_id(request.args)
-    environment_id = get_environment_id(request.args)
-    environment = get_environment(mongo.db, environment_id, user_id)
-    update_environment_status(mongo.db, user_id, environment_id, "2")
+    target_environment = TargetEnvironment(
+        get_user_id(request.json),
+        get_environment_id(request.json))
+    environment = get_environment(mongo.db, target_environment)
+    update_environment_status(mongo.db, target_environment, "2")
     instances_data = post_data_to_instance(
         request.files, environment["environment_ips"]
     )
     save_environment_data_distribution(
-        mongo.db, user_id, environment_id, instances_data
+        mongo.db, target_environment, instances_data
     )
-    update_environment_status(mongo.db, user_id, environment_id, "5")
+    update_environment_status(mongo.db, target_environment, "5")
     return "Saved test data in instances"
 
 
