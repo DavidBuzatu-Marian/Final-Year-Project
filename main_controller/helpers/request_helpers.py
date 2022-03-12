@@ -10,6 +10,18 @@ except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
+def request_wrapper(request_function):
+    try:
+        return request_function()
+    except requests.exceptions.Timeout:
+        abort_with_text_response(408, "A request to an instance timedout.")
+    except requests.exceptions.RequestException as e:
+        abort_with_text_response(500, "A request failed due to an internal server error")
+    except ValueError:
+        abort_with_text_response(
+            500, "A request failed due to an internal server error (ValueError)")
+
+
 def post_to_instance(url, data):
     files = []
     if data.items() == None:
@@ -81,10 +93,10 @@ def post_data_distribution(files, environment_data_distribution):
     instances_data = dict()
     for environment_ip, data_distribution in environment_data_distribution.items():
         instance_data = get_instance_data_from_files(files, data_distribution)
-        post_to_instance(
+        request_wrapper(lambda: post_to_instance(
             "http://" + environment_ip + ":5000/dataset/add",
             instance_data,
-        )
+        ))
         add_data_to_instance_distribution(instances_data, instance_data, environment_ip)
     return instances_data
 
@@ -112,9 +124,9 @@ def post_data_to_instance(files, environment_ips):
     instances_data = dict()
     instance_data = get_instance_data_from_files(files, [])
     for environment_ip in environment_ips:
-        post_to_instance(
+        request_wrapper(lambda: post_to_instance(
             "http://" + environment_ip + ":5000/dataset/add", instance_data
-        )
+        ))
         add_data_to_instance_distribution(instances_data, instance_data, environment_ip)
     return instances_data
 
@@ -123,9 +135,9 @@ def compute_losses(request_json, environment_ips):
     losses = dict()
     for environment_ip in environment_ips:
         losses[environment_ip] = json.dumps(
-            post_json_to_instance(
+            request_wrapper(lambda: post_json_to_instance(
                 "http://" + environment_ip + ":5000/model/loss", request_json
-            ).content.decode("utf-8")
+            )).content.decode("utf-8")
         )
     error(losses)
     return losses

@@ -7,7 +7,7 @@ from werkzeug.datastructures import FileStorage
 from bson.objectid import ObjectId
 
 try:
-    from request_helpers import get_to_instance, post_json_to_instance, post_to_instance
+    from request_helpers import get_to_instance, post_json_to_instance, post_to_instance, request_wrapper
     from nn_model import NNModel
     from error_handlers import abort_with_text_response
 except ImportError as exc:
@@ -21,9 +21,9 @@ def get_available_instances(environment, max_trials, required_instances):
         # Get each environment ip
         # Make request for availability and store available envs
         for environment_ip in environment["environment_ips"]:
-            response = get_to_instance(
+            response = request_wrapper(lambda: get_to_instance(
                 "http://{}:5000/instance/availability".format(environment_ip)
-            )
+            ))
             if response.json()["availability"] == True:
                 available_instances.add(environment_ip)
         trials += 1
@@ -143,11 +143,11 @@ def aggregate_models(instances, environment_id, user_id):
 
 def train_on_instances(instances, instance_training_parameters, environment_id, user_id):
     for instance_ip in instances:
-        response = post_json_to_instance(
+        response = request_wrapper(lambda: post_json_to_instance(
             "http://{}:5000/model/train".format(instance_ip),
             instance_training_parameters,
             True
-        )
+        ))
         if not response.ok:
             # Instance failed during training => remove instance from round of training
             instances.remove(instance_ip)

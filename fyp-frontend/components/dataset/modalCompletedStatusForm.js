@@ -88,9 +88,21 @@ const ModalCompletedStatusForm = ({
     }
   };
 
+  const checkRequiredFilesNotEmpty = (formValues) => {
+    if (
+      Object.keys(formValues[formValues.dataName]).length === 0 ||
+      Object.keys(formValues[formValues.labelsName]).length === 0
+    ) {
+      throw {
+        message: `Both ${formValues.dataName} and ${formValues.labelsName} are required`,
+      };
+    }
+  };
+
   const onSubmit = async () => {
     try {
       setModalState({ ...modalState, loading: true });
+      checkRequiredFilesNotEmpty(formValues);
       const res = await performRequest(
         headerModals[activeHeaderModal],
         formValues
@@ -114,10 +126,9 @@ const ModalCompletedStatusForm = ({
         }
       }, 1000);
     } catch (error) {
-      console.log(error);
       setModalState({
         ...modalState,
-        errorMessage: "Request could not be made",
+        errorMessage: error.message,
         loading: false,
         alertId: crypto.randomUUID(),
       });

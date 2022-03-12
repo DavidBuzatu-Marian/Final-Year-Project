@@ -10,7 +10,7 @@ import time
 from werkzeug.datastructures import ImmutableMultiDict
 
 try:
-    from helpers.request_helpers import post_json_to_instance, get_to_instance
+    from helpers.request_helpers import post_json_to_instance, request_wrapper
     from error_handlers import abort_with_text_response
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
@@ -32,15 +32,15 @@ def send_options_to_instances(ips, environment_options):
     time.sleep(30)  # required for the cold start of docker container
     ips_with_options = set()
     for option in environment_options:
-        post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
-                              .format(ips[option['instanceNumber'] - 1]),
-                              json.dumps(option['probabilityOfFailure']))
+        request_wrapper(lambda: post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
+                                                      .format(ips[option['instanceNumber'] - 1]),
+                                                      json.dumps(option['probabilityOfFailure'])))
         ips_with_options.add(ips[option['instanceNumber'] - 1])
     for ip in ips:
         if ip not in ips_with_options:
-            post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
-                                  .format(ip),
-                                  {"probabilityOfFailure": "0"})
+            request_wrapper(lambda: post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
+                                                          .format(ip),
+                                                          {"probabilityOfFailure": "0"}))
 
 
 def update_environment_status(database, user_id, environment_id, status):
