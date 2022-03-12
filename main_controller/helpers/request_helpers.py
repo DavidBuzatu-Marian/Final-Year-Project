@@ -1,23 +1,28 @@
 from collections import defaultdict
 from logging import error
 import requests
-from flask import abort
 import json
+import sys
+
+try:
+    from error_handlers import abort_with_text_response
+except ImportError as exc:
+    sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
 def post_to_instance(url, data):
     files = []
     if data.items() == None:
-        abort(400, "Posting data went wrong. Empty data")
+        abort_with_text_response(400, "Posting data went wrong. Empty data")
     for file_type, value in data.items():
         for file in value:
             files.append((file_type, (file.filename, file.read(), file.content_type)))
             file.seek(0)
     if len(files) == 0:
-        abort(400, "No files selected")
+        abort_with_text_response(400, "No files selected")
     response = requests.post(url=url, files=files, timeout=10)
     if not response.ok:
-        abort(
+        abort_with_text_response(
             response.status_code,
             "Posting data went wrong. Response: {}".format(response.content),
         )
@@ -27,7 +32,7 @@ def post_to_instance(url, data):
 def post_json_to_instance(url, json, allow_failure=False):
     response = requests.post(url, json=json, timeout=10)
     if not response.ok and not allow_failure:
-        abort(
+        abort_with_text_response(
             response.status_code,
             "Posting data went wrong. Response: {}".format(response.content),
         )
@@ -37,7 +42,7 @@ def post_json_to_instance(url, json, allow_failure=False):
 def get_to_instance(url):
     response = requests.get(url, timeout=10)
     if not response.ok:
-        abort(
+        abort_with_text_response(
             response.status_code,
             "Getting from {} went wrong. Response".format(url, response.content),
         )

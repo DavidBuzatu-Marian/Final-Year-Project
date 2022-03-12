@@ -2,14 +2,18 @@ from logging import debug, error
 import subprocess
 import json
 from bson.objectid import ObjectId
-from flask import abort, request
+from flask import request
 from app import statuses
 from datetime import datetime
-
+import sys
 import time
 from werkzeug.datastructures import ImmutableMultiDict
 
-from helpers.request_helpers import post_json_to_instance, get_to_instance
+try:
+    from helpers.request_helpers import post_json_to_instance, get_to_instance
+    from error_handlers import abort_with_text_response
+except ImportError as exc:
+    sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
 def save_ips_for_user(database, ips, user_id, environment_id):
@@ -186,7 +190,7 @@ def apply_terraform(user_id, environments):
         destroy_terraform(user_id)
         error("Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
             terraform_apply_result.stderr, terraform_apply_result.returncode, terraform_apply_result.stdout, ))
-        abort(
+        abort_with_text_response(
             500,
             "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
                 terraform_apply_result.stderr,
@@ -206,7 +210,7 @@ def destroy_terraform(user_id):
         text=True,
     )
     if terraform_destroy_result.returncode != 0:
-        abort(
+        abort_with_text_response(
             500,
             "Something went wrong when destroying environments. Error: {}. Return code: {}. Output: {}".format(
                 terraform_destroy_result.stderr,
@@ -224,7 +228,7 @@ def get_terraform_output():
         text=True,
     )
     if output.returncode != 0:
-        abort(
+        abort_with_text_response(
             500,
             "Something went wrong when constructing environments. Error: {}. Return code: {}. Output: {}".format(
                 output.stderr,

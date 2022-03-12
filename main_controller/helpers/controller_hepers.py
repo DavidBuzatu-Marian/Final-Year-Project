@@ -4,12 +4,12 @@ import torch
 from logging import error
 from flask.helpers import send_file
 from werkzeug.datastructures import FileStorage
-from flask import abort
 from bson.objectid import ObjectId
 
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance
     from nn_model import NNModel
+    from error_handlers import abort_with_text_response
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -28,7 +28,7 @@ def get_available_instances(environment, max_trials, required_instances):
                 available_instances.add(environment_ip)
         trials += 1
     if len(available_instances) < required_instances:
-        abort(400, "Not enough available instances found")
+        abort_with_text_response(400, "Not enough available instances found")
     return available_instances
 
 
@@ -55,7 +55,7 @@ def train_model(database, instances, training_iterations, instance_training_para
         if len(instances) == 0:
             write_to_train_log(train_log, ["All devices crashed"])
             write_logs_to_database(database, train_log, user_id, environment_id)
-            abort(400, "All devices crashed")
+            abort_with_text_response(400, "All devices crashed")
         aggregated_model = aggregate_models(instances, environment_id, user_id)
         write_to_train_log(train_log, ["Aggregated models from contributors"])
         save_aggregated_model(aggregated_model, environment_id, user_id)

@@ -9,3 +9,4 @@ python-terraform
 aiohttp
 requests
 celery
+pytest
