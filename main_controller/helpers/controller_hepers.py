@@ -1,7 +1,6 @@
 import sys
 import os
 import torch
-from logging import error
 from flask.helpers import send_file
 from werkzeug.datastructures import FileStorage
 from bson.objectid import ObjectId

@@ -1,4 +1,4 @@
-from logging import debug, error
+from logging import error
 import subprocess
 import json
 from bson.objectid import ObjectId

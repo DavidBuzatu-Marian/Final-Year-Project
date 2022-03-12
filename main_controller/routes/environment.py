@@ -8,7 +8,6 @@ import json
 
 from app import app
 from app import mongo
-from main_controller.environment import target_environment
 
 
 try:
@@ -123,9 +122,10 @@ def environment_dataset_test():
 @app.route("/environment/dataset/distribution", methods=["POST"])
 @return_500_on_uncaught_server_error
 def environment_dataset_distribution():
-    user_id = get_user_id(request.json)
-    environment_id = get_environment_id(request.json)
-    environment = get_environment(mongo.db, environment_id, user_id)
+    target_environment = TargetEnvironment(
+        get_user_id(request.json),
+        get_environment_id(request.json))
+    environment = get_environment(mongo.db, target_environment)
     environment_data_distribution = get_data_distribution(request.json)
     dataset_length = get_dataset_length(request.json)
 
@@ -137,6 +137,6 @@ def environment_dataset_distribution():
             range(0, dataset_length), distribution
         )
     save_environment_test_data_distribution(
-        mongo.db, environment_id, user_id, environment_data_distribution
+        mongo.db, target_environment, environment_data_distribution
     )
     return "Saved dataset distribution"
