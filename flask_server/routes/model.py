@@ -5,7 +5,6 @@ from flask.json import jsonify
 import json
 import os
 import sys
-from flask import abort
 import torch
 
 
@@ -14,6 +13,7 @@ try:
     from helpers.data_helpers import *
     from helpers.app_helpers import *
     from helpers.model_helpers import is_failing
+    from error_handlers.abort_handler import abort_with_text_response
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -77,7 +77,7 @@ def model_train():
 
     for _ in range(0, hyperparameters["epochs"]):
         if is_failing(probability_of_failure):
-            abort(400, "Device failed during training")
+            abort_with_text_response(400, "Device failed during training")
         for data, label in train_dataloader:
             optimizer.zero_grad()
 

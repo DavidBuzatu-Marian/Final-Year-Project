@@ -4,9 +4,11 @@ from flask.json import jsonify
 import os
 import sys
 
+
 try:
     from helpers.dataset_helpers import delete_data_from_path
     from helpers.dataset_helpers import delete_model_from_path, save_dataset
+    from error_handlers.abort_handler import abort_with_text_response
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -16,12 +18,10 @@ from app import app
 @app.route("/dataset/add", methods=["POST"])
 def dataset_add():
     if not ("multipart/form-data" in request.content_type):
-        return (
-            jsonify("Content type is not supported. Please return multipart/form-data"),
-            415,
-        )
+        abort_with_text_response(
+            415, "Content type is not supported. Please return multipart/form-data")
     if len(request.files) == 0:
-        return (jsonify("At least a file needs to be selected"), 400)
+        abort_with_text_response(400, "At least a file needs to be selected")
     save_dataset(request)
     # delete_model_from_path(os.getenv("MODEL_PATH"))
     return jsonify("Files saved successfully")

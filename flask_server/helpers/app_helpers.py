@@ -1,13 +1,11 @@
 import os
+from error_handlers.abort_handler import abort_with_text_response
 from nn_loss.nn_loss_factory import NNLossFactory
 from nn_optimizer.nn_optimizer_factory import NNOptimizerFactory
 
 import torch
-from flask.json import jsonify
-from logging import error
 from werkzeug.utils import secure_filename
 from pathlib import Path
-from flask import abort
 
 
 def read_model_from_path(path):
@@ -53,13 +51,16 @@ def get_hyperparameters(request_json):
     request_json["hyperparameters"].setdefault("shuffle", True)
     return request_json["hyperparameters"]
 
+
 def get_probability_of_failure(request_json):
     return request_json["probabilityOfFailure"]
 
+
 def get_instance_probability_of_failure():
     if not os.environ.has_key('PROBABILITY_OF_FAILURE'):
-        abort(400, "No probability of failure is set")
+        abort_with_text_response(400, "No probability of failure is set")
     return os.environ.get('PROBABILITY_OF_FAILURE')
+
 
 def get_processors(request_json):
     # TODO: Find a way to encapsulate this
