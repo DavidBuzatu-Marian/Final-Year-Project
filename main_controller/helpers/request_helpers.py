@@ -5,7 +5,7 @@ import json
 import sys
 
 try:
-    from error_handlers import abort_with_text_response
+    from error_handlers.abort_handler import abort_with_text_response
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 

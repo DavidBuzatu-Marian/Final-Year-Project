@@ -11,7 +11,7 @@ from werkzeug.datastructures import ImmutableMultiDict
 
 try:
     from helpers.request_helpers import post_json_to_instance, request_wrapper
-    from error_handlers import abort_with_text_response
+    from error_handlers.abort_handler import abort_with_text_response
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 

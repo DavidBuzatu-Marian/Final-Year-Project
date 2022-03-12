@@ -9,7 +9,7 @@ from bson.objectid import ObjectId
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance, request_wrapper
     from nn_model import NNModel
-    from error_handlers import abort_with_text_response
+    from error_handlers.abort_handler import abort_with_text_response
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
