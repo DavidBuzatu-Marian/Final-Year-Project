@@ -11,8 +11,8 @@ from app import mongo
 
 
 try:
-    from environment import Environment
-    from environment.target_environment import TargetEnvironment
+    from environment_classes.environment import Environment
+    from environment_classes.target_environment import TargetEnvironment
     from helpers.environment_helpers import *
     from helpers.request_helpers import *
     from routes.error_handlers.environment import return_500_environment_critical_error, return_500_on_uncaught_server_error

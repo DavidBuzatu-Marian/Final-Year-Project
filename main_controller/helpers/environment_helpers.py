@@ -56,9 +56,9 @@ def update_environment_status(database, environment, status):
 
 def delete_environment(database, environment):
     destroy_terraform(environment.user_id)
-    delete_environment_for_user(database, environment.id, environment.user_id)
-    delete_environment_train_distribution(database, environment.id, environment.user_id)
-    delete_environment_data_distribution(database, environment.id, environment.user_id)
+    delete_environment_for_user(database, environment)
+    delete_environment_train_distribution(database, environment)
+    delete_environment_data_distribution(database, environment)
 
 
 def create_environment_data_distribution_entry(database, ips, environment):
@@ -93,22 +93,22 @@ def save_environment_for_user(database, user_id, environment):
     return insert_result.inserted_id
 
 
-def delete_environment_for_user(database, environment_id, user_id):
-    query = {"_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
+def delete_environment_for_user(database, environment):
+    query = {"_id": ObjectId(environment.id), "user_id": ObjectId(environment.user_id)}
     delete_result = database.environmentsAddresses.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
     return delete_result
 
 
-def delete_environment_train_distribution(database, environment_id, user_id):
-    query = {"environment_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
+def delete_environment_train_distribution(database, environment):
+    query = {"environment_id": ObjectId(environment.id), "user_id": ObjectId(environment.user_id)}
     delete_result = database.environmentsTrainingDataDistribution.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
     return delete_result
 
 
-def delete_environment_data_distribution(database, environment_id, user_id):
-    query = {"environment_id": ObjectId(environment_id), "user_id": ObjectId(user_id)}
+def delete_environment_data_distribution(database, environment):
+    query = {"environment_id": ObjectId(environment.id), "user_id": ObjectId(environment.user_id)}
     delete_result = database.environmentsDataDistribution.delete_one(query)
     error("Deleted entry: {}".format(delete_result.deleted_count))
     return delete_result

@@ -6,6 +6,8 @@ import sys
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../../nn_model")
+sys.path.insert(2, "../")
+
 from nn_model.nn_activation_factory import NNActivationFactory
 
 

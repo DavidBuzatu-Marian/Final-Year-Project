@@ -9,7 +9,7 @@ import unittest
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
-from controller_hepers import *
+from helpers.controller_hepers import *
 
 
 class TestControllerHelpers(unittest.TestCase):
