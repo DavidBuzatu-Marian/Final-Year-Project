@@ -10,3 +10,4 @@ aiohttp
 requests
 celery
 pytest
+pytest-responsemock

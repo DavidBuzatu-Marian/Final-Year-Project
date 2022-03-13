@@ -56,7 +56,7 @@ def get_to_instance(url):
     if not response.ok:
         abort_with_text_response(
             response.status_code,
-            "Getting from {} went wrong. Response".format(url, response.content),
+            "Getting from: {} went wrong. Response: {}".format(url, response.content),
         )
     return response
 
