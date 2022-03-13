@@ -43,8 +43,7 @@ def get_model_network_options(request_json):
     return request_json["environment_model_network_options"]
 
 
-def train_model(database, instances, training_iterations, instance_training_parameters, user_id,
-                environment_id):
+def train_model(database, instances, training_iterations, instance_training_parameters, environment):
     initial_instances = instances
     train_log = list()
     for iteration in range(training_iterations):
@@ -53,29 +52,29 @@ def train_model(database, instances, training_iterations, instance_training_para
             iteration, instances, initial_instances))
         if len(instances) == 0:
             write_to_train_log(train_log, ["All devices crashed"])
-            write_logs_to_database(database, train_log, user_id, environment_id)
+            write_logs_to_database(database, train_log, environment)
             abort_with_text_response(400, "All devices crashed")
-        aggregated_model = aggregate_models(instances, environment_id, user_id)
+        aggregated_model = aggregate_models(instances, environment)
         write_to_train_log(train_log, ["Aggregated models from contributors"])
-        save_aggregated_model(aggregated_model, environment_id, user_id)
-        update_instances_model(instances, environment_id, user_id)
+        save_aggregated_model(aggregated_model, environment)
+        update_instances_model(instances, environment)
         write_to_train_log(
             train_log,
             ["Updated model on contributors. Sent aggregated model to intances",
              "Preparing next round..."])
-    write_logs_to_database(database, train_log, user_id, environment_id)
+    write_logs_to_database(database, train_log, environment)
     return send_file(os.getenv("GLOBAL_MODEL"))
 
 
-def write_logs_to_database(database, logs, user_id, environment_id):
+def write_logs_to_database(database, logs, environment):
     log_document = {
-        "user_id": ObjectId(user_id),
-        "environment_id": ObjectId(environment_id),
+        "user_id": ObjectId(environment.user_id),
+        "environment_id": ObjectId(environment.id),
         "train_logs": logs
     }
     log_document_query = {
-        "user_id": ObjectId(user_id),
-        "environment_id": ObjectId(environment_id),
+        "user_id": ObjectId(environment.user_id),
+        "environment_id": ObjectId(environment.id),
     }
     insert_result = database.environmentsLogs.update_one(
         log_document_query, {"$set": log_document}, upsert=True)
@@ -114,15 +113,16 @@ def update_instances_model(instances):
         )
 
 
-def save_aggregated_model(aggregated_model, environment_id, user_id):
-    torch.save(aggregated_model, "{}/{}-{}.pth".format(os.getenv("GLOBAL_MODEL"), environment_id, user_id))
+def save_aggregated_model(aggregated_model, environment):
+    torch.save(aggregated_model, "{}/{}-{}.pth".format(os.getenv("GLOBAL_MODEL"),
+               environment.id, environment.user_id))
 
 
-def aggregate_models(instances, environment_id, user_id):
+def aggregate_models(instances, environment):
     aggregated_model = None
     for instance_ip in instances:
         model = load_model_from_path(
-            "./models/model-{}-{}-{}.pth".format(environment_id, user_id, instance_ip))
+            "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip))
         if aggregated_model == None:
             aggregated_model = model
         else:
@@ -132,7 +132,7 @@ def aggregate_models(instances, environment_id, user_id):
                 state_aggregated[layer] += state_model[layer]
             aggregated_model.load_state_dict(state_aggregated)
         delete_model_from_path(
-            "./models/model-{}-{}-{}.pth".format(environment_id, user_id, instance_ip))
+            "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip))
     state_aggregated = aggregated_model.state_dict()
     for layer in state_aggregated:
         state_aggregated[layer] /= len(instances)
@@ -140,7 +140,7 @@ def aggregate_models(instances, environment_id, user_id):
     return aggregated_model
 
 
-def train_on_instances(instances, instance_training_parameters, environment_id, user_id):
+def train_on_instances(instances, instance_training_parameters, environment):
     for instance_ip in instances:
         response = request_wrapper(lambda: post_json_to_instance(
             "http://{}:5000/model/train".format(instance_ip),
@@ -152,7 +152,7 @@ def train_on_instances(instances, instance_training_parameters, environment_id, 
             instances.remove(instance_ip)
         else:
             with open(
-                "./models/model-{}-{}-{}.pth".format(environment_id, user_id, instance_ip), "wb"
+                "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip), "wb"
             ) as instance_model_file:
                 instance_model_file.write(response.content)
 

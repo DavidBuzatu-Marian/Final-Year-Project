@@ -1,0 +1,22 @@
+{
+    loss: {
+      loss_type: 'CrossEntropyLoss',
+      parameters: {}
+    },
+    optimizer: {
+      optimizer_type: 'RMSprop',
+      parameters: {
+          lr: 0.001,
+          weight_decay: 0.00000001,
+          momentum: 0.9
+      }
+    },
+    hyperparameters: {
+      epochs: 60,
+      batch_size: 4,
+      reshape: '4, 1, 96, 96',
+      normalizer: true,
+      normalizer_mean: '0.5',
+      normalizer_std: '0.5'
+    }
+  }

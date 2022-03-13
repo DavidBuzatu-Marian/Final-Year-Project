@@ -17,9 +17,10 @@ except ImportError as exc:
 
 @app.route("/model/train", methods=["POST"])
 def model_train():
-    user_id = get_user_id(request.json)
-    environment_id = get_environment_id(request.json)
-    environment = get_environment(mongo.db, environment_id, user_id)
+    target_environment = TargetEnvironment(
+        get_user_id(request.json),
+        get_environment_id(request.json))
+    environment = get_environment(mongo.db, target_environment)
     training_options = get_training_options(request.json)
     available_instances = get_available_instances(
         environment, training_options['max_trials'], training_options['required_instances']
@@ -31,8 +32,7 @@ def model_train():
         random.sample(list(available_instances), training_options['required_instances']),
         training_iterations,
         instance_training_parameters,
-        user_id,
-        environment_id
+        target_environment
     )
 
 

@@ -62,10 +62,10 @@ const ModalTrainModel = ({
       setModalState({ ...modalState, loading: true });
       const res = await performRequest(formValues);
       const jobLink = res.data.jobLink;
-      console.log(formValues);
+
       const scheduledRequest = setInterval(async () => {
         const task = await getTask(jobLink);
-        console.log(task);
+
         if (task.jobState === "active" || task.jobState === "failed") {
           clearInterval(scheduledRequest);
           setModalState({
