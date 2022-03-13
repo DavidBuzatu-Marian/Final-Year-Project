@@ -86,7 +86,9 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
             disabled={
               Object.keys(selectedRow).length === 0 ||
               (Object.keys(selectedRow).length > 0 &&
-                selectedRow.status === "Training")
+                (selectedRow.status === "Training" ||
+                  selectedRow.status === "Creating" ||
+                  selectedRow.status === "Deleting"))
             }
           >
             Add model

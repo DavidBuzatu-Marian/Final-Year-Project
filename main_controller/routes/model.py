@@ -10,6 +10,7 @@ try:
     from helpers.environment_helpers import *
     from helpers.request_helpers import *
     from helpers.controller_hepers import *
+    from environment_classes.target_environment import TargetEnvironment
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -37,9 +38,10 @@ def model_train():
 
 @app.route("/model/create", methods=["POST"])
 def model_create():
-    user_id = get_user_id(request.json)
-    environment_id = get_environment_id(request.json)
-    environment = get_environment(mongo.db, environment_id, user_id)
+    target_environment = TargetEnvironment(
+        get_user_id(request.json),
+        get_environment_id(request.json))
+    environment = get_environment(mongo.db, target_environment)
     model_network_options = get_model_network_options(request.json)
     create_model(environment["environment_ips"], model_network_options)
 
@@ -48,9 +50,10 @@ def model_create():
 
 @app.route("/model/loss", methods=["POST"])
 def model_loss():
-    user_id = get_user_id(request.json)
-    environment_id = get_environment_id(request.json)
-    environment = get_environment(mongo.db, environment_id, user_id)
+    target_environment = TargetEnvironment(
+        get_user_id(request.json),
+        get_environment_id(request.json))
+    environment = get_environment(mongo.db, target_environment)
     instance_training_parameters = get_instance_training_parameters(request.json)
     losses = compute_losses(
         instance_training_parameters, environment["environment_ips"]

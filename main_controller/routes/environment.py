@@ -63,8 +63,8 @@ def environment_delete():
 @return_500_on_uncaught_server_error
 def environment_dataset_data():
     target_environment = TargetEnvironment(
-        get_user_id(request.json),
-        get_environment_id(request.json))
+        get_user_id(request.args),
+        get_environment_id(request.args))
     environment = get_environment(mongo.db, target_environment)
     update_environment_status(mongo.db, target_environment, "2")
     environment_data_distribution = get_environment_data_distribution(
@@ -87,8 +87,8 @@ def environment_dataset_data():
 @return_500_on_uncaught_server_error
 def environment_dataset_validation():
     target_environment = TargetEnvironment(
-        get_user_id(request.json),
-        get_environment_id(request.json))
+        get_user_id(request.args),
+        get_environment_id(request.args))
     environment = get_environment(mongo.db, target_environment)
     update_environment_status(mongo.db, target_environment, "2")
     instances_data = post_data_to_instance(
@@ -105,8 +105,8 @@ def environment_dataset_validation():
 @return_500_on_uncaught_server_error
 def environment_dataset_test():
     target_environment = TargetEnvironment(
-        get_user_id(request.json),
-        get_environment_id(request.json))
+        get_user_id(request.args),
+        get_environment_id(request.args))
     environment = get_environment(mongo.db, target_environment)
     update_environment_status(mongo.db, target_environment, "2")
     instances_data = post_data_to_instance(

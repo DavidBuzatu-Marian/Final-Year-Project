@@ -56,10 +56,11 @@ const ModalCompletedStatusForm = ({
 
   useEffect(() => {
     setFormValues(initialFormValues);
-  }, [selectedRow, activeHeaderModal]);
+  }, [selectedRow, activeHeaderModal, initialFormValues]);
 
   const performRequest = async (activeModal, formValues) => {
     if (activeModal.hasOwnProperty("isMultipartForm")) {
+      checkRequiredFilesNotEmpty(formValues);
       const formData = new FormData();
       for (const file of formValues[formValues.dataName]) {
         formData.append(formValues.dataName, file);
@@ -102,7 +103,7 @@ const ModalCompletedStatusForm = ({
   const onSubmit = async () => {
     try {
       setModalState({ ...modalState, loading: true });
-      checkRequiredFilesNotEmpty(formValues);
+
       const res = await performRequest(
         headerModals[activeHeaderModal],
         formValues

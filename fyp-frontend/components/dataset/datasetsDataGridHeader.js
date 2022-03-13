@@ -34,6 +34,7 @@ const DatasetsDataGridHeader = ({ selectedRow, user }) => {
       setDataDistribution(dataDistributionObject);
     }
   }, [selectedRow]);
+
   return (
     <Box
       component="main"
