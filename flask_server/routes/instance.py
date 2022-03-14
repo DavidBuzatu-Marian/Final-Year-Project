@@ -6,7 +6,7 @@ import os
 import sys
 
 import torch
-
+import yaml
 
 try:
     from nn_model import NNModel
@@ -29,5 +29,11 @@ def instance_availability():
 @app.route('/instance/probabilityoffailure', methods=["POST"])
 @return_500_on_uncaught_server_error
 def set_probability_of_failure():
-    os.environ['PROBABILITY_OF_FAILURE'] = get_probability_of_failure(request.json)
+    with open(os.getenv("INSTANCE_CONFIG_FILE_PATH"), "w+") as yaml_config_file:
+        yaml.dump(get_probability_of_failure(request.json), yaml_config_file)
     return "Saved probability of failure"
+
+
+@app.route('/instance/getprobabilityoffailure', methods=["GET"])
+def get_probability_of_failure():
+    return get_instance_probability_of_failure()

@@ -2,7 +2,7 @@ import os
 from error_handlers.abort_handler import abort_with_text_response
 from nn_loss.nn_loss_factory import NNLossFactory
 from nn_optimizer.nn_optimizer_factory import NNOptimizerFactory
-
+import yaml
 import torch
 from werkzeug.utils import secure_filename
 from pathlib import Path
@@ -53,13 +53,13 @@ def get_hyperparameters(request_json):
 
 
 def get_probability_of_failure(request_json):
-    return request_json["probabilityOfFailure"]
+    return {"probabilityOfFailure": request_json["probabilityOfFailure"]}
 
 
 def get_instance_probability_of_failure():
-    if not 'PROBABILITY_OF_FAILURE' in os.environ:
-        abort_with_text_response(400, "No probability of failure is set")
-    return os.environ.get('PROBABILITY_OF_FAILURE')
+    with open(os.getenv("INSTANCE_CONFIG_FILE_PATH")) as yaml_config_file:
+        env_variables = yaml.load(yaml_config_file, Loader=yaml.FullLoader)
+        return env_variables["probabilityOfFailure"]
 
 
 def get_processors(request_json):

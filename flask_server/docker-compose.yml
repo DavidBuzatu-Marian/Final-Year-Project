@@ -6,6 +6,8 @@ services:
     image: "local_fyp_instance"
     volumes:
       - ./:/app
+    ports:
+      - "5000-5001:5000"
     expose:
       - "5000"
 
