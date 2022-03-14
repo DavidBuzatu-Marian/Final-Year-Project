@@ -73,3 +73,6 @@ ssl-certs/
 *.log
 
 /temp
+
+**/__pycache__
+.pytest_cache
