@@ -22,7 +22,6 @@ modelCreateQueue.process(async (job, done) => {
 
     done(null, { resData: res.data });
   } catch (err) {
-    console.log(err);
     return done(new Error(err));
   }
 });

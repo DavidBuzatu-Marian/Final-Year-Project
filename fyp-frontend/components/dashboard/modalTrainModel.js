@@ -75,6 +75,7 @@ const ModalTrainModel = ({
               successMessage: task.jobState === "active" ? "Task active" : null,
               alertId: task.id,
             });
+            clearInterval(scheduledRequest);
           }
         } catch (error) {
           setModalState({
@@ -82,7 +83,6 @@ const ModalTrainModel = ({
             loading: false,
             alertId: crypto.randomUUID(),
           });
-        } finally {
           clearInterval(scheduledRequest);
         }
       }, 1000);

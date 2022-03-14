@@ -124,6 +124,7 @@ const ModalCompletedStatusForm = ({
               alertId: task.id,
             });
             setFormValues(initialFormValues);
+            clearInterval(scheduledRequest);
           }
         } catch (error) {
           setModalState({
@@ -131,9 +132,8 @@ const ModalCompletedStatusForm = ({
             loading: false,
             alertId: crypto.randomUUID(),
           });
-          setFormValues(initialFormValues);
-        } finally {
           clearInterval(scheduledRequest);
+          setFormValues(initialFormValues);
         }
       }, 1000);
     } catch (error) {
