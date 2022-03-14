@@ -57,7 +57,7 @@ def get_probability_of_failure(request_json):
 
 
 def get_instance_probability_of_failure():
-    if not os.environ.has_key('PROBABILITY_OF_FAILURE'):
+    if not 'PROBABILITY_OF_FAILURE' in os.environ:
         abort_with_text_response(400, "No probability of failure is set")
     return os.environ.get('PROBABILITY_OF_FAILURE')
 

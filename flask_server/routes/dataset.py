@@ -9,6 +9,7 @@ try:
     from helpers.dataset_helpers import delete_data_from_path
     from helpers.dataset_helpers import delete_model_from_path, save_dataset
     from error_handlers.abort_handler import abort_with_text_response
+    from routes.error_handlers.server_errors_handler import return_500_on_uncaught_server_error
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -16,6 +17,7 @@ from app import app
 
 
 @app.route("/dataset/add", methods=["POST"])
+@return_500_on_uncaught_server_error
 def dataset_add():
     if not ("multipart/form-data" in request.content_type):
         abort_with_text_response(
@@ -28,6 +30,7 @@ def dataset_add():
 
 
 @app.route("/dataset/remove", methods=["POST"])
+@return_500_on_uncaught_server_error
 def dataset_remove():
     dir_paths = [
         os.path.join(os.getenv("TRAIN_DATA_PATH")),

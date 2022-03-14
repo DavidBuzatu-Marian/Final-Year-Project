@@ -14,6 +14,7 @@ try:
     from helpers.app_helpers import *
     from helpers.model_helpers import is_failing
     from error_handlers.abort_handler import abort_with_text_response
+    from routes.error_handlers.server_errors_handler import return_500_on_uncaught_server_error
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -21,6 +22,7 @@ from app import app
 
 
 @app.route("/model/create", methods=["POST"])
+@return_500_on_uncaught_server_error
 def model_create():
     model = NNModel(request.json)
     path = os.getenv("MODEL_PATH")
@@ -31,6 +33,7 @@ def model_create():
 
 
 @app.route("/model/loss", methods=["POST"])
+@return_500_on_uncaught_server_error
 def model_validate():
     path = os.getenv("MODEL_PATH")
     model = read_model_from_path(path)
@@ -60,6 +63,7 @@ def model_validate():
 
 
 @app.route("/model/train", methods=["POST"])
+@return_500_on_uncaught_server_error
 def model_train():
     path = os.getenv("MODEL_PATH")
     model = read_model_from_path(path)
@@ -84,7 +88,7 @@ def model_train():
             data = reshape_data(data, hyperparameters)
             data = normalize_data(data, hyperparameters)
             output = model(data)
-            # output = process_output(output, processors)
+            output = process_output(output, processors)
 
             loss = loss_func(output, label.to(torch.int64))
             loss.backward()
