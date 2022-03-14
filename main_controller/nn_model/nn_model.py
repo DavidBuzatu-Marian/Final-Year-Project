@@ -10,12 +10,12 @@ class NNModel(nn.Module):
         super(NNModel, self).__init__()  # needed for how torch works
         layer_factory = NNLayerFactory()
         activation_factory = NNActivationFactory()
-        self._model = nn.ModuleList()
+        self.nn_layers = nn.ModuleList()
 
         for layer_dict in architecture_components["network"]:
             for component_type, component_details in layer_dict.items():
                 if component_type == "layer":
-                    self._model.append(
+                    self.nn_layers.append(
                         layer_factory.get_layer(
                             component_details["layer_type"],
                             component_details["subtype"],
@@ -23,14 +23,14 @@ class NNModel(nn.Module):
                         )
                     )
                 elif component_type == "activation":
-                    self._model.append(
+                    self.nn_layers.append(
                         activation_factory.get_activation(
                             component_details["activation_type"],
                             component_details["parameters"],
                         )
                     )
                 elif component_type == "concatenate":
-                    self._model.append(
+                    self.nn_layers.append(
                         Concatenate(
                             component_details["previous_layer_index"],
                             component_details["dim"]))
@@ -42,7 +42,7 @@ class NNModel(nn.Module):
     def forward(self, input_data):
         computed_layers = list()
         prediction = input_data
-        for component in self._model:
+        for component in self.nn_layers:
             if isinstance(component, Concatenate):
                 prediction = component(
                     computed_layers[component.get_previous_layer_index()],

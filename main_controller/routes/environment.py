@@ -15,7 +15,7 @@ try:
     from environment_classes.target_environment import TargetEnvironment
     from helpers.environment_helpers import *
     from helpers.request_helpers import *
-    from routes.error_handlers.environment import return_500_environment_critical_error, return_500_on_uncaught_server_error
+    from routes.error_handlers.server_errors_handler import return_500_environment_critical_error, return_500_on_uncaught_server_error
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 

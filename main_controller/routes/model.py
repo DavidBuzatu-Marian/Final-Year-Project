@@ -11,11 +11,13 @@ try:
     from helpers.request_helpers import *
     from helpers.controller_hepers import *
     from environment_classes.target_environment import TargetEnvironment
+    from routes.error_handlers.server_errors_handler import return_500_on_uncaught_server_error
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
 @app.route("/model/train", methods=["POST"])
+@return_500_on_uncaught_server_error
 def model_train():
     target_environment = TargetEnvironment(
         get_user_id(request.json),
@@ -37,6 +39,7 @@ def model_train():
 
 
 @app.route("/model/create", methods=["POST"])
+@return_500_on_uncaught_server_error
 def model_create():
     target_environment = TargetEnvironment(
         get_user_id(request.json),
@@ -49,6 +52,7 @@ def model_create():
 
 
 @app.route("/model/loss", methods=["POST"])
+@return_500_on_uncaught_server_error
 def model_loss():
     target_environment = TargetEnvironment(
         get_user_id(request.json),

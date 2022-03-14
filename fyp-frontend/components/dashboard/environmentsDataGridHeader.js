@@ -150,16 +150,19 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
               },
               optimizer: {
                 optimizer_type: "RMSprop",
-                parameters: {},
+                parameters: {
+                  lr: 0.001,
+                  weight_decay: 0.00000001,
+                  momentum: 0.9,
+                },
               },
               hyperparameters: {
-                epochs: 5,
-                batch_size: 5,
-                reshape: "5, 1, 96, 96",
+                epochs: 60,
+                batch_size: 4,
+                reshape: "4, 1, 96, 96",
                 normalizer: true,
                 normalizer_mean: "0.5",
                 normalizer_std: "0.5",
-                drop_last: true,
               },
             },
             training_options: {

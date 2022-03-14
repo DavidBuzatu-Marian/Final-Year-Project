@@ -47,7 +47,7 @@ def train_model(database, instances, training_iterations, instance_training_para
     initial_instances = instances
     train_log = list()
     for iteration in range(training_iterations):
-        train_on_instances(instances, instance_training_parameters)
+        train_on_instances(instances, instance_training_parameters, environment)
         write_to_train_log(train_log, process_training_results(
             iteration, instances, initial_instances))
         if len(instances) == 0:

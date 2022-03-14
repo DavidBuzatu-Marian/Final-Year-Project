@@ -27,7 +27,7 @@ def model_create():
     if os.path.isfile(path):
         os.remove(path)
     torch.save(model, path)
-    return jsonify(repr(model._model))
+    return jsonify(repr(model.nn_layers))
 
 
 @app.route("/model/loss", methods=["POST"])

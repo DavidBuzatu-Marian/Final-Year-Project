@@ -48,6 +48,7 @@ const ModalCompletedStatusForm = ({
       loading: false,
       successMessage: null,
     });
+    mutate(null);
   };
 
   useEffect(() => {
@@ -111,19 +112,28 @@ const ModalCompletedStatusForm = ({
 
       const jobLink = res.data.jobLink;
       const scheduledRequest = setInterval(async () => {
-        const task = await getTask(jobLink);
-        if (task.jobState === "completed" || task.jobState === "failed") {
-          clearInterval(scheduledRequest);
-          mutate(null);
+        try {
+          const task = await getTask(jobLink);
+          if (task.jobState === "completed" || task.jobState === "failed") {
+            setModalState({
+              errorMessage:
+                task.jobState === "failed" ? task.jobFailReason : null,
+              loading: false,
+              successMessage:
+                task.jobState === "completed" ? "Task completed" : null,
+              alertId: task.id,
+            });
+            setFormValues(initialFormValues);
+          }
+        } catch (error) {
           setModalState({
-            errorMessage:
-              task.jobState === "failed" ? task.jobFailReason : null,
+            errorMessage: error,
             loading: false,
-            successMessage:
-              task.jobState === "completed" ? "Task completed" : null,
-            alertId: task.id,
+            alertId: crypto.randomUUID(),
           });
           setFormValues(initialFormValues);
+        } finally {
+          clearInterval(scheduledRequest);
         }
       }, 1000);
     } catch (error) {

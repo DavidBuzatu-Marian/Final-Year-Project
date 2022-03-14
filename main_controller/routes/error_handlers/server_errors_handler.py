@@ -6,6 +6,7 @@ import traceback
 
 
 try:
+    from environment_classes.target_environment import TargetEnvironment
     from helpers.environment_helpers import delete_environment, get_user_id, get_environment_id, update_environment_status
     from error_handlers.abort_handler import abort_with_text_response
 except ImportError as exc:
@@ -33,10 +34,10 @@ def return_500_environment_critical_error(function):
             log_error()
             request_json = flask.request.json
             user_id = get_user_id(request_json)
-
             environment_id = get_environment_id(flask.request.args)
-            update_environment_status(mongo.db, user_id, environment_id, "4")
-            delete_environment(mongo.db, user_id, environment_id)
+            environment = TargetEnvironment(user_id, environment_id)
+            update_environment_status(mongo.db, environment, "4")
+            delete_environment(mongo.db, environment)
 
             abort_with_text_response(500, "Internal Server Error")
     wrapper.__name__ = function.__name__

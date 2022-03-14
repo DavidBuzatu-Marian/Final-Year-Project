@@ -60,21 +60,30 @@ const ModalTrainModel = ({
   const onSubmit = async () => {
     try {
       setModalState({ ...modalState, loading: true });
+      console.log(formValues);
       const res = await performRequest(formValues);
       const jobLink = res.data.jobLink;
 
       const scheduledRequest = setInterval(async () => {
-        const task = await getTask(jobLink);
-
-        if (task.jobState === "active" || task.jobState === "failed") {
-          clearInterval(scheduledRequest);
+        try {
+          const task = await getTask(jobLink);
+          if (task.jobState === "active" || task.jobState === "failed") {
+            setModalState({
+              errorMessage:
+                task.jobState === "failed" ? task.jobFailReason : null,
+              loading: false,
+              successMessage: task.jobState === "active" ? "Task active" : null,
+              alertId: task.id,
+            });
+          }
+        } catch (error) {
           setModalState({
-            errorMessage:
-              task.jobState === "failed" ? task.jobFailReason : null,
+            errorMessage: error,
             loading: false,
-            successMessage: task.jobState === "active" ? "Task active" : null,
-            alertId: task.id,
+            alertId: crypto.randomUUID(),
           });
+        } finally {
+          clearInterval(scheduledRequest);
         }
       }, 1000);
     } catch (error) {
