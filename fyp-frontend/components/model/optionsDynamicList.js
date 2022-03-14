@@ -36,14 +36,14 @@ const OptionsDynamicList = ({ listOptionsInit, title }) => {
       }
     >
       {listValues.listOptions.map((option, idx) => (
-        <div key={option.name}>
+        <div key={crypto.randomUUID()}>
           <ListItemButton
-            key={idx}
+            key={crypto.randomUUID()}
             onClick={(event) => handleClick(option.name)}
           >
             <ListItemText primary={option.name} />
             {listValues.collapsables.hasOwnProperty(option.name) && (
-              <div key={option.name}>
+              <div key={crypto.randomUUID()}>
                 {!listValues.collapsables[option.name] ? (
                   <span className="material-icons">expand_more</span>
                 ) : (
@@ -53,7 +53,7 @@ const OptionsDynamicList = ({ listOptionsInit, title }) => {
             )}
           </ListItemButton>
           {listValues.collapsables.hasOwnProperty(option.name) && (
-            <div key={option.name}>
+            <div key={crypto.randomUUID()}>
               <Collapse
                 in={listValues.collapsables[option.name]}
                 timeout="auto"
@@ -61,7 +61,7 @@ const OptionsDynamicList = ({ listOptionsInit, title }) => {
               >
                 <List component="div" disablePadding>
                   {option.values.map((value) => (
-                    <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton key={crypto.randomUUID()} sx={{ pl: 4 }}>
                       <ListItemText primary={value} />
                     </ListItemButton>
                   ))}
