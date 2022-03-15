@@ -17,6 +17,7 @@ const ModalProgress = ({
   modalButtonText,
   modalTitle,
   modalContent,
+  modalAlertMessage,
   redirectUrl,
   jobLink,
 }) => {
@@ -47,9 +48,7 @@ const ModalProgress = ({
               task.jobState === "failed" ? task.jobFailReason : null,
             loading: false,
             successMessage:
-              task.jobState === "active"
-                ? "Environment creation has started!"
-                : null,
+              task.jobState === "active" ? modalAlertMessage : null,
             alertId: task.id,
           });
         }

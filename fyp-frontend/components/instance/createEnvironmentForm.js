@@ -108,6 +108,7 @@ const CreateEnvironmentForm = () => {
         modalButtonText={"Go to Dashboard"}
         modalTitle={"Environment creation progress"}
         modalContent={"Creating environment..."}
+        modalAlertMessage={"Environment creation process started!"}
         redirectUrl={"/dashboard"}
         jobLink={progressModal.jobLink}
       />

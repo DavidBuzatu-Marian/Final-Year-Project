@@ -25,7 +25,7 @@ export const useEnvironment = () => {
   return [environments, { mutate, loading }, environmentsError];
 };
 
-export const useEnvironmentTrainingLogs = () => {
+export const useEnvironmentTrainingLogs = (environmentId) => {
   const {
     data,
     mutate,

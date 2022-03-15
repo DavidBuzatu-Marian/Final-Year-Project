@@ -118,6 +118,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           modalButtonText={"Close"}
           modalTitle={"Environment deletion progress"}
           modalContent={"Deleting environment..."}
+          modalAlertMessage={"Environment deletion process started!"}
           jobLink={progressModal.jobLink}
         />
         <ModalCompletedStatusForm

@@ -21,32 +21,12 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
     useEnvironment();
   const [trainingLogs, { loadingTrainingLogs }, trainingLogsError] =
     useEnvironmentTrainingLogs();
-  const [gridData, setGridData] = React.useState({});
+
   const [state, setState] = React.useState({
     open: true,
     vertical: "bottom",
     horizontal: "center",
   });
-
-  React.useEffect(() => {
-    /*
-    [{environemnt}...]
-    [{training}...]
-    They both share env_id and user_id
-    map each value in environment
-    if training contains env_id and user_id, update value in environment with training log
-    */
-    if (environments && trainingLogs) {
-      const data = environments.map((environment) => {
-        const environmentLog = trainingLogs.filter(
-          (log) =>
-            log._id === environment._id && log.user_id === environment.user_id
-        );
-        return { ...environment, training_log: environmentLog };
-      });
-      setGridData(data);
-    }
-  }, [loading, loadingTrainingLogs, environments, trainingLogs]);
 
   const { vertical, horizontal, open } = state;
 
@@ -158,14 +138,28 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
         </Snackbar>
       ) : (
         <DataGrid
-          rows={gridData ? gridData : []}
+          rows={
+            environments
+              ? environments.map((environment) => {
+                  const environmentLog = trainingLogs
+                    .filter(
+                      (log) =>
+                        log.environment_id === environment._id &&
+                        log.user_id === environment.user_id
+                    )
+                    .map((log) => log.train_logs);
+                  return { ...environment, training_log: environmentLog };
+                })
+              : []
+          }
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
           onSelectionModelChange={(ids) => {
             const selectedIDs = new Set(ids);
             const selectedRowData =
-              gridData && gridData.filter((row) => selectedIDs.has(row._id));
+              environments &&
+              environments.filter((row) => selectedIDs.has(row._id));
             if (!selectedRowData || selectedRowData.length === 0) {
               setSelectedRow({});
             } else {
