@@ -32,8 +32,3 @@ def set_probability_of_failure():
     with open(os.getenv("INSTANCE_CONFIG_FILE_PATH"), "w+") as yaml_config_file:
         yaml.dump(get_probability_of_failure(request.json), yaml_config_file)
     return "Saved probability of failure"
-
-
-@app.route('/instance/getprobabilityoffailure', methods=["GET"])
-def get_probability_of_failure():
-    return get_instance_probability_of_failure()

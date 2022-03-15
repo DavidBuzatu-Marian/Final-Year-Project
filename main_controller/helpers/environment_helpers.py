@@ -55,7 +55,7 @@ def update_environment_status(database, environment, status):
 
 
 def delete_environment(database, environment):
-    destroy_terraform(environment.user_id)
+    # destroy_terraform(environment.user_id)
     delete_environment_for_user(database, environment)
     delete_environment_train_distribution(database, environment)
     delete_environment_data_distribution(database, environment)
