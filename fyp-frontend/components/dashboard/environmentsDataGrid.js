@@ -29,7 +29,23 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
   });
 
   React.useEffect(() => {
-    const auxEnvironments = environments;
+    /*
+    [{environemnt}...]
+    [{training}...]
+    They both share env_id and user_id
+    map each value in environment
+    if training contains env_id and user_id, update value in environment with training log
+    */
+    if (environments && trainingLogs) {
+      const data = environments.map((environment) => {
+        const environmentLog = trainingLogs.filter(
+          (log) =>
+            log._id === environment._id && log.user_id === environment.user_id
+        );
+        return { ...environment, training_log: environmentLog };
+      });
+      setGridData(data);
+    }
   }, [loading, loadingTrainingLogs, environments, trainingLogs]);
 
   const { vertical, horizontal, open } = state;
@@ -45,7 +61,7 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
   const columns = [
     { field: "id", headerName: "ID", width: 220 },
     {
-      field: "Training logs",
+      field: "training_log",
       headerName: "Training logs",
       width: 250,
       renderCell: (params) => {
@@ -142,15 +158,14 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
         </Snackbar>
       ) : (
         <DataGrid
-          rows={environments ? environments : []}
+          rows={gridData ? gridData : []}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
           onSelectionModelChange={(ids) => {
             const selectedIDs = new Set(ids);
             const selectedRowData =
-              environments &&
-              environments.filter((row) => selectedIDs.has(row._id));
+              gridData && gridData.filter((row) => selectedIDs.has(row._id));
             if (!selectedRowData || selectedRowData.length === 0) {
               setSelectedRow({});
             } else {
