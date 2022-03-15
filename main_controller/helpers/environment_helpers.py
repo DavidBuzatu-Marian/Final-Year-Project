@@ -31,7 +31,7 @@ def save_ips_for_user(database, ips, environment):
 
 
 def send_options_to_instances(ips, environment_options):
-    time.sleep(30)  # required for the cold start of docker container
+    time.sleep(45)  # required for the cold start of docker container
     ips_with_options = set()
     for option in environment_options:
         request_wrapper(lambda: post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
@@ -42,7 +42,7 @@ def send_options_to_instances(ips, environment_options):
         if ip not in ips_with_options:
             request_wrapper(lambda: post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
                                                           .format(ip),
-                                                          {"probabilityOfFailure": "0"}))
+                                                          {"probabilityOfFailure": 0}))
 
 
 def update_environment_status(database, environment, status):
@@ -55,7 +55,7 @@ def update_environment_status(database, environment, status):
 
 
 def delete_environment(database, environment):
-    # destroy_terraform(environment.user_id)
+    destroy_terraform(environment.user_id)
     delete_environment_for_user(database, environment)
     delete_environment_train_distribution(database, environment)
     delete_environment_data_distribution(database, environment)

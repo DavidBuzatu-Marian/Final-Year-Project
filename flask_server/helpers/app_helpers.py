@@ -49,6 +49,7 @@ def get_hyperparameters(request_json):
     request_json["hyperparameters"].setdefault("num_workers", 1)
     request_json["hyperparameters"].setdefault("batch_size", 1)
     request_json["hyperparameters"].setdefault("shuffle", True)
+    request_json["hyperparameters"].setdefault("drop_last", False)
     return request_json["hyperparameters"]
 
 

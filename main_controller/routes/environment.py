@@ -42,6 +42,7 @@ def environment_create():
         json_output["gci_instances_ids"],
         target_environment
     )
+
     return "Created {} environments with requested options. Environments are ready for receiving datasets".format(
         environment.nr_instances
     )
