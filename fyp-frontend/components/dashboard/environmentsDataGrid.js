@@ -1,15 +1,63 @@
 import * as React from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { useEnvironment } from "../../hooks/environment";
-import { CircularProgress, Box, Typography, Stack } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import {
+  useEnvironment,
+  useEnvironmentTrainingLogs,
+} from "../../hooks/environment";
+import {
+  CircularProgress,
+  Typography,
+  Stack,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import ModalHandler from "../utils/modalHandler";
 import { statuses } from "./statuses";
 import moment from "moment";
+import ClosableAlert from "../alert/closableAlert";
 
 const EnvironmentsDataGrid = ({ setSelectedRow }) => {
-  const [environments, { loading, mutate }] = useEnvironment();
+  const [environments, { loading, mutate }, environmentsError] =
+    useEnvironment();
+  const [trainingLogs, { loadingTrainingLogs }, trainingLogsError] =
+    useEnvironmentTrainingLogs();
+  const [gridData, setGridData] = React.useState({});
+  const [state, setState] = React.useState({
+    open: true,
+    vertical: "bottom",
+    horizontal: "center",
+  });
+
+  React.useEffect(() => {
+    const auxEnvironments = environments;
+  }, [loading, loadingTrainingLogs, environments, trainingLogs]);
+
+  const { vertical, horizontal, open } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
+
   const columns = [
     { field: "id", headerName: "ID", width: 220 },
+    {
+      field: "Training logs",
+      headerName: "Training logs",
+      width: 250,
+      renderCell: (params) => {
+        return (
+          <ModalHandler
+            modalTitle={"Training logs"}
+            modalContent={params.value}
+            modalButtonText={"Open training logs"}
+          />
+        );
+      },
+    },
     {
       field: "environment_ips",
       headerName: "Environment IP addresses",
@@ -71,8 +119,27 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
 
   return (
     <div style={{ height: 480, width: "100%" }}>
-      {loading ? (
-        <CircularProgress />
+      {loading || loadingTrainingLogs ? (
+        <CircularProgress sx={{ ml: 5 }} />
+      ) : trainingLogsError || environmentsError ? (
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          autoHideDuration={6000}
+          key={crypto.randomUUID()}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="error"
+            sx={{
+              width: "100%",
+              "& .MuiAlert-message": { wordWrap: "break-word" },
+            }}
+          >
+            Something went wrong with the request on our part. Please try to
+            reload
+          </Alert>
+        </Snackbar>
       ) : (
         <DataGrid
           rows={environments ? environments : []}

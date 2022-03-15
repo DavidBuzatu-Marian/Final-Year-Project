@@ -7,6 +7,7 @@ export const fetcher = (url) =>
     .get(url, { withCredentials: true })
     .then((res) => res.data)
     .catch((err) => {
+      console.log(err);
       if (err) {
         throw err.response.data;
       } else {

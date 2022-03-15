@@ -21,4 +21,6 @@ export const urls = {
     "http://localhost:5002/backend/api/environment/dataset/test",
   environmentModelAddUrl: "http://localhost:5002/backend/api/model/create",
   environmentModelTrainUrl: "http://localhost:5002/backend/api/model/train",
+  environmentTrainingLogsUrl:
+    "http://localhost:5002/backend/api/environment/trainlogs",
 };
