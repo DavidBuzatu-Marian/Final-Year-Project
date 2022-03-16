@@ -194,7 +194,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
               },
             },
             training_options: {
-              max_trials: 0,
+              max_trials: 1,
               required_instances: 1,
             },
           }}

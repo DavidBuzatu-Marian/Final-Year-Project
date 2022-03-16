@@ -22,9 +22,10 @@ def get_available_instances(environment, max_trials, required_instances):
         # Get each environment ip
         # Make request for availability and store available envs
         for environment_ip in environment["environment_ips"]:
+            error("http://{}:{}/instance/availability".format(environment_ip,
+                  os.getenv("ENVIRONMENTS_PORT")))
             response = request_wrapper(lambda: get_to_instance(
-                "http://{}:{}/instance/availability".format(environment_ip, os.getenv("ENVIRONMENTS_PORT"))
-            ))
+                "http://{}:{}/instance/availability".format(environment_ip, os.getenv("ENVIRONMENTS_PORT")), allow_failure=True))
             if response.json()["availability"] == True:
                 available_instances.add(environment_ip)
         trials += 1

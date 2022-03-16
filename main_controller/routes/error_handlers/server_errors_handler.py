@@ -19,7 +19,8 @@ def return_500_on_uncaught_server_error(function):
             return function(*args, **kwargs)
         except:
             log_error()
-
+            environment = get_environment()
+            update_environment_status_to_error(environment, "8")
             abort_with_text_response(500, "Internal Server Error")
     wrapper.__name__ = function.__name__
     return wrapper
@@ -32,16 +33,25 @@ def return_500_environment_critical_error(function):
             return function(*args, **kwargs)
         except:
             log_error()
-            request_json = flask.request.json
-            user_id = get_user_id(request_json)
-            environment_id = get_environment_id(flask.request.args)
-            environment = TargetEnvironment(user_id, environment_id)
-            update_environment_status(mongo.db, environment, "4")
+            environment = get_environment()
+            update_environment_status_to_error(environment)
             delete_environment(mongo.db, environment)
 
             abort_with_text_response(500, "Internal Server Error")
     wrapper.__name__ = function.__name__
     return wrapper
+
+
+def get_environment():
+    request_json = flask.request.json
+    user_id = get_user_id(request_json)
+    environment_id = get_environment_id(
+        request_json) if "environment_id" in request_json else get_environment_id(flask.request.args)
+    return TargetEnvironment(user_id, environment_id)
+
+
+def update_environment_status_to_error(environment, error_code="4"):
+    update_environment_status(mongo.db, environment, error_code)
 
 # As suggested by: https://stackoverflow.com/a/49613561/11023871
 

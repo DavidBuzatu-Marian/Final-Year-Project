@@ -19,10 +19,10 @@ except ImportError as exc:
 @app.route("/model/train", methods=["POST"])
 @return_500_on_uncaught_server_error
 def model_train():
-    update_environment_status(mongo.db, target_environment, "3")
     target_environment = TargetEnvironment(
         get_user_id(request.json),
         get_environment_id(request.json))
+    update_environment_status(mongo.db, target_environment, "3")
     environment = get_environment(mongo.db, target_environment)
     training_options = get_training_options(request.json)
     available_instances = get_available_instances(
