@@ -19,6 +19,7 @@ except ImportError as exc:
 @app.route("/model/train", methods=["POST"])
 @return_500_on_uncaught_server_error
 def model_train():
+    update_environment_status(mongo.db, target_environment, "3")
     target_environment = TargetEnvironment(
         get_user_id(request.json),
         get_environment_id(request.json))
@@ -27,6 +28,7 @@ def model_train():
     available_instances = get_available_instances(
         environment, training_options['max_trials'], training_options['required_instances']
     )
+
     training_iterations = get_training_iterations(request.json)
     instance_training_parameters = get_instance_training_parameters(request.json)
     return train_model(
@@ -41,7 +43,6 @@ def model_train():
 @app.route("/model/create", methods=["POST"])
 @return_500_on_uncaught_server_error
 def model_create():
-    error("here")
     target_environment = TargetEnvironment(
         get_user_id(request.json),
         get_environment_id(request.json))

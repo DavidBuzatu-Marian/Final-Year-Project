@@ -1,6 +1,7 @@
 from logging import error
 import subprocess
 import json
+import os
 from bson.objectid import ObjectId
 from flask import request
 from app import statuses
@@ -34,14 +35,13 @@ def send_options_to_instances(ips, environment_options):
     time.sleep(45)  # required for the cold start of docker container
     ips_with_options = set()
     for option in environment_options:
-        request_wrapper(lambda: post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
-                                                      .format(ips[option['instanceNumber'] - 1]),
-                                                      json.dumps(option['probabilityOfFailure'])))
+        request_wrapper(lambda: post_json_to_instance("http://{}:{}/instance/probabilityoffailure" .format(
+            ips[option['instanceNumber'] - 1], os.getenv("ENVIRONMENTS_PORT")), json.dumps(option['probabilityOfFailure'])))
         ips_with_options.add(ips[option['instanceNumber'] - 1])
     for ip in ips:
         if ip not in ips_with_options:
-            request_wrapper(lambda: post_json_to_instance("http://{}:5000/instance/probabilityoffailure"
-                                                          .format(ip),
+            request_wrapper(lambda: post_json_to_instance("http://{}:{}/instance/probabilityoffailure"
+                                                          .format(ip, os.getenv("ENVIRONMENTS_PORT")),
                                                           {"probabilityOfFailure": 0}))
 
 

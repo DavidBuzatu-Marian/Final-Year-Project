@@ -8,6 +8,7 @@ from bson.objectid import ObjectId
 
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance, request_wrapper
+    from environment_helpers import update_environment_status
     from nn_model import NNModel
     from error_handlers.abort_handler import abort_with_text_response
 except ImportError as exc:
@@ -22,7 +23,7 @@ def get_available_instances(environment, max_trials, required_instances):
         # Make request for availability and store available envs
         for environment_ip in environment["environment_ips"]:
             response = request_wrapper(lambda: get_to_instance(
-                "http://{}:5000/instance/availability".format(environment_ip)
+                "http://{}:{}/instance/availability".format(environment_ip, os.getenv("ENVIRONMENTS_PORT"))
             ))
             if response.json()["availability"] == True:
                 available_instances.add(environment_ip)
@@ -54,6 +55,7 @@ def train_model(database, instances, training_iterations, instance_training_para
         if len(instances) == 0:
             write_to_train_log(train_log, ["All devices crashed"])
             write_logs_to_database(database, train_log, environment)
+            update_environment_status(database, environment, "8")
             abort_with_text_response(400, "All devices crashed")
         aggregated_model = aggregate_models(instances, environment)
         write_to_train_log(train_log, ["Aggregated models from contributors"])
@@ -64,7 +66,9 @@ def train_model(database, instances, training_iterations, instance_training_para
             ["Updated model on contributors. Sent aggregated model to intances",
              "Preparing next round..."])
     write_logs_to_database(database, train_log, environment)
-    return send_file(os.getenv("GLOBAL_MODEL"))
+    update_environment_status(database, environment, "7")
+    return send_file("{}/{}-{}.pth".format(os.getenv("GLOBAL_MODEL"),
+                                           environment.id, environment.user_id))
 
 
 def write_logs_to_database(database, logs, environment):
@@ -104,12 +108,13 @@ def write_to_train_log(train_log, data):
         train_log.append(log)
 
 
-def update_instances_model(instances):
-    model_file = open(os.getenv("GLOBAL_MODEL"), "rb")
+def update_instances_model(instances, environment):
+    model_file = open("{}/{}-{}.pth".format(os.getenv("GLOBAL_MODEL"),
+                                            environment.id, environment.user_id), "rb")
     model = FileStorage(model_file)
     for instance_ip in instances:
         post_to_instance(
-            "http://{}:5000/model/update".format(instance_ip),
+            "http://{}:{}/model/update".format(instance_ip, os.getenv("ENVIRONMENTS_PORT")),
             {"model": [model]},
         )
 
@@ -144,7 +149,7 @@ def aggregate_models(instances, environment):
 def train_on_instances(instances, instance_training_parameters, environment):
     for instance_ip in instances:
         response = request_wrapper(lambda: post_json_to_instance(
-            "http://{}:5000/model/train".format(instance_ip),
+            "http://{}:{}/model/train".format(instance_ip, os.getenv("ENVIRONMENTS_PORT")),
             instance_training_parameters,
             True
         ))
@@ -173,10 +178,8 @@ def delete_model_from_path(path):
 
 
 def create_model(environment_ips, model_network_options):
-    error(model_network_options)
-    error(environment_ips)
     for instance_ip in environment_ips:
         request_wrapper(lambda: post_json_to_instance(
-            "http://{}:5000/model/create".format(
-                instance_ip), model_network_options
+            "http://{}:{}/model/create".format(
+                instance_ip, os.getenv("ENVIRONMENTS_PORT")), model_network_options
         ))

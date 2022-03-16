@@ -67,6 +67,7 @@ const ModalTrainModel = ({
       const scheduledRequest = setInterval(async () => {
         try {
           const task = await getTask(jobLink);
+          console.log(task);
           if (task.jobState === "active" || task.jobState === "failed") {
             setModalState({
               errorMessage:

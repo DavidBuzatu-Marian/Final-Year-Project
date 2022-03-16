@@ -24,7 +24,6 @@ from app import app
 @app.route("/model/create", methods=["POST"])
 @return_500_on_uncaught_server_error
 def model_create():
-    error(request)
     model = NNModel(request.json)
     path = os.getenv("MODEL_PATH")
     if os.path.isfile(path):

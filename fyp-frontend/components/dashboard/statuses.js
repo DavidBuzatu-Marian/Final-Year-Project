@@ -6,4 +6,6 @@ export const statuses = {
   4: "Error",
   5: "Ready to train",
   6: "Deleting",
+  7: "Finished training",
+  8: "Training error",
 };
