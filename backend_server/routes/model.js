@@ -43,7 +43,7 @@ router.get("/download", async (req, res) => {
   );
 });
 
-router.get("/*:id", async (req, res) => {
+router.get("/*/:id", async (req, res) => {
   const url = removeUrlParams(req.originalUrl);
   if (!strategyMap.has(url)) {
     return res.status(404).send("Endpoint not found");

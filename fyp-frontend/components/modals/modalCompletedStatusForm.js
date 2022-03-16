@@ -109,11 +109,13 @@ const ModalCompletedStatusForm = ({
         headerModals[activeHeaderModal],
         formValues
       );
-
+      console.log(formValues);
+      console.log(res);
       const jobLink = res.data.jobLink;
       const scheduledRequest = setInterval(async () => {
         try {
           const task = await getTask(jobLink);
+          console.log(task);
           if (task.jobState === "completed" || task.jobState === "failed") {
             setModalState({
               errorMessage:

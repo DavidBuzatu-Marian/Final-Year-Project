@@ -1,6 +1,7 @@
 import sys
 import os
 import torch
+from logging import error
 from flask.helpers import send_file
 from werkzeug.datastructures import FileStorage
 from bson.objectid import ObjectId
@@ -172,8 +173,10 @@ def delete_model_from_path(path):
 
 
 def create_model(environment_ips, model_network_options):
+    error(model_network_options)
+    error(environment_ips)
     for instance_ip in environment_ips:
-        post_json_to_instance(
+        request_wrapper(lambda: post_json_to_instance(
             "http://{}:5000/model/create".format(
                 instance_ip), model_network_options
-        )
+        ))

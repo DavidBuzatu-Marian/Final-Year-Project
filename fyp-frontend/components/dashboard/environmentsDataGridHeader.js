@@ -9,9 +9,9 @@ import Link from "next/link";
 import ModalProgress from "../utils/modalProgress";
 import axios from "axios";
 import { getConfig } from "../../config/defaultConfig";
-import ModalCompletedStatusForm from "../dataset/modalCompletedStatusForm";
+import ModalCompletedStatusForm from "../modals/modalCompletedStatusForm";
 import AddModelForm from "../model/addModelForm";
-import ModalTrainModel from "./modalTrainModel";
+import ModalTrainModel from "../modals/modalTrainModel";
 
 const EnvironmentsDataGridHeader = ({ selectedRow }) => {
   const [progressModal, setProgressModal] = React.useState({
@@ -130,7 +130,34 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           initialFormValues={{
             environment_id: selectedRow._id,
             environment_model_network_options: {
-              network: [],
+              network: [
+                {
+                  layer: {
+                    layer_type: "Convolution",
+                    subtype: "Conv2d",
+                    parameters: {
+                      in_channels: 1,
+                      out_channels: 4,
+                      kernel_size: 3,
+                      stride: 1,
+                      padding: 1,
+                    },
+                  },
+                },
+                {
+                  layer: {
+                    layer_type: "Convolution",
+                    subtype: "Conv2d",
+                    parameters: {
+                      in_channels: 1,
+                      out_channels: 4,
+                      kernel_size: 3,
+                      stride: 1,
+                      padding: 1,
+                    },
+                  },
+                },
+              ],
             },
           }}
           selectedRow={selectedRow}

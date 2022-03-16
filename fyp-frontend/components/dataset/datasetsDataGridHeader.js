@@ -5,7 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import ModalCompletedStatusForm from "./modalCompletedStatusForm";
+import ModalCompletedStatusForm from "../modals/modalCompletedStatusForm";
 import AddTrainingDataDistributionForm from "./addTrainingDataDistributionForm";
 import DataUploadFormContainer from "./dataUploadFormContainer";
 

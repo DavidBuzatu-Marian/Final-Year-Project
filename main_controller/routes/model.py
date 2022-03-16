@@ -41,6 +41,7 @@ def model_train():
 @app.route("/model/create", methods=["POST"])
 @return_500_on_uncaught_server_error
 def model_create():
+    error("here")
     target_environment = TargetEnvironment(
         get_user_id(request.json),
         get_environment_id(request.json))
