@@ -1,3 +1,4 @@
+from logging import error
 from model.concatenate import Concatenate
 from nn_activation_factory import NNActivationFactory
 from nn_layer_factory import NNLayerFactory
@@ -43,6 +44,9 @@ class NNModel(nn.Module):
         computed_layers = list()
         prediction = input_data
         for component in self.nn_layers:
+            error("NN_MODEL: ")
+            error(prediction.shape)
+            error(len(computed_layers))
             if isinstance(component, Concatenate):
                 prediction = component(
                     computed_layers[component.get_previous_layer_index()],

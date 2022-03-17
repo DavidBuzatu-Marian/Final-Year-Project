@@ -291,15 +291,6 @@
                     }
                 }
             },
-            {
-              "layer": {
-                    "layer_type": "Pooling",
-                    "subtype": "MaxPool2d",
-                    "parameters": {
-                        "kernel_size": 2
-                    }
-                }
-            },
             
             
             {
@@ -315,7 +306,7 @@
             },
             {
               "concatenate": {
-                "previous_layer_index": 24,
+                "previous_layer_index": 23,
                 "dim": 1
               }
             },
@@ -373,7 +364,7 @@
             },
             {
               "concatenate": {
-                "previous_layer_index": 19,
+                "previous_layer_index": 18,
                 "dim": 1
               }
             },
@@ -432,7 +423,7 @@
             },
             {
               "concatenate": {
-                "previous_layer_index": 14,
+                "previous_layer_index": 13,
                 "dim": 1
               }
             },
@@ -490,7 +481,7 @@
             },
             {
               "concatenate": {
-                "previous_layer_index": 9,
+                "previous_layer_index": 8,
                 "dim": 1
               }
             },
@@ -548,7 +539,7 @@
             },
             {
               "concatenate": {
-                "previous_layer_index": 4,
+                "previous_layer_index": 3,
                 "dim": 1
               }
             },
