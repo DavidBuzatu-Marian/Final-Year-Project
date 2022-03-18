@@ -45,7 +45,7 @@ def return_500_environment_critical_error(function):
 def get_environment():
     request_json = flask.request.json
     request_args = flask.request.args
-    if "user_id" not in request_json or "user_id" not in request_args:
+    if "user_id" not in request_json and "user_id" not in request_args:
         return None
     user_id = get_user_id(request_json) if "user_id" in request_json else get_user_id(
         request_args)

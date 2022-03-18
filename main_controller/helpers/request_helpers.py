@@ -42,8 +42,8 @@ def post_to_instance(url, data):
     return response
 
 
-def post_json_to_instance(url, json, allow_failure=False):
-    response = requests.post(url, json=json, timeout=10)
+def post_json_to_instance(url, json, allow_failure=False, timeout=10):
+    response = requests.post(url, json=json, timeout=timeout)
     if not response.ok and not allow_failure:
         abort_with_text_response(
             response.status_code,

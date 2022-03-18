@@ -158,7 +158,8 @@ def train_on_instances(instances, instance_training_parameters, environment):
         response = request_wrapper(lambda: post_json_to_instance(
             "http://{}:{}/model/train".format(instance_ip, os.getenv("ENVIRONMENTS_PORT")),
             instance_training_parameters,
-            True
+            True,
+            10000
         ))
         if not response.ok:
             # Instance failed during training => remove instance from round of training

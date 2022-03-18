@@ -65,7 +65,7 @@ def get_instance_probability_of_failure():
 
 def get_processors(request_json):
     # TODO: Find a way to encapsulate this
-    return [torch.argmax]
+    return []
 
 
 def process_output(output, processors):

@@ -49,11 +49,12 @@ def model_validate():
     )
 
     total_loss = 0
-
+    mean, std = compute_mean_and_std(validation_dataloader)
     with torch.no_grad():
         for data, label in validation_dataloader:
             data = reshape_data(data, hyperparameters)
-            data = normalize_data(data, hyperparameters)
+            if normalize(hyperparameters):
+                data = normalize_data(data, mean, std)
             output = model(data)
 
             loss = loss_func(output, label.to(torch.int64))
@@ -78,19 +79,21 @@ def model_train():
         labels_path=os.getenv("TRAIN_LABELS_PATH"),
         hyperparameters=hyperparameters,
     )
-
+    mean, std = compute_mean_and_std(train_dataloader)
     for _ in range(0, hyperparameters["epochs"]):
         if is_failing(probability_of_failure):
             abort_with_text_response(400, "Device failed during training")
+        model.train()
         for data, label in train_dataloader:
             optimizer.zero_grad()
 
             data = reshape_data(data, hyperparameters)
-            data = normalize_data(data, hyperparameters)
+            if normalize(hyperparameters):
+                data = normalize_data(data, mean, std)
             output = model(data)
-            output = process_output(output, processors)
 
-            loss = loss_func(output, label.to(torch.int64))
+            output = process_output(output, processors)
+            loss = loss_func(output, label.to(dtype=torch.int64))
             loss.backward()
             optimizer.step()
 
