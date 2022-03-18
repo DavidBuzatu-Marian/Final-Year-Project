@@ -62,10 +62,10 @@ def update_environment_status_to_error(environment, error_code="4"):
 
 
 def log_error():
-    ex_type, ex_value, ex_traceback = sys.exc_info()
+    exception_type, exception_value, exception_traceback = sys.exc_info()
 
     # Extract unformatter stack traces as tuples
-    trace_back = traceback.extract_tb(ex_traceback)
+    trace_back = traceback.extract_tb(exception_traceback)
 
     # Format stacktrace
     stack_trace = list()
@@ -74,6 +74,8 @@ def log_error():
         stack_trace.append("File : %s , Line : %d, Func.Name : %s, Message : %s" %
                            (trace[0], trace[1], trace[2], trace[3]))
 
-    app.logger.error("Exception type : %s " % ex_type.__name__)
-    app.logger.error("Exception message : %s" % ex_value)
+    app.logger.error("Exception type : %s " % exception_type.__name__)
+    app.logger.error("Exception message : %s" % exception_value)
     app.logger.error("Stack trace : %s" % stack_trace)
+
+    return exception_value
