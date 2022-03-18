@@ -35,7 +35,11 @@ const ModalCompletedStatusForm = ({
   const [formValues, setFormValues] = React.useState(initialFormValues);
 
   const handleClose = () => {
-    setOpen(false);
+    setModalState({
+      errorMessage: null,
+      loading: false,
+      successMessage: null,
+    });
     setHeaderModalsState({
       ...headerModals,
       [activeHeaderModal]: {
@@ -43,11 +47,8 @@ const ModalCompletedStatusForm = ({
         isVisible: false,
       },
     });
-    setModalState({
-      errorMessage: null,
-      loading: false,
-      successMessage: null,
-    });
+    setOpen(false);
+
     mutate(null);
   };
 
@@ -128,6 +129,7 @@ const ModalCompletedStatusForm = ({
         } catch (error) {
           setModalState({
             errorMessage: error,
+            successMessage: null,
             loading: false,
             alertId: crypto.randomUUID(),
           });
@@ -139,6 +141,7 @@ const ModalCompletedStatusForm = ({
       setModalState({
         ...modalState,
         errorMessage: error.message,
+        successMessage: null,
         loading: false,
         alertId: crypto.randomUUID(),
       });
@@ -219,7 +222,7 @@ const ModalCompletedStatusForm = ({
           <Button
             variant="outlined"
             color="error"
-            onClick={handleClose}
+            onClick={() => handleClose()}
             sx={{ mt: 1, width: "35ch" }}
           >
             {modalButtonText}

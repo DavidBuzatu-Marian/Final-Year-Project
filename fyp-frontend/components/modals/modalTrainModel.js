@@ -37,6 +37,11 @@ const ModalTrainModel = ({
         isVisible: false,
       },
     });
+    setModalState({
+      errorMessage: null,
+      loading: false,
+      successMessage: null,
+    });
   };
 
   useEffect(() => {
