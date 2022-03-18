@@ -9,3 +9,5 @@ python-terraform
 aiohttp
 requests
 celery
+pytest
+pytest-responsemock

@@ -1,15 +1,15 @@
-const Queue = require('bull');
-const config = require('config');
-const axios = require('axios');
-const fs = require('fs');
-const { deleteLocalFiles } = require('../../hooks/upload');
-const FormData = require('form-data');
+const Queue = require("bull");
+const config = require("config");
+const axios = require("axios");
+const fs = require("fs");
+const { deleteLocalFiles } = require("../../hooks/upload");
+const FormData = require("form-data");
 
-const environmentDatasetQueue = new Queue('environment-dataset-queue', {
+const environmentDatasetQueue = new Queue("environment-dataset-queue", {
   redis: {
-    port: config.get('redisPort'),
-    host: config.get('redisIP'),
-    password: config.get('redisPassword'),
+    port: config.get("redisPort"),
+    host: config.get("redisIP"),
+    password: config.get("redisPassword"),
   },
 });
 
@@ -36,8 +36,8 @@ const makeAxiosRequest = async (job) => {
       }
     }
     return await axios.post(
-      `http://${config.get('loadBalancerIP')}:${config.get(
-        'loadBalancerPort'
+      `http://${config.get("loadBalancerIP")}:${config.get(
+        "loadBalancerPort"
       )}/environment/dataset${job.data.endpoint}`,
       formData,
       {
@@ -47,8 +47,8 @@ const makeAxiosRequest = async (job) => {
     );
   }
   return await axios.post(
-    `http://${config.get('loadBalancerIP')}:${config.get(
-      'loadBalancerPort'
+    `http://${config.get("loadBalancerIP")}:${config.get(
+      "loadBalancerPort"
     )}/environment/dataset${job.data.endpoint}`,
     JSON.stringify(job.data.body),
     {

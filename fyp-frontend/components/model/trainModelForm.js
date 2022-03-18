@@ -26,6 +26,38 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
         }
         sx={{ width: "100%" }}
       />
+      <TextField
+        id="outlined-required"
+        label="Maximum trials for device availability"
+        type={"number"}
+        value={formValues["training_options"].max_trials}
+        onChange={(event) =>
+          setFormValues({
+            ...formValues,
+            ["training_options"]: {
+              ...formValues["training_options"],
+              max_trials: parseInt(event.target.value),
+            },
+          })
+        }
+        sx={{ width: "100%", mt: 4 }}
+      />
+      <TextField
+        id="outlined-required"
+        label="Minimum number of required devices"
+        type={"number"}
+        value={formValues["training_options"].required_instances}
+        onChange={(event) =>
+          setFormValues({
+            ...formValues,
+            ["training_options"]: {
+              ...formValues["training_options"],
+              required_instances: parseInt(event.target.value),
+            },
+          })
+        }
+        sx={{ width: "100%", mt: 4 }}
+      />
       <OptionsDynamicList
         listOptionsInit={{
           listOptions: [
@@ -56,9 +88,7 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
                 "batch_size",
                 "shuffle",
                 "drop_last",
-                "normalizer",
-                "normalizer_mean",
-                "normalizer_std",
+                "normalize",
                 "reshape",
               ],
             },
@@ -71,7 +101,7 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
         }}
         title={"Losses, optimisers and hyperparameter options"}
       />
-      <Typography variant="h6" sx={{ whiteSpace: "pre-wrap", mb: 1 }}>
+      <Typography variant="p" sx={{ whiteSpace: "pre-wrap", mb: 1 }}>
         Specify your options using the following structure{" "}
         <a href="https://pytorch.org/docs/stable/nn.html" target="_blank">
           <Badge color="secondary" variant="dot" sx={{ cursor: "pointer" }}>
@@ -91,21 +121,23 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
           },
           optimizer: {
             optimizer_type: "RMSprop",
-            parameters: {},
+            parameters: {
+              lr: 0.001,
+              weight_decay: 0.00000001,
+              momentum: 0.9,
+            },
           },
           hyperparameters: {
-            epochs: 5,
-            batch_size: 5,
-            reshape: "5, 1, 96, 96",
-            normalizer: true,
-            normalizer_mean: "0.5",
-            normalizer_std: "0.5",
-            drop_last: true,
+            epochs: 60,
+            batch_size: 4,
+            reshape: "4, 1, 96, 96",
+            normalize: true,
           },
         }}
         theme="light_mitsuketa_tribute"
         locale={locale}
         height="450px"
+        width="100%"
         onChange={(event) =>
           setFormValues({
             ...formValues,

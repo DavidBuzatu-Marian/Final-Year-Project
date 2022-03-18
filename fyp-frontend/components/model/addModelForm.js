@@ -79,34 +79,7 @@ const AddModelForm = ({ formValues, setFormValues }) => {
       </Typography>
       <JSONInput
         id="a_unique_id"
-        placeholder={[
-          {
-            layer: {
-              layer_type: "Convolution",
-              subtype: "Conv2d",
-              parameters: {
-                in_channels: 1,
-                out_channels: 4,
-                kernel_size: 3,
-                stride: 1,
-                padding: 1,
-              },
-            },
-          },
-          {
-            layer: {
-              layer_type: "Convolution",
-              subtype: "Conv2d",
-              parameters: {
-                in_channels: 1,
-                out_channels: 4,
-                kernel_size: 3,
-                stride: 1,
-                padding: 1,
-              },
-            },
-          },
-        ]}
+        placeholder={formValues.environment_model_network_options.network}
         theme="light_mitsuketa_tribute"
         locale={locale}
         height="450px"

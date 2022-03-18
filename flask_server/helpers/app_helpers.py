@@ -1,10 +1,9 @@
 import os
+from error_handlers.abort_handler import abort_with_text_response
 from nn_loss.nn_loss_factory import NNLossFactory
 from nn_optimizer.nn_optimizer_factory import NNOptimizerFactory
-
+import yaml
 import torch
-from flask.json import jsonify
-from logging import error
 from werkzeug.utils import secure_filename
 from pathlib import Path
 
@@ -50,12 +49,23 @@ def get_hyperparameters(request_json):
     request_json["hyperparameters"].setdefault("num_workers", 1)
     request_json["hyperparameters"].setdefault("batch_size", 1)
     request_json["hyperparameters"].setdefault("shuffle", True)
+    request_json["hyperparameters"].setdefault("drop_last", False)
     return request_json["hyperparameters"]
+
+
+def get_probability_of_failure(request_json):
+    return {"probabilityOfFailure": request_json["probabilityOfFailure"]}
+
+
+def get_instance_probability_of_failure():
+    with open(os.getenv("INSTANCE_CONFIG_FILE_PATH")) as yaml_config_file:
+        env_variables = yaml.load(yaml_config_file, Loader=yaml.FullLoader)
+        return env_variables["probabilityOfFailure"]
 
 
 def get_processors(request_json):
     # TODO: Find a way to encapsulate this
-    return [torch.argmax]
+    return []
 
 
 def process_output(output, processors):

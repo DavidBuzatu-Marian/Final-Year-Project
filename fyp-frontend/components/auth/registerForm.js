@@ -1,25 +1,25 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { FormControl } from '@mui/material';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import { handleClickShowPassword, handleMouseDownPassword } from './hooks';
-import axios from 'axios';
-import { getConfig } from '../../config/defaultConfig';
-import ClosableAlert from '../alert/closableAlert';
-import Router from 'next/router';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { FormControl } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import { handleClickShowPassword, handleMouseDownPassword } from "./hooks";
+import axios from "axios";
+import { getConfig } from "../../config/defaultConfig";
+import ClosableAlert from "../alert/closableAlert";
+import Router from "next/router";
 
 export default function RegisterForm() {
   const [formValues, setFormValues] = React.useState({
-    email: '',
-    password: '',
-    passwordConfirm: '',
+    email: "",
+    password: "",
+    passwordConfirm: "",
     showPassword: false,
-    passwordErrorText: '',
-    passwordConfirmErrorText: '',
-    emailErrorText: '',
+    passwordErrorText: "",
+    passwordConfirmErrorText: "",
+    emailErrorText: "",
     loading: false,
     onSubmitError: false,
     alertId: 0,
@@ -29,18 +29,18 @@ export default function RegisterForm() {
    * Made slight adaptations
    */
   const handleChange = (prop) => (event) => {
-    if (prop === 'password') {
+    if (prop === "password") {
       const err = validatePassword(event.target.value);
       setFormValues({
         ...formValues,
         [prop]: event.target.value,
         passwordErrorText: err,
       });
-    } else if (prop === 'passwordConfirm') {
+    } else if (prop === "passwordConfirm") {
       const err =
         formValues.password !== event.target.value
-          ? 'Passwords must match!'
-          : '';
+          ? "Passwords must match!"
+          : "";
       setFormValues({
         ...formValues,
         [prop]: event.target.value,
@@ -58,11 +58,11 @@ export default function RegisterForm() {
 
   /* RegEx from: https://regexr.com/3bfsi*/
   const validatePassword = (password) => {
-    const regEx = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).{8,}$';
+    const regEx = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z0-9]).{8,}$";
     const errorMessage =
       password.length > 0 && password.match(regEx) === null
-        ? 'Password needs to be:\n- at least 8 characters long,\n- contain one uppercase letter\n- contain one lowercase letter,\n- a number.'
-        : '';
+        ? "Password needs to be:\n- at least 8 characters long,\n- contain one uppercase letter\n- contain one lowercase letter,\n- a number."
+        : "";
     return errorMessage;
   };
 
@@ -73,8 +73,8 @@ export default function RegisterForm() {
       .match(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       ) === null
-      ? 'Email is not valid'
-      : '';
+      ? "Email is not valid"
+      : "";
   };
 
   const checkErrors = () => {
@@ -95,20 +95,19 @@ export default function RegisterForm() {
     let onSubmitError = false;
     let onSubmitSuccess = false;
     try {
-      await axios.post(getConfig()['registerUrl'], {
+      await axios.post(getConfig()["registerUrl"], {
         email: formValues.email,
         password: formValues.password,
       });
       onSubmitSuccess = true;
     } catch (err) {
       onSubmitError = true;
-      console.log(err);
     } finally {
       setFormValues({
         ...formValues,
-        email: onSubmitSuccess ? '' : formValues.email,
-        password: '',
-        passwordConfirm: '',
+        email: onSubmitSuccess ? "" : formValues.email,
+        password: "",
+        passwordConfirm: "",
         loading: false,
         onSubmitError,
         onSubmitSuccess,
@@ -119,59 +118,59 @@ export default function RegisterForm() {
 
   return (
     <Box
-      component='form'
+      component="form"
       sx={{
-        '& .MuiTextField-root': { width: '35ch', my: 1 },
-        '& .Mui-error': { whiteSpace: 'pre-wrap' },
+        "& .MuiTextField-root": { width: "35ch", my: 1 },
+        "& .Mui-error": { whiteSpace: "pre-wrap" },
         mt: 1,
-        mx: 'auto',
+        mx: "auto",
       }}
-      autoComplete='off'
+      autoComplete="off"
     >
       <FormControl>
         {formValues.onSubmitError && (
           <ClosableAlert
-            severity={'error'}
-            alertMessage={'Registration went wrong'}
+            severity={"error"}
+            alertMessage={"Registration went wrong"}
           />
         )}
         {formValues.onSubmitSuccess && (
           <ClosableAlert
-            severity={'success'}
-            alertMessage={'Registration successful'}
+            severity={"success"}
+            alertMessage={"Registration successful"}
           />
         )}
         <TextField
-          id='outlined-required'
-          label='Email'
+          id="outlined-required"
+          label="Email"
           value={formValues.email}
-          onChange={handleChange('email')}
+          onChange={handleChange("email")}
           error={formValues.emailErrorText.length > 0}
           helperText={formValues.emailErrorText}
         />
         <TextField
-          id='outlined-required'
-          label='Password'
-          type={formValues.showPassword ? 'text' : 'password'}
+          id="outlined-required"
+          label="Password"
+          type={formValues.showPassword ? "text" : "password"}
           value={formValues.password}
-          onChange={handleChange('password')}
+          onChange={handleChange("password")}
           error={formValues.passwordErrorText.length > 0}
           helperText={formValues.passwordErrorText}
           InputProps={{
             endAdornment: (
-              <InputAdornment position='end'>
+              <InputAdornment position="end">
                 <IconButton
-                  aria-label='toggle password visibility'
+                  aria-label="toggle password visibility"
                   onClick={() =>
                     handleClickShowPassword(setFormValues, formValues)
                   }
                   onMouseDown={handleMouseDownPassword}
-                  edge='end'
+                  edge="end"
                 >
                   {formValues.showPassword ? (
-                    <span className='material-icons'>visibility</span>
+                    <span className="material-icons">visibility</span>
                   ) : (
-                    <span className='material-icons'>visibility_off</span>
+                    <span className="material-icons">visibility_off</span>
                   )}
                 </IconButton>
               </InputAdornment>
@@ -180,21 +179,21 @@ export default function RegisterForm() {
         />
 
         <TextField
-          id='outlined-required'
-          label='Password confirm'
-          type={formValues.showPassword ? 'text' : 'password'}
+          id="outlined-required"
+          label="Password confirm"
+          type={formValues.showPassword ? "text" : "password"}
           value={formValues.passwordConfirm}
-          onChange={handleChange('passwordConfirm')}
+          onChange={handleChange("passwordConfirm")}
           error={formValues.passwordConfirmErrorText.length > 0}
           helperText={formValues.passwordConfirmErrorText}
         />
         <LoadingButton
-          variant='outlined'
+          variant="outlined"
           disabled={checkErrors()}
-          loadingPosition='end'
+          loadingPosition="end"
           loading={formValues.loading}
-          endIcon={<span className='material-icons'>send</span>}
-          sx={{ marginTop: '1rem' }}
+          endIcon={<span className="material-icons">send</span>}
+          sx={{ marginTop: "1rem" }}
           onClick={(event) => onSubmit(event)}
         >
           Register

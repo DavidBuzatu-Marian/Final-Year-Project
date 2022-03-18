@@ -1,20 +1,20 @@
-const Queue = require('bull');
-const config = require('config');
-const axios = require('axios');
+const Queue = require("bull");
+const config = require("config");
+const axios = require("axios");
 
-const modelCreateQueue = new Queue('model-create-queue', {
+const modelCreateQueue = new Queue("model-create-queue", {
   redis: {
-    port: config.get('redisPort'),
-    host: config.get('redisIP'),
-    password: config.get('redisPassword'),
+    port: config.get("redisPort"),
+    host: config.get("redisIP"),
+    password: config.get("redisPassword"),
   },
 });
 
 modelCreateQueue.process(async (job, done) => {
   try {
     const res = await axios.post(
-      `http://${config.get('loadBalancerIP')}:${config.get(
-        'loadBalancerPort'
+      `http://${config.get("loadBalancerIP")}:${config.get(
+        "loadBalancerPort"
       )}/model/create`,
       JSON.stringify(job.data.body),
       { headers: job.data.headers, timeout: 1000 * 60 * 10 }

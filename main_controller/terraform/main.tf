@@ -30,13 +30,13 @@ resource "google_compute_instance" "instances" {
   }
 }
 
-resource "google_compute_instance_group" "environment" {
-  name        = "instance-group-${var.user_id}"
-  description = "Environment group. Only 1 environment/user"
-  instances   = google_compute_instance.instances[*].self_link
+# resource "google_compute_instance_group" "environment" {
+#   name        = "instance-group-${var.user_id}"
+#   description = "Environment group. Only 1 environment/user"
+#   instances   = google_compute_instance.instances[*].self_link
 
-  named_port {
-    name = "http"
-    port = "5000"
-  }
-}
+#   named_port {
+#     name = "http"
+#     port = "5000"
+#   }
+# }

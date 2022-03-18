@@ -1,14 +1,14 @@
-import { FormControl, Stack, TextField } from '@mui/material';
-import { Box } from '@mui/system';
-import React from 'react';
+import { FormControl, Stack, TextField } from "@mui/material";
+import { Box } from "@mui/system";
+import React from "react";
 
 const AddTrainingDataDistributionForm = ({ formValues, setFormValues }) => {
-  const handleChange = (field, subField, idx) => (event) => {
+  const handleChange = (field, subField) => (event) => {
     const newValue =
-      event.target.value.length === 0 ? 0 : parseInt(event.target.value);
+      event.target.value.length === 0 ? "" : parseInt(event.target.value);
     if (subField) {
       const newProp = formValues[field];
-      newProp[idx][subField] = newValue;
+      newProp[subField] = newValue;
       setFormValues({
         ...formValues,
         newProp,
@@ -23,33 +23,29 @@ const AddTrainingDataDistributionForm = ({ formValues, setFormValues }) => {
 
   return (
     <Box
-      component='form'
+      component="form"
       sx={{
-        '& .MuiTextField-root': { width: '35ch', my: 1 },
+        "& .MuiTextField-root": { width: "35ch", my: 1 },
         mt: 1,
-        mx: 'auto',
+        mx: "auto",
       }}
     >
       <FormControl>
         <TextField
-          id='outlined-required'
-          label='Dataset length'
-          type='number'
+          id="outlined-required"
+          label="Dataset length"
+          type="number"
           value={formValues.dataset_length}
-          onChange={handleChange('dataset_length')}
+          onChange={handleChange("dataset_length")}
         />
-        {formValues.data_distribution.map((instance, idx) => (
+        {Object.keys(formValues.data_distribution).map((instance) => (
           <TextField
-            id='outlined-required'
-            key={Object.keys(instance)[0]}
-            label={Object.keys(instance)[0]}
-            type='number'
-            value={formValues.data_distribution[idx][Object.keys(instance)[0]]}
-            onChange={handleChange(
-              'data_distribution',
-              Object.keys(instance)[0],
-              idx
-            )}
+            id="outlined-required"
+            key={instance}
+            label={instance}
+            type="number"
+            value={formValues.data_distribution[instance]}
+            onChange={handleChange("data_distribution", instance)}
           />
         ))}
       </FormControl>

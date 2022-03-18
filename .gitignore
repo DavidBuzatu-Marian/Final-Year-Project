@@ -71,3 +71,8 @@ ssl-certs/
 .next
 
 *.log
+
+/temp
+
+**/__pycache__
+.pytest_cache

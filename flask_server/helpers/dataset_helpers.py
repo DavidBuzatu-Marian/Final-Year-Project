@@ -1,6 +1,7 @@
 import os
 from helpers.app_helpers import save_file
-
+import shutil
+from logging import error
 
 def delete_model_from_path(path):
     if os.path.isfile(path):
@@ -17,5 +18,14 @@ def save_dataset(request):
         ("test_labels", "TEST_LABELS_PATH"),
     ]
     for key, value in data_types:
+        if len(request.files.getlist(key)) > 0:
+            path = os.path.join(os.getenv(value))
+            delete_data_from_path(path)
         for file in request.files.getlist(key):
             save_file(file, value)
+
+def delete_data_from_path(path):
+    try:
+        shutil.rmtree(path)
+    except OSError as err:
+        error(err)

@@ -4,30 +4,33 @@ from flask.json import jsonify
 import os
 import sys
 
+
 try:
+    from helpers.dataset_helpers import delete_data_from_path
     from helpers.dataset_helpers import delete_model_from_path, save_dataset
+    from error_handlers.abort_handler import abort_with_text_response
+    from routes.error_handlers.server_errors_handler import return_500_on_uncaught_server_error
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
-import shutil
 
 from app import app
 
 
 @app.route("/dataset/add", methods=["POST"])
+@return_500_on_uncaught_server_error
 def dataset_add():
     if not ("multipart/form-data" in request.content_type):
-        return (
-            jsonify("Content type is not supported. Please return multipart/form-data"),
-            415,
-        )
+        abort_with_text_response(
+            415, "Content type is not supported. Please return multipart/form-data")
     if len(request.files) == 0:
-        return (jsonify("At least a file needs to be selected"), 400)
+        abort_with_text_response(400, "At least a file needs to be selected")
     save_dataset(request)
     # delete_model_from_path(os.getenv("MODEL_PATH"))
     return jsonify("Files saved successfully")
 
 
 @app.route("/dataset/remove", methods=["POST"])
+@return_500_on_uncaught_server_error
 def dataset_remove():
     dir_paths = [
         os.path.join(os.getenv("TRAIN_DATA_PATH")),
@@ -38,9 +41,6 @@ def dataset_remove():
         os.path.join(os.getenv("TEST_LABELS_PATH")),
     ]
     for path in dir_paths:
-        try:
-            shutil.rmtree(path)
-        except OSError as err:
-            error(err)
+        delete_data_from_path(path)
     # delete_model_from_path(os.getenv("MODEL_PATH"))
     return jsonify("Files and model deleted successfully")

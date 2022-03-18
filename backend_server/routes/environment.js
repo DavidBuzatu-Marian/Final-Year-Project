@@ -6,6 +6,7 @@ const {
   createJobHeader,
 } = require("../hooks/environment");
 const EnvironmentAddresses = require("../models/EnvironmentAddresses");
+const EnvironmentTrainingLogs = require("../models/EnvironmentTrainingLogs");
 const {
   environmentCreateQueue,
 } = require("../workers/environment/environment_create");
@@ -15,6 +16,7 @@ const {
 const {
   environmentDeleteQueue,
 } = require("../workers/environment/environment_delete");
+
 const router = express.Router();
 const mongoose = require("mongoose");
 
@@ -145,10 +147,18 @@ router.get("/dataset/:id", async (req, res) => {
 
 router.get("/", async (req, res) => {
   const userId = req.headers["x-auth"];
-  const environmentsAddresses = await EnvironmentAddresses.find({
+  const environmentAddresses = await EnvironmentAddresses.find({
     user_id: mongoose.mongo.ObjectId(userId),
   });
-  return res.send(environmentsAddresses);
+  return res.send(environmentAddresses);
+});
+
+router.get("/trainlogs", async (req, res) => {
+  const userId = req.headers["x-auth"];
+  const environmentTrainLogs = await EnvironmentTrainingLogs.find({
+    user_id: mongoose.mongo.ObjectId(userId),
+  });
+  return res.send(environmentTrainLogs);
 });
 
 module.exports = router;

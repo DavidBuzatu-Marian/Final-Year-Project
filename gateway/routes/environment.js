@@ -1,15 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const axios = require('axios');
-const config = require('config');
-const FormData = require('form-data');
-const multer = require('multer');
-const fs = require('fs');
-const { deleteLocalFiles } = require('../hooks/upload');
-const { ensureAuthenticated } = require('../middleware/auth');
+const axios = require("axios");
+const config = require("config");
+const FormData = require("form-data");
+const multer = require("multer");
+const fs = require("fs");
+const { deleteLocalFiles } = require("../hooks/upload");
+const { ensureAuthenticated } = require("../middleware/auth");
 
 const storage = multer.diskStorage({
-  destination: './temp/',
+  destination: "./temp/",
   filename: (_, file, cb) => {
     cb(null, file.originalname);
   },
@@ -17,19 +17,19 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post(
-  '/dataset/data',
+  "/dataset/data",
   [
     ensureAuthenticated,
     upload.fields([
-      { name: 'train_data', maxCount: 10000 },
-      { name: 'train_labels', maxCount: 10000 },
+      { name: "train_data", maxCount: 10000 },
+      { name: "train_labels", maxCount: 10000 },
     ]),
   ],
   async (req, res) => {
     try {
       let formData = new FormData();
       if (!req.files) {
-        return res.status(400).send('At least a file is required');
+        return res.status(400).send("At least a file is required");
       }
       for (key in req.files) {
         for (file of req.files[key]) {
@@ -39,7 +39,7 @@ router.post(
       //   console.log(formData);
       const axiosRes = await axios.post(
         `http://${config.get(
-          'backendIP'
+          "backendIP"
         )}:5005/api/environment/dataset/data?user_id=${
           req.query.user_id
         }&environment_id=${req.query.environment_id}`,
@@ -50,7 +50,7 @@ router.post(
       );
       return res.json(axiosRes.data);
     } catch (error) {
-      console.log(error);
+      console.log(`Error: ${error}`);
       res.sendStatus(500);
     } finally {
       deleteLocalFiles(req);

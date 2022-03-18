@@ -9,9 +9,9 @@ import Link from "next/link";
 import ModalProgress from "../utils/modalProgress";
 import axios from "axios";
 import { getConfig } from "../../config/defaultConfig";
-import ModalCompletedStatusForm from "../dataset/modalCompletedStatusForm";
+import ModalCompletedStatusForm from "../modals/modalCompletedStatusForm";
 import AddModelForm from "../model/addModelForm";
-import ModalTrainModel from "./modalTrainModel";
+import ModalTrainModel from "../modals/modalTrainModel";
 
 const EnvironmentsDataGridHeader = ({ selectedRow }) => {
   const [progressModal, setProgressModal] = React.useState({
@@ -41,6 +41,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
       console.log(error);
     }
   };
+
   return (
     <Box
       component="main"
@@ -82,7 +83,13 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
                 },
               })
             }
-            disabled={Object.keys(selectedRow).length === 0}
+            disabled={
+              Object.keys(selectedRow).length === 0 ||
+              (Object.keys(selectedRow).length > 0 &&
+                (selectedRow.status === "Training" ||
+                  selectedRow.status === "Creating" ||
+                  selectedRow.status === "Deleting"))
+            }
           >
             Add model
           </Button>
@@ -98,10 +105,13 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
             disabled={
               Object.keys(selectedRow).length === 0 ||
               (Object.keys(selectedRow).length > 0 &&
-                selectedRow.status !== "Ready to train")
+                selectedRow.status !== "Ready to train" &&
+                selectedRow.status !== "Training error") ||
+              (Object.keys(selectedRow).length > 0 &&
+                selectedRow.status === "Training")
             }
           >
-            Add model
+            Train model
           </Button>
         </Stack>
         <ModalProgress
@@ -109,6 +119,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           modalButtonText={"Close"}
           modalTitle={"Environment deletion progress"}
           modalContent={"Deleting environment..."}
+          modalAlertMessage={"Environment deletion process started!"}
           jobLink={progressModal.jobLink}
         />
         <ModalCompletedStatusForm
@@ -118,11 +129,39 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
           modalForm={AddModelForm}
           modalButtonText={"Close"}
           initialFormValues={{
-            environment_id: selectedRow.id,
+            environment_id: selectedRow._id,
             environment_model_network_options: {
-              network: [],
+              network: [
+                {
+                  layer: {
+                    layer_type: "Convolution",
+                    subtype: "Conv2d",
+                    parameters: {
+                      in_channels: 1,
+                      out_channels: 4,
+                      kernel_size: 3,
+                      stride: 1,
+                      padding: 1,
+                    },
+                  },
+                },
+                {
+                  layer: {
+                    layer_type: "Convolution",
+                    subtype: "Conv2d",
+                    parameters: {
+                      in_channels: 1,
+                      out_channels: 4,
+                      kernel_size: 3,
+                      stride: 1,
+                      padding: 1,
+                    },
+                  },
+                },
+              ],
             },
           }}
+          selectedRow={selectedRow}
           headerModals={modals}
           setHeaderModalsState={setModals}
           activeHeaderModal={"model"}
@@ -131,13 +170,37 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
         <ModalTrainModel
           isOpen={modals.modelTrain.isVisible}
           initialFormValues={{
-            environment_id: selectedRow.id,
+            environment_id: selectedRow._id,
             training_iterations: 1,
-            environment_parameters: {},
+            environment_parameters: {
+              loss: {
+                loss_type: "CrossEntropyLoss",
+                parameters: {},
+              },
+              optimizer: {
+                optimizer_type: "RMSprop",
+                parameters: {
+                  lr: 0.001,
+                  weight_decay: 0.00000001,
+                  momentum: 0.9,
+                },
+              },
+              hyperparameters: {
+                epochs: 60,
+                batch_size: 4,
+                reshape: "4, 1, 96, 96",
+                normalize: true,
+              },
+            },
+            training_options: {
+              max_trials: 1,
+              required_instances: 1,
+            },
           }}
           headerModals={modals}
           setHeaderModalsState={setModals}
           activeHeaderModal={"modelTrain"}
+          selectedRow={selectedRow}
         />
       </Toolbar>
       <Divider />

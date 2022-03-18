@@ -1,13 +1,59 @@
 import * as React from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { useEnvironment } from "../../hooks/environment";
-import { CircularProgress, Box } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import {
+  useEnvironment,
+  useEnvironmentTrainingLogs,
+} from "../../hooks/environment";
+import {
+  CircularProgress,
+  Typography,
+  Stack,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import ModalHandler from "../utils/modalHandler";
+import { statuses } from "./statuses";
+import moment from "moment";
+import ClosableAlert from "../alert/closableAlert";
 
 const EnvironmentsDataGrid = ({ setSelectedRow }) => {
-  const [environments, { loading, mutate }] = useEnvironment();
+  const [environments, { loading, mutate }, environmentsError] =
+    useEnvironment();
+  const [trainingLogs, { loadingTrainingLogs }, trainingLogsError] =
+    useEnvironmentTrainingLogs();
+
+  const [state, setState] = React.useState({
+    open: true,
+    vertical: "bottom",
+    horizontal: "center",
+  });
+
+  const { vertical, horizontal, open } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
+
   const columns = [
     { field: "id", headerName: "ID", width: 220 },
+    {
+      field: "training_log",
+      headerName: "Training logs",
+      width: 250,
+      renderCell: (params) => {
+        return (
+          <ModalHandler
+            modalTitle={"Training logs"}
+            modalContent={params.value}
+            modalButtonText={"Open training logs"}
+          />
+        );
+      },
+    },
     {
       field: "environment_ips",
       headerName: "Environment IP addresses",
@@ -40,6 +86,20 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
       field: "status",
       headerName: "Status",
       width: 150,
+      renderCell: (params) => {
+        return params.value === statuses[0] ||
+          params.value === statuses[2] ||
+          params.value === statuses[3] ||
+          params.value === statuses[6] ? (
+          <Stack direction="row">
+            {" "}
+            <Typography variant="p">{params.value}</Typography>
+            <CircularProgress size="1rem" sx={{ ml: 1 }} />
+          </Stack>
+        ) : (
+          <Typography variant="p">{params.value}</Typography>
+        );
+      },
     },
     { field: "machine_series", headerName: "Instances series", width: 200 },
     { field: "machine_type", headerName: "Instances type", width: 200 },
@@ -48,27 +108,59 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
       headerName: "Date created",
       width: 200,
       valueFormatter: (params) => {
-        return new Date(params.value).toLocaleString();
+        return moment(params.value * 1000).format("YYYY-MM-DD HH:mm");
       },
     },
   ];
 
   return (
     <div style={{ height: 480, width: "100%" }}>
-      {loading ? (
-        <CircularProgress />
+      {loading || loadingTrainingLogs ? (
+        <CircularProgress sx={{ ml: 5 }} />
+      ) : trainingLogsError || environmentsError ? (
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          autoHideDuration={6000}
+          key={crypto.randomUUID()}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="error"
+            sx={{
+              width: "100%",
+              "& .MuiAlert-message": { wordWrap: "break-word" },
+            }}
+          >
+            Something went wrong with the request on our part. Please try to
+            reload
+          </Alert>
+        </Snackbar>
       ) : (
         <DataGrid
-          rows={environments ? environments : []}
+          rows={
+            environments
+              ? environments.map((environment) => {
+                  const environmentLog = trainingLogs
+                    .filter(
+                      (log) =>
+                        log.environment_id === environment._id &&
+                        log.user_id === environment.user_id
+                    )
+                    .map((log) => log.train_logs);
+                  return { ...environment, training_log: environmentLog };
+                })
+              : []
+          }
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
           onSelectionModelChange={(ids) => {
             const selectedIDs = new Set(ids);
-            const selectedRowData = environments.filter((row) =>
-              selectedIDs.has(row._id)
-            );
-            if (selectedRowData.length === 0) {
+            const selectedRowData =
+              environments &&
+              environments.filter((row) => selectedIDs.has(row._id));
+            if (!selectedRowData || selectedRowData.length === 0) {
               setSelectedRow({});
             } else {
               setSelectedRow(...selectedRowData);

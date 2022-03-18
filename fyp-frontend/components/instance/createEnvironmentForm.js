@@ -14,6 +14,7 @@ import axios from "axios";
 import { getConfig } from "../../config/defaultConfig";
 import Link from "next/link";
 import ModalProgress from "../utils/modalProgress";
+import ClosableAlert from "../alert/closableAlert";
 
 const CreateEnvironmentForm = () => {
   const [formValues, setFormValues] = React.useState({
@@ -40,6 +41,10 @@ const CreateEnvironmentForm = () => {
       setProgressModal({ isVisible: true, ...res.data });
     } catch (error) {
       console.log(error);
+      setProgressModal({
+        isVisible: false,
+        errorMessage: "Something went wrong on our end. Please retry.",
+      });
     }
   };
 
@@ -52,6 +57,12 @@ const CreateEnvironmentForm = () => {
         ml: 3,
       }}
     >
+      {progressModal.errorMessage && (
+        <ClosableAlert
+          severity={"error"}
+          alertMessage={progressModal.errorMessage}
+        />
+      )}
       <FormControl>
         <Typography variant="h5">Machines configuration</Typography>
         <TextField
@@ -97,6 +108,7 @@ const CreateEnvironmentForm = () => {
         modalButtonText={"Go to Dashboard"}
         modalTitle={"Environment creation progress"}
         modalContent={"Creating environment..."}
+        modalAlertMessage={"Environment creation process started!"}
         redirectUrl={"/dashboard"}
         jobLink={progressModal.jobLink}
       />

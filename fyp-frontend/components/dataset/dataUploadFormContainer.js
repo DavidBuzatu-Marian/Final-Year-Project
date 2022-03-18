@@ -41,7 +41,6 @@ const DataUploadFormContainer = ({
       },
     });
   };
-
   return (
     <Box sx={{ width: "100%", typography: "body1", mt: "1rem" }}>
       <TabContext value={value}>
