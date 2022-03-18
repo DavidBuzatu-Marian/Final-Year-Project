@@ -22,8 +22,6 @@ def get_available_instances(environment, max_trials, required_instances):
         # Get each environment ip
         # Make request for availability and store available envs
         for environment_ip in environment["environment_ips"]:
-            error("http://{}:{}/instance/availability".format(environment_ip,
-                  os.getenv("ENVIRONMENTS_PORT")))
             response = request_wrapper(lambda: get_to_instance(
                 "http://{}:{}/instance/availability".format(environment_ip, os.getenv("ENVIRONMENTS_PORT")), allow_failure=True))
             if response.json()["availability"] == True:
@@ -50,9 +48,9 @@ def train_model(database, instances, training_iterations, instance_training_para
     initial_instances = instances
     train_log = list()
     for iteration in range(training_iterations):
-        train_on_instances(instances, instance_training_parameters, environment)
+        instances_error = train_on_instances(instances, instance_training_parameters, environment)
         write_to_train_log(train_log, process_training_results(
-            iteration, instances, initial_instances))
+            iteration, instances, initial_instances, instances_error))
         if len(instances) == 0:
             write_to_train_log(train_log, ["All devices crashed"])
             write_logs_to_database(database, train_log, environment)
@@ -87,14 +85,21 @@ def write_logs_to_database(database, logs, environment):
     return insert_result
 
 
-def process_training_results(iteration, instances, initial_instances):
+def process_training_results(iteration, instances, initial_instances, instances_error):
     data = list()
     data.append("Iteration nr: %d" % (iteration))
     for instance_ip in initial_instances:
         training_result = check_contribution(instance_ip, instances)
-        data.append("Instance IP: %s , Training result: %s , Other: None" % (
-            instance_ip, training_result))
+        detected_error = get_error(instance_ip, instances, instances_error)
+        data.append("Instance IP: %s , Training result: %s , Errors: %s" % (
+            instance_ip, training_result, detected_error))
     return data
+
+
+def get_error(instance_ip, instances, instances_error):
+    if instance_ip in instances:
+        return instances_error[instance_ip]
+    return "No error detected"
 
 
 def check_contribution(instance_ip, instances):
@@ -148,6 +153,7 @@ def aggregate_models(instances, environment):
 
 
 def train_on_instances(instances, instance_training_parameters, environment):
+    instances_error = []
     for instance_ip in instances:
         response = request_wrapper(lambda: post_json_to_instance(
             "http://{}:{}/model/train".format(instance_ip, os.getenv("ENVIRONMENTS_PORT")),
@@ -156,12 +162,14 @@ def train_on_instances(instances, instance_training_parameters, environment):
         ))
         if not response.ok:
             # Instance failed during training => remove instance from round of training
+            instances_error.append(response.data)
             instances.remove(instance_ip)
         else:
             with open(
                 "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip), "wb"
             ) as instance_model_file:
                 instance_model_file.write(response.content)
+    return instances_error
 
 
 def load_model_from_path(path):

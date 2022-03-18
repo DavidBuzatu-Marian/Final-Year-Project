@@ -44,14 +44,19 @@ def return_500_environment_critical_error(function):
 
 def get_environment():
     request_json = flask.request.json
-    user_id = get_user_id(request_json)
+    request_args = flask.request.args
+    if "user_id" not in request_json or "user_id" not in request_args:
+        return None
+    user_id = get_user_id(request_json) if "user_id" in request_json else get_user_id(
+        request_args)
     environment_id = get_environment_id(
-        request_json) if "environment_id" in request_json else get_environment_id(flask.request.args)
+        request_json) if "environment_id" in request_json else get_environment_id(request_args)
     return TargetEnvironment(user_id, environment_id)
 
 
 def update_environment_status_to_error(environment, error_code="4"):
-    update_environment_status(mongo.db, environment, error_code)
+    if environment:
+        update_environment_status(mongo.db, environment, error_code)
 
 # As suggested by: https://stackoverflow.com/a/49613561/11023871
 
