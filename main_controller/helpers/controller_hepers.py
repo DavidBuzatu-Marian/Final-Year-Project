@@ -1,3 +1,4 @@
+import json
 import sys
 import os
 import torch
@@ -5,6 +6,9 @@ from logging import error
 from flask.helpers import send_file
 from werkzeug.datastructures import FileStorage
 from bson.objectid import ObjectId
+import aiohttp
+import asyncio
+from asgiref import sync
 
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance, request_wrapper
@@ -48,7 +52,7 @@ def train_model(database, instances, training_iterations, instance_training_para
     initial_instances = instances.copy()
     train_log = list()
     for iteration in range(training_iterations):
-        instances_error = train_on_instances(instances, instance_training_parameters, environment)
+        instances_error = async_train_post(instances, instance_training_parameters, environment)
         write_to_train_log(train_log, process_training_results(
             iteration, instances, initial_instances, instances_error))
         if len(instances) == 0:
@@ -152,6 +156,38 @@ def aggregate_models(instances, environment):
     return aggregated_model
 
 
+def async_train_post(instances, json_parameters, environment):
+    instances_error = dict()
+
+    async def make_all_post_requests(instances, json_parameters, environment):
+        async with aiohttp.ClientSession() as session:
+            async def fetch(instance_ip):
+                url = "http://{}:{}/model/train".format(instance_ip, os.getenv("ENVIRONMENTS_PORT"))
+                async with session.post(url, data=json_parameters, timeout=20000) as response:
+                    await process_training_response(response, instances, instances_error, instance_ip, environment)
+            return await asyncio.gather(*[
+                fetch(url) for url in instances
+            ])
+
+    sync.async_to_sync(make_all_post_requests)(instances, json_parameters, environment)
+    return instances_error
+
+
+async def process_training_response(response, instances, instances_error, instance_ip, environment):
+    if response.status != 200:
+        # Instance failed during training => remove instance from round of training
+        instances_error[instance_ip] = response.text
+        instances.remove(instance_ip)
+    else:
+        with open(
+            "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip), "wb"
+        ) as instance_model_file:
+            chunk_size = 16384
+            async for chunk in response.content.iter_chunked(chunk_size):
+                instance_model_file.write(chunk)
+
+
+# Deprecated
 def train_on_instances(instances, instance_training_parameters, environment):
     instances_error = dict()
     for instance_ip in instances:

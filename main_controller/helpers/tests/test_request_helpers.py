@@ -9,20 +9,6 @@ from helpers.request_helpers import *
 from unittest.mock import patch, mock_open
 from werkzeug.exceptions import HTTPException
 import pytest
-# Reference used for testing async code:
-# https://stackoverflow.com/a/46324983/11023871
-# https://stackoverflow.com/a/23036785/11023871
-
-
-def async_test(coro):
-    def wrapper(*args, **kwargs):
-        loop = asyncio.new_event_loop()
-        try:
-            return loop.run_until_complete(coro(*args, **kwargs))
-        finally:
-            loop.close()
-
-    return wrapper
 
 
 def test_request_wrapper_post_json_to_instance(response_mock):

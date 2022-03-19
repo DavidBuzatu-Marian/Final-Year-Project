@@ -11,3 +11,6 @@ requests
 celery
 pytest
 pytest-responsemock
+aiohttp
+asgiref
+requests-mock
