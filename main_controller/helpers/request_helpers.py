@@ -17,10 +17,14 @@ def request_wrapper(request_function):
     except requests.exceptions.Timeout:
         abort_with_text_response(408, "A request to an instance timedout.")
     except requests.exceptions.RequestException as e:
-        abort_with_text_response(500, "A request failed due to an internal server error")
+        abort_with_text_response(
+            500, "A request failed due to an internal server error on instance")
     except ValueError:
         abort_with_text_response(
             500, "A request failed due to an internal server error (ValueError)")
+    except:
+        abort_with_text_response(
+            500, "A request failed due to an internal server error")
 
 
 def post_to_instance(url, data):

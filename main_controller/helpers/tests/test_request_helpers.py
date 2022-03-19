@@ -1,5 +1,4 @@
 import sys
-import asyncio
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
@@ -43,3 +42,43 @@ def test_request_wrapper_get_to_instance_fail(response_mock):
                 assert res.content == b'Getting from: 192.1.1.0 went wrong. Response: Server error'
 
                 assert 500 == httperror.value.code
+
+
+def test_request_wrapper_get_to_instance_timeout(mocker):
+    mocker.patch('requests.get', side_effect=requests.exceptions.ConnectTimeout())
+    with app.app_context():
+        with pytest.raises(HTTPException) as httperror:
+            res = request_wrapper(lambda: get_to_instance(
+                "http://{}:{}/instance/availability".format("192.1.1.0", os.getenv("ENVIRONMENTS_PORT"))))
+            assert res.content == "Status code: 408\nMessage:A request to an instance timedout."
+
+            assert 408 == httperror.value.code
+
+
+def test_request_wrapper_get_to_instance_request_exception(mocker):
+    mocker.patch('requests.get', side_effect=requests.exceptions.RequestException())
+    with app.app_context():
+        with pytest.raises(HTTPException) as httperror:
+            res = request_wrapper(lambda: get_to_instance(
+                "http://{}:{}/instance/availability".format("192.1.1.0", os.getenv("ENVIRONMENTS_PORT"))))
+            assert res.content == "Status code: 500\nMessage:A request failed due to an internal server error on instance"
+            assert 500 == httperror.value.code
+
+
+def test_request_wrapper_get_to_instance_request_exception_http_error(mocker):
+    mocker.patch('requests.get', side_effect=requests.exceptions.HTTPError())
+    with app.app_context():
+        with pytest.raises(HTTPException) as httperror:
+            res = request_wrapper(lambda: get_to_instance(
+                "http://{}:{}/instance/availability".format("192.1.1.0", os.getenv("ENVIRONMENTS_PORT"))))
+            assert res.content == "Status code: 500\nMessage:A request failed due to an internal server error"
+            assert 500 == httperror.value.code
+
+
+def test_request_wrapper_get_to_instance_value_error(mocker):
+    mocker.patch('requests.get', return_value={"Some text"})
+    with app.app_context():
+        with pytest.raises(HTTPException) as httperror:
+            res = request_wrapper(lambda: get_to_instance(123))
+            assert res.content == "Status code: 500\nMessage:A request failed due to an internal server error (ValueError)"
+            assert 500 == httperror.value.code
