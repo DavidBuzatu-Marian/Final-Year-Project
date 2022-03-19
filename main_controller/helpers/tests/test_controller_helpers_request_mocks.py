@@ -1,13 +1,14 @@
 import sys
-import asyncio
-from zoneinfo import available_timezones
-from mocks.mock_json_response import MockJSONResponse
-
-from mocks.mock_stream_response import MockStreamResponse
-from mocks.mock_text_response import MockTextResponse
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
+
+
+from tests.mocks.mock_json_response import MockJSONResponse
+from tests.mocks.mock_stream_response import MockStreamResponse
+from tests.mocks.mock_text_response import MockTextResponse
+
+
 from app import app
 import os
 from helpers.controller_hepers import *
