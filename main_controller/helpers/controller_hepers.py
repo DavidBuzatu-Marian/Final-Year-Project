@@ -15,8 +15,9 @@ from app import app
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance, request_wrapper
     from environment_helpers import update_environment_status
-    from nn_model import NNModel
     from error_handlers.abort_handler import abort_with_text_response
+    from nn_model.nn_model import NNModel
+
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
@@ -28,10 +29,11 @@ def get_available_instances(environment, max_trials, required_instances):
         # Get each environment ip
         # Make request for availability and store available envs
         for environment_ip in environment["environment_ips"]:
-            response = request_wrapper(lambda: get_to_instance(
-                "http://{}:{}/instance/availability".format(environment_ip, os.getenv("ENVIRONMENTS_PORT")), allow_failure=True))
-            if response.json()["availability"] == True:
-                available_instances.add(environment_ip)
+            if environment_ip not in available_instances:
+                response = request_wrapper(lambda: get_to_instance(
+                    "http://{}:{}/instance/availability".format(environment_ip, os.getenv("ENVIRONMENTS_PORT")), allow_failure=True))
+                if response.json()["availability"] == True:
+                    available_instances.add(environment_ip)
         trials += 1
     if len(available_instances) < required_instances:
         abort_with_text_response(400, "Not enough available instances found")

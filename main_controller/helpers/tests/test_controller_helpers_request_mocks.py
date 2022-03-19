@@ -1,5 +1,7 @@
 import sys
 import asyncio
+from zoneinfo import available_timezones
+from mocks.mock_json_response import MockJSONResponse
 
 from mocks.mock_stream_response import MockStreamResponse
 from mocks.mock_text_response import MockTextResponse
@@ -165,3 +167,54 @@ def test_async_train_post_with_more_instances_two_fail(mocker):
                         but it is still bytes, thus it can be anything'
     for _, err in instances_error.items():
         assert err == 'Some 500 error message from instance'
+
+
+def test_get_available_instances_with_one_instance(mocker):
+    mock_response = MockJSONResponse({"availability": True}, 200)
+    mocker.patch('requests.get', return_value=mock_response)
+
+    environment = {"environment_ips": ["192.1.1.0"]}
+    available_instances = get_available_instances(environment, 10, 1)
+    assert len(available_instances) == 1
+    assert min(available_instances) == '192.1.1.0'
+
+
+def test_get_available_instances_with_one_instance_insufficient_environments(mocker):
+    mock_response = MockJSONResponse({"availability": True}, 200)
+    mocker.patch('requests.get', return_value=mock_response)
+
+    environment = {"environment_ips": ["192.1.1.0"]}
+    with app.app_context():
+        with pytest.raises(HTTPException) as httperror:
+            get_available_instances(environment, 10, 2)
+
+            assert 400 == httperror.value.code
+            assert "Not enough available instances found" == httperror.msg
+
+
+def test_get_available_instances_with_two_instance_not_enough_trials(mocker):
+    mock_responses = [MockJSONResponse({"availability": False}, 200),
+                      MockJSONResponse({"availability": True}, 200),
+                      MockJSONResponse({"availability": True}, 200)]
+    mocker.patch('requests.get', side_effect=mock_responses)
+
+    environment = {"environment_ips": ["192.1.1.0", "192.1.1.1"]}
+    with app.app_context():
+        with pytest.raises(HTTPException) as httperror:
+            get_available_instances(environment, 1, 2)
+
+            assert 400 == httperror.value.code
+            assert "Not enough available instances found" == httperror.msg
+
+
+def test_get_available_instances_with_two_instances_success(mocker):
+    mock_responses = [MockJSONResponse({"availability": False}, 200),
+                      MockJSONResponse({"availability": True}, 200),
+                      MockJSONResponse({"availability": True}, 200)]
+    mocker.patch('requests.get', side_effect=mock_responses)
+
+    environment = {"environment_ips": ["192.1.1.0", "192.1.1.1"]}
+    available_instances = get_available_instances(environment, 2, 2)
+    assert len(available_instances) == 2
+    for ip in environment["environment_ips"]:
+        assert ip in available_instances
