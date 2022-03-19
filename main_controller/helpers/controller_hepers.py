@@ -1,3 +1,4 @@
+from http import client
 import json
 import sys
 import os
@@ -9,6 +10,7 @@ from bson.objectid import ObjectId
 import aiohttp
 import asyncio
 from asgiref import sync
+from app import app
 
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance, request_wrapper
@@ -169,7 +171,8 @@ def async_train_post(instances, json_parameters, environment):
                 fetch(url) for url in instances
             ])
 
-    sync.async_to_sync(make_all_post_requests)(instances, json_parameters, environment)
+    sync.async_to_sync(make_all_post_requests)(
+        instances, json_parameters, environment)
     return instances_error
 
 
@@ -179,12 +182,11 @@ async def process_training_response(response, instances, instances_error, instan
         instances_error[instance_ip] = response.text
         instances.remove(instance_ip)
     else:
+        os.makedirs('./models', exist_ok=True)
         with open(
-            "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip), "wb"
-        ) as instance_model_file:
-            chunk_size = 16384
-            async for chunk in response.content.iter_chunked(chunk_size):
-                instance_model_file.write(chunk)
+                "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip), "wb+") as instance_model_file:
+            chunk_size = 1024
+            instance_model_file.write(await response.content.read(chunk_size))
 
 
 # Deprecated
@@ -203,7 +205,8 @@ def train_on_instances(instances, instance_training_parameters, environment):
             instances.remove(instance_ip)
         else:
             with open(
-                "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip), "wb"
+                "./models/model-{}-{}-{}.pth".format(environment.id,
+                                                     environment.user_id, instance_ip), "wb"
             ) as instance_model_file:
                 instance_model_file.write(response.content)
     return instances_error

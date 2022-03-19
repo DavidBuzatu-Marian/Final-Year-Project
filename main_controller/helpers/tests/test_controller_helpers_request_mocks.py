@@ -12,41 +12,62 @@ from environment_classes.target_environment import TargetEnvironment
 import pytest
 
 
-def test_async_train_post_with_one_instance(response_mock):
-    with response_mock(['POST http://{}:{}/model/train -> 200: This will be a pytorch model file,\
-                        but it is still bytes, thus it can be anything'.format("192.1.1.0", os.getenv("ENVIRONMENTS_PORT")),
-                        ]):
-        test_user_id = ObjectId("61febbb5d4289b4b0b4a48d5")
-        test_environment_id = ObjectId("61febbb5d4289b4b0b4a48d4")
-        environment = TargetEnvironment(
-            test_user_id,
-            test_environment_id)
+class MockResponse():
+    def __init__(self, data, status):
+        self.status = status
+        stream = asyncio.StreamReader()
+        stream.feed_data(data)
+        stream.feed_eof()
+        self.content = stream
 
-        instances_error = async_train_post(["192.1.1.0"], {
-            "loss": {
-                "loss_type": "CrossEntropyLoss",
-                "parameters": {}
-            },
-            "optimizer": {
-                "optimizer_type": "RMSprop",
-                "parameters": {
-                    "lr": 0.001,
-                    "weight_decay": 0.00000001,
-                    "momentum": 0.9
-                }
-            },
-            "hyperparameters": {
-                "epochs": 60,
-                "batch_size": 4,
-                "reshape": "4, 1, 96, 96",
-                "normalize": True
+    async def __aexit__(self, exc_type, exc, tb):
+        pass
+
+    async def __aenter__(self):
+        return self
+
+
+@pytest.mark.asyncio
+def test_async_train_post_with_one_instance(mocker):
+
+    test_json = {
+        "loss": {
+            "loss_type": "CrossEntropyLoss",
+            "parameters": {}
+        },
+        "optimizer": {
+            "optimizer_type": "RMSprop",
+            "parameters": {
+                "lr": 0.001,
+                "weight_decay": 0.00000001,
+                "momentum": 0.9
             }
-        }, environment)
-        assert len(instances_error) == 0
-        with open(
-            "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, "192.1.1.0"), "r"
-        ) as instance_model_file:
-            assert instance_model_file.read() == 'This will be a pytorch model file,\
+        },
+        "hyperparameters": {
+            "epochs": 60,
+            "batch_size": 4,
+            "reshape": "4, 1, 96, 96",
+            "normalize": True
+        }
+    }
+    mock_response = MockResponse(b'This will be a pytorch model file,\
+                        but it is still bytes, thus it can be anything', 200)
+    mocker.patch('aiohttp.ClientSession.post', return_value=mock_response)
+
+    test_user_id = ObjectId("61febbb5d4289b4b0b4a48d5")
+    test_environment_id = ObjectId("61febbb5d4289b4b0b4a48d4")
+    environment = TargetEnvironment(
+        test_user_id,
+        test_environment_id)
+
+    instances_error = async_train_post(
+        ["192.1.1.0"],
+        test_json, environment)
+    assert len(instances_error) == 0
+    with open(
+        "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, "192.1.1.0"), "r"
+    ) as instance_model_file:
+        assert instance_model_file.read() == 'This will be a pytorch model file,\
                         but it is still bytes, thus it can be anything'
 
 

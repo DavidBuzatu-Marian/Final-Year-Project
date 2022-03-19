@@ -14,3 +14,5 @@ pytest-responsemock
 aiohttp
 asgiref
 requests-mock
+pytest-aiohttp
+pytest-mock
