@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../")
 
-from model_helpers import *
+from helpers.model_helpers import *
 
 
 class TestModelHelpers(unittest.TestCase):

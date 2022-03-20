@@ -10,7 +10,7 @@ sys.path.insert(2, "../../nn_loss")
 sys.path.insert(3, "../")
 sys.path.insert(4, "../../nn_model_factory/model")
 
-from app_helpers import *
+from helpers.app_helpers import *
 from nn_model_factory.nn_model import NNModel
 
 

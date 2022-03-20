@@ -68,9 +68,18 @@ def reshape_data(data, hyperparameters):
     return data
 
 
-def normalize_data(data, mean, std):
+def standardize_data(data, mean, std):
+    # Naming is strange, but Normalize is doing z-score
     normalizer = Normalize(mean, std)
     return normalizer(data)
+
+
+def normalize_data(data, data_min, data_max):
+    return (data - data_min) / data_max - data_min
+
+
+def standardize(hyperparameters):
+    return "standardize" in hyperparameters
 
 
 def normalize(hyperparameters):

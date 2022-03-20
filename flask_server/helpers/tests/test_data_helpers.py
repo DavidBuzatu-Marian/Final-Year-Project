@@ -10,7 +10,7 @@ sys.path.insert(2, "../../nn_model_factory/model")
 sys.path.insert(3, "../")
 
 from dotenv import load_dotenv
-from data_helpers import *
+from helpers.data_helpers import *
 
 load_dotenv()
 
@@ -18,8 +18,8 @@ load_dotenv()
 class TestDataHelpers(unittest.TestCase):
     def test_dataloader(self):
         dl = get_dataloader(
-            data_path="../../train_data",
-            labels_path="../../train_labels",
+            data_path="helpers/tests/mock_files/train_data",
+            labels_path="helpers/tests/mock_files/train_labels",
             hyperparameters={"num_workers": 1, "batch_size": 1,
                              "shuffle": True, "drop_last": False},
         )
@@ -29,8 +29,8 @@ class TestDataHelpers(unittest.TestCase):
 
     def test_reshape(self):
         dl = get_dataloader(
-            data_path="../../train_data",
-            labels_path="../../train_labels",
+            data_path="helpers/tests/mock_files/train_data",
+            labels_path="helpers/tests/mock_files/train_labels",
             hyperparameters={"num_workers": 1, "batch_size": 1,
                              "shuffle": True, "drop_last": False},
         )
@@ -45,8 +45,8 @@ class TestDataHelpers(unittest.TestCase):
 
     def test_reshape_no_reshape_hyperparameter(self):
         dl = get_dataloader(
-            data_path="../../train_data",
-            labels_path="../../train_labels",
+            data_path="helpers/tests/mock_files/train_data",
+            labels_path="helpers/tests/mock_files/train_labels",
             hyperparameters={"num_workers": 1, "batch_size": 1,
                              "shuffle": True, "drop_last": False},
         )
@@ -59,17 +59,18 @@ class TestDataHelpers(unittest.TestCase):
 
     def test_normalize(self):
         dl = get_dataloader(
-            data_path="./mock_files/train_data",
-            labels_path="./mock_files/train_labels",
+            data_path="helpers/tests/mock_files/train_data",
+            labels_path="helpers/tests/mock_files/train_labels",
             hyperparameters={"num_workers": 1, "batch_size": 1,
                              "shuffle": True, "drop_last": False},
         )
-        mean, std = compute_mean_and_std(dl)
+        data_min = 0
+        data_max = 255
         for data, label in dl:
             self.assertEqual(data.shape, (1, 96, 96))
             self.assertEqual(label.shape, (1, 96, 96))
-            norm_data = normalize_data(data, mean, std)
-            norm_label = normalize_data(label, mean, std)
+            norm_data = normalize_data(data, data_min, data_max)
+            norm_label = normalize_data(label, data_min, data_max)
             self.assertLessEqual(
                 torch.max(norm_data), 1.0
             )
@@ -85,8 +86,8 @@ class TestDataHelpers(unittest.TestCase):
 
     def test_normalize_no_normalize_hyperparameter(self):
         dl = get_dataloader(
-            data_path="../../train_data",
-            labels_path="../../train_labels",
+            data_path="helpers/tests/mock_files/train_data",
+            labels_path="helpers/tests/mock_files/train_labels",
             hyperparameters={"num_workers": 1, "batch_size": 1,
                              "shuffle": True, "drop_last": False},
         )

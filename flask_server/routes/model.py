@@ -53,8 +53,13 @@ def model_validate():
     with torch.no_grad():
         for data, label in validation_dataloader:
             data = reshape_data(data, hyperparameters)
+            if standardize(hyperparameters):
+                data = standardize_data(data, mean, std)
             if normalize(hyperparameters):
-                data = normalize_data(data, mean, std)
+                data = normalize_data(
+                    data, hyperparameters["data_min"],
+                    hyperparameters["data_max"])
+
             output = model(data)
 
             loss = loss_func(output, label.to(torch.int64))
