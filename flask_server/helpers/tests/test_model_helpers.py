@@ -15,8 +15,8 @@ class TestModelHelpers(unittest.TestCase):
 
     def test_probability_of_failure_0(self):
         failed = is_failing(0)
-        self.assertEquals(False, failed)
+        self.assertEqual(False, failed)
 
     def test_probability_of_failure_100(self):
         failed = is_failing(100)
-        self.assertEquals(True, failed)
+        self.assertEqual(True, failed)

@@ -9,7 +9,7 @@ import torch
 
 
 try:
-    from nn_model import NNModel
+    from nn_model_factory.nn_model import NNModel
     from helpers.data_helpers import *
     from helpers.app_helpers import *
     from helpers.model_helpers import is_failing

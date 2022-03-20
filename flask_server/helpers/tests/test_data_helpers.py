@@ -6,8 +6,9 @@ import sys
 
 sys.path.insert(0, "../../")
 sys.path.insert(1, "../../nn_model_factory")
-sys.path.insert(2, "../../nn_model_factory")
+sys.path.insert(2, "../../nn_model_factory/model")
 sys.path.insert(3, "../")
+
 from dotenv import load_dotenv
 from data_helpers import *
 
@@ -19,7 +20,8 @@ class TestDataHelpers(unittest.TestCase):
         dl = get_dataloader(
             data_path="../../train_data",
             labels_path="../../train_labels",
-            hyperparameters={"num_workers": 1, "batch_size": 1, "shuffle": True},
+            hyperparameters={"num_workers": 1, "batch_size": 1,
+                             "shuffle": True, "drop_last": False},
         )
         for data, label in dl:
             self.assertEqual(data.shape, (1, 96, 96))
@@ -29,14 +31,15 @@ class TestDataHelpers(unittest.TestCase):
         dl = get_dataloader(
             data_path="../../train_data",
             labels_path="../../train_labels",
-            hyperparameters={"num_workers": 1, "batch_size": 1, "shuffle": True},
+            hyperparameters={"num_workers": 1, "batch_size": 1,
+                             "shuffle": True, "drop_last": False},
         )
         for data, label in dl:
             self.assertEqual(data.shape, (1, 96, 96))
             self.assertEqual(label.shape, (1, 96, 96))
 
             self.assertEqual(
-                reshape_data(data, {"reshape": (384, 24)}).shape, (384, 24)
+                reshape_data(data, {"reshape": "384, 24"}).shape, (384, 24)
             )
             self.assertEqual(reshape_data(label, {}).shape, (1, 96, 96))
 
@@ -44,7 +47,8 @@ class TestDataHelpers(unittest.TestCase):
         dl = get_dataloader(
             data_path="../../train_data",
             labels_path="../../train_labels",
-            hyperparameters={"num_workers": 1, "batch_size": 1, "shuffle": True},
+            hyperparameters={"num_workers": 1, "batch_size": 1,
+                             "shuffle": True, "drop_last": False},
         )
         for data, label in dl:
             self.assertEqual(data.shape, (1, 96, 96))
@@ -57,7 +61,8 @@ class TestDataHelpers(unittest.TestCase):
         dl = get_dataloader(
             data_path="./mock_files/train_data",
             labels_path="./mock_files/train_labels",
-            hyperparameters={"num_workers": 1, "batch_size": 1, "shuffle": True},
+            hyperparameters={"num_workers": 1, "batch_size": 1,
+                             "shuffle": True, "drop_last": False},
         )
         mean, std = compute_mean_and_std(dl)
         for data, label in dl:
@@ -82,7 +87,8 @@ class TestDataHelpers(unittest.TestCase):
         dl = get_dataloader(
             data_path="../../train_data",
             labels_path="../../train_labels",
-            hyperparameters={"num_workers": 1, "batch_size": 1, "shuffle": True},
+            hyperparameters={"num_workers": 1, "batch_size": 1,
+                             "shuffle": True, "drop_last": False},
         )
         for data, label in dl:
             self.assertEqual(data.shape, (1, 96, 96))

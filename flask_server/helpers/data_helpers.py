@@ -6,7 +6,6 @@ import os
 from glob import glob
 from torch.utils.data import DataLoader
 from torchvision.transforms import Normalize
-from torchvision import transforms
 
 
 class CustomDataset(data.Dataset):

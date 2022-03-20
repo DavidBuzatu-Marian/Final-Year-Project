@@ -6,8 +6,8 @@ import sys
 
 
 sys.path.insert(0, "../../")
-sys.path.insert(1, "../../nn_model")
-sys.path.insert(2, "../../nn_loss")
+sys.path.insert(1, "../../nn_model_factory")
+sys.path.insert(2, "../../nn_model_factory")
 
 from nn_loss.nn_loss_factory import NNLossFactory
 

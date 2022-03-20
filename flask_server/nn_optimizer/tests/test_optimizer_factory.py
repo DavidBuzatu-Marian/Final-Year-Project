@@ -6,11 +6,11 @@ import sys
 
 
 sys.path.insert(0, "../../")
-sys.path.insert(1, "../../nn_model")
+sys.path.insert(1, "../../nn_model_factory")
 sys.path.insert(2, "../../nn_optimizer")
 
 from nn_optimizer.nn_optimizer_factory import NNOptimizerFactory
-from nn_model.nn_model import NNModel
+from nn_model_factory.nn_model import NNModel
 
 
 class TestOptimizerFactory(unittest.TestCase):

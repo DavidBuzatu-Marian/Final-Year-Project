@@ -5,9 +5,9 @@ import torch.nn as nn
 import sys
 
 sys.path.insert(0, "../../")
-sys.path.insert(1, "../../nn_model")
+sys.path.insert(1, "../../nn_model_factory")
 
-from nn_model.nn_layer_factory import NNLayerFactory
+from nn_model_factory.nn_layer_factory import NNLayerFactory
 
 
 class TestLinearLayerFactory(unittest.TestCase):

@@ -1,7 +1,7 @@
 from logging import error
-from model.concatenate import Concatenate
-from nn_activation_factory import NNActivationFactory
-from nn_layer_factory import NNLayerFactory
+from nn_model_factory.model.concatenate import Concatenate
+from nn_model_factory.nn_activation_factory import NNActivationFactory
+from nn_model_factory.nn_layer_factory import NNLayerFactory
 import torch
 import torch.nn as nn
 

@@ -9,7 +9,7 @@ import torch
 import yaml
 
 try:
-    from nn_model import NNModel
+    from nn_model_factory.nn_model import NNModel
     from helpers.data_helpers import *
     from helpers.app_helpers import *
     from routes.error_handlers.server_errors_handler import return_500_on_uncaught_server_error

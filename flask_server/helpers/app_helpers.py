@@ -1,11 +1,15 @@
 import os
-from error_handlers.abort_handler import abort_with_text_response
-from nn_loss.nn_loss_factory import NNLossFactory
-from nn_optimizer.nn_optimizer_factory import NNOptimizerFactory
 import yaml
 import torch
 from werkzeug.utils import secure_filename
 from pathlib import Path
+import sys
+
+try:
+    from nn_loss.nn_loss_factory import NNLossFactory
+    from nn_optimizer.nn_optimizer_factory import NNOptimizerFactory
+except ImportError as exc:
+    sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
 def read_model_from_path(path):

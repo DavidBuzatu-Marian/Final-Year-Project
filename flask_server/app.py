@@ -2,7 +2,10 @@ from flask import Flask
 import sys
 from dotenv import load_dotenv
 import logging
-sys.path.insert(0, "./nn_model/")
+
+sys.path.insert(0, "./nn_model_factory/model/")
+sys.path.insert(1, "./helpers/")
+sys.path.insert(2, "./nn_model_factory/")
 
 
 load_dotenv()
