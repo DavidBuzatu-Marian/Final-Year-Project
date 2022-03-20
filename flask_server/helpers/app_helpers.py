@@ -57,8 +57,8 @@ def get_probability_of_failure(request_json):
     return {"probabilityOfFailure": request_json["probabilityOfFailure"]}
 
 
-def get_instance_probability_of_failure():
-    with open(os.getenv("INSTANCE_CONFIG_FILE_PATH")) as yaml_config_file:
+def get_instance_probability_of_failure(config_path_env="INSTANCE_CONFIG_FILE_PATH"):
+    with open(os.getenv(config_path_env)) as yaml_config_file:
         env_variables = yaml.load(yaml_config_file, Loader=yaml.FullLoader)
         return env_variables["probabilityOfFailure"]
 

@@ -3,9 +3,12 @@ from helpers.app_helpers import save_file
 import shutil
 from logging import error
 
+
 def delete_model_from_path(path):
     if os.path.isfile(path):
         os.remove(path)
+    else:
+        raise FileNotFoundError("Model does not exist")
 
 
 def save_dataset(request):
@@ -23,6 +26,7 @@ def save_dataset(request):
             delete_data_from_path(path)
         for file in request.files.getlist(key):
             save_file(file, value)
+
 
 def delete_data_from_path(path):
     try:

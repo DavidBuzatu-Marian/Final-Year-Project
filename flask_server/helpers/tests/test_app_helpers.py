@@ -5,12 +5,13 @@ import shutil
 import sys
 
 sys.path.insert(0, "../../")
-sys.path.insert(1, "../../nn_model")
+sys.path.insert(1, "../../nn_model_factory")
 sys.path.insert(2, "../../nn_loss")
 sys.path.insert(3, "../")
+sys.path.insert(4, "../../nn_model_factory/model")
 
 from app_helpers import *
-from nn_model.nn_model import NNModel
+from nn_model_factory.nn_model import NNModel
 
 
 class TestAppHelpers(unittest.TestCase):
@@ -36,20 +37,20 @@ class TestAppHelpers(unittest.TestCase):
 
     def test_read_model_with_no_model(self):
         with self.assertRaises(Exception):
-            read_model_from_path("/no_model.pth")
+            read_model_from_path("./no_model.pth")
 
-    # def test_save_file_with_existing_dir(self):
-    #     file = open("./__init__.py", "r")
-    #     save_file(file, "./test.py")
-    #     file.close()
-    #     os.remove("./test.py")
+    def test_save_file_with_existing_dir(self):
+        file = open("./__init__.py", "r")
+        save_file(file, "./test.py")
+        file.close()
+        os.remove("./test.py")
 
-    # def test_save_file_without_dir(self):
-    #     file = open("./__init__.py", "r")
-    #     file.filename = "__init__.py"
-    #     save_file(file, "/test/test.py")
-    #     file.close()
-    #     shutil.rmtree("/test/test.py")
+    def test_save_file_without_dir(self):
+        file = open("./__init__.py", "r")
+        file.filename = "__init__.py"
+        save_file(file, "./test/test.py")
+        file.close()
+        shutil.rmtree("./test/test.py")
 
     def test_get_loss(self):
         request_json = {"loss": {"loss_type": "CrossEntropyLoss", "parameters": {}}}
@@ -109,3 +110,39 @@ class TestAppHelpers(unittest.TestCase):
             {"epochs": 20, "num_workers": 1, "batch_size": 10, "shuffle": True},
             hyperparameters,
         )
+
+    def test_get_instance_probability_of_failure(self):
+        probability_of_failure = get_instance_probability_of_failure(
+            config_path_env="INSTANCE_CONFIG_TEST_FILE_PATH")
+        self.assertEquals(0.01, probability_of_failure)
+
+    def test_get_instance_probability_of_failure_no_config(self):
+        with self.assertRaises(Exception):
+            get_instance_probability_of_failure(config_path_env="INVALID_ENV")
+
+    def test_get_loss_type_training(self):
+        request_json = {
+            "loss_type": "training",
+        }
+        path = get_loss_type(request_json)
+        self.assertEquals({"data_path": "TRAIN_DATA_PATH", "labels_path": "TRAIN_LABELS_PATH"},
+                          path)
+
+    def test_get_loss_type_test(self):
+        request_json = {
+            "loss_type": "test",
+        }
+        path = get_loss_type(request_json)
+        self.assertEquals({"data_path": "TEST_DATA_PATH", "labels_path": "TEST_LABELS_PATH"},
+                          path)
+
+    def test_get_loss_type_validation(self):
+        request_json = {
+            "loss_type": "validation",
+        }
+        path = get_loss_type(request_json)
+        self.assertEquals({
+            "data_path": "VALIDATION_DATA_PATH",
+            "labels_path": "VALIDATION_LABELS_PATH",
+        },
+            path)
