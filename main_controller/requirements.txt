@@ -6,9 +6,7 @@ Flask-PyMongo
 pymongo[srv]
 jsons
 python-terraform
-aiohttp
 requests
-celery
 pytest
 pytest-responsemock
 aiohttp
@@ -16,3 +14,4 @@ asgiref
 requests-mock
 pytest-aiohttp
 pytest-mock
+coverage

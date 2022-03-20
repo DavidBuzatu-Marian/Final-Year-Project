@@ -8,7 +8,7 @@ import json
 
 sys.path.insert(0, "./environment/")
 sys.path.insert(1, "./helpers/")
-sys.path.insert(2, "./nn_model/")
+sys.path.insert(2, "./nn_model_factory/")
 sys.path.insert(3, "./config/")
 
 load_dotenv()

@@ -159,16 +159,16 @@ class TestControllerHelpers(unittest.TestCase):
 
     def get_training_iterations(self):
         test_json = {"training_iterations": 3}
-        self.assertEquals(get_training_iterations(test_json), 3)
+        self.assertEqual(get_training_iterations(test_json), 3)
 
     def get_instance_training_parameters(self):
         test_json = {"environment_parameters": {}}
-        self.assertEquals(get_instance_training_parameters(test_json), {})\
+        self.assertEqual(get_instance_training_parameters(test_json), {})\
 
 
     def get_instance_training_parameters(self):
         test_json = {"environment_model_network_options": {[{"layer": {}}]}}
-        self.assertEquals(get_instance_training_parameters(test_json), [{"layer": {}}])
+        self.assertEqual(get_instance_training_parameters(test_json), [{"layer": {}}])
 
 
 def test_create_model_success_one_instance(response_mock):
