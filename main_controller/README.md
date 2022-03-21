@@ -2,7 +2,7 @@
 
 ## Description
 
-As explained in the Architecture section of the write-up, the Main Controller represents the servers that interact directly with environments, and implicitely [instances](../flask_server/README.md). The Main Controller is responsible to handle interactions with the environments based on the requests received from the [Backend server](../backend_server/README.md).
+As explained in the Architecture section of the write-up, the Main Controller represents the servers that interact directly with environments, and implicitely [instances](../instance/README.md). The Main Controller is responsible to handle interactions with the environments based on the requests received from the [Backend server](../backend_server/README.md).
 
 The Main Controller servers are stateless, thus they can interact with any environment without prior connectivity to them. This allows an efficient approach to handling requests, as no state has to be stored and shared among controllers. Moreover, it makes controllers especially reliable and failure safe, as any other controller can pick up the work of a controller that crashed, is restarting or has just been added to the cluster of controllers.
 
@@ -16,15 +16,15 @@ Overall, the controllers have been developed using Python and [Flask](https://fl
 
 The code has been split up into folders that are independent and have single responsiblity within their effects.
 
-- config: Contains a json file for available status codes for environments. These codes are used to update the status an environment is in during creation, error, training, etc.
-- environment_classes: Contains a few classes that wrap around information needed to interact with environments.
-- error_handlers: Contains a class that wraps around the default [abort](https://flask.palletsprojects.com/en/2.0.x/api/#flask.abort) function to be able to log errors to files as well.
-- helpers: Contains various suits of Python script files that provide functions which are used in [routes](./routes/). These functions have single responsibilities, and they encapsulate the mechanism for specific functionality - e.g., creating an environment with terraform.
-- logs: It is the folder where logs are saved to during execution. Logs have been ignored in the repository due to their size.
-- models: Contains models that have been saved locally during training.
-- nn_model_factory: The same folder as in [flask_server](../flask_server/README.md). It contains the necessary classes for creating models due to the requirements of [PyTorch](https://pytorch.org) to be able to save, read and update models.
-- routes: Contains the suite of endpoints handlers.
-- terraform: Contains the files necessary to interact with Terraform to build the required infrastructure.
+- config: contains a json file for available status codes for environments. These codes are used to update the status an environment is in during creation, error, training, etc.
+- environment_classes: contains a few classes that wrap around information needed to interact with environments.
+- error_handlers: contains a class that wraps around the default [abort](https://flask.palletsprojects.com/en/2.0.x/api/#flask.abort) function to be able to log errors to files as well.
+- helpers: contains various suits of Python script files that provide functions which are used in [routes](./routes/). These functions have single responsibilities, and they encapsulate the mechanism for specific functionality - e.g., creating an environment with terraform.
+- logs: it is the folder where logs are saved to during execution. Logs have been ignored in the repository due to their size.
+- models: contains models that have been saved locally during training.
+- nn_model_factory: The same folder as in [instance](../instance/README.md). It contains the necessary classes for creating models due to the requirements of [PyTorch](https://pytorch.org) to be able to save, read and update models.
+- routes: contains the suite of endpoints handlers.
+- terraform: contains the files necessary to interact with Terraform to build the required infrastructure.
 - Files outside of folders: some files were left outside of folders due to python style of organisation and imports.
 
 ## Endpoints

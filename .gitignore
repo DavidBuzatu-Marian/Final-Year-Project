@@ -53,12 +53,12 @@ terraform.rc
 model.pth
 .env
 
-/flask_server/train_data/
-/flask_server/train_labels/
-/flask_server/validation_data/
-/flask_server/validation_labels/
-/flask_server/test_data/
-/flask_server/test_labels/
+/instance/train_data/
+/instance/train_labels/
+/instance/validation_data/
+/instance/validation_labels/
+/instance/test_data/
+/instance/test_labels/
 
 aws_credentials
 finalyearproject-338819-21f926ffec3a.json
