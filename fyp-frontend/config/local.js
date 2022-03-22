@@ -23,4 +23,6 @@ export const urls = {
   environmentModelTrainUrl: "http://localhost:5002/backend/api/model/train",
   environmentTrainingLogsUrl:
     "http://localhost:5002/backend/api/environment/trainlogs",
+  environmentModelDownloadUrl:
+    "http://localhost:5002/backend/api/model/download",
 };

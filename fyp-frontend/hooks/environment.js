@@ -14,6 +14,7 @@ export const useEnvironment = () => {
       if (retryCount >= 5) return;
     },
   });
+
   const loading = !data && !environmentsError;
   const environments =
     data && !environmentsError && Array.isArray(data) ? data : null;

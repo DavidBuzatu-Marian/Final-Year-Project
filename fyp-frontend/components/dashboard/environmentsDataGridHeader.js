@@ -42,6 +42,16 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
     }
   };
 
+  const handleDownload = async () => {
+    try {
+      const res = await axios.get(getConfig()["environmentModelDownloadUrl"], {
+        withCredentials: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Box
       component="main"
@@ -112,6 +122,21 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
             }
           >
             Train model
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<span className="material-icons">download</span>}
+            onClick={() => handleDownload()}
+            color="error"
+            disabled={
+              Object.keys(selectedRow).length === 0 ||
+              !(
+                Object.keys(selectedRow).length > 0 &&
+                selectedRow.status === "Finished training"
+              )
+            }
+          >
+            Download model
           </Button>
         </Stack>
         <ModalProgress

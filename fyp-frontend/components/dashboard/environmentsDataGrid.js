@@ -4,39 +4,17 @@ import {
   useEnvironment,
   useEnvironmentTrainingLogs,
 } from "../../hooks/environment";
-import {
-  CircularProgress,
-  Typography,
-  Stack,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { CircularProgress, Typography, Stack } from "@mui/material";
 import ModalHandler from "../utils/modalHandler";
 import { statuses } from "./statuses";
 import moment from "moment";
-import ClosableAlert from "../alert/closableAlert";
+import SnackbarAlert from "../alert/snackbarAlert";
 
 const EnvironmentsDataGrid = ({ setSelectedRow }) => {
   const [environments, { loading, mutate }, environmentsError] =
     useEnvironment();
   const [trainingLogs, { loadingTrainingLogs }, trainingLogsError] =
     useEnvironmentTrainingLogs();
-
-  const [state, setState] = React.useState({
-    open: true,
-    vertical: "bottom",
-    horizontal: "center",
-  });
-
-  const { vertical, horizontal, open } = state;
-
-  const handleClick = (newState) => () => {
-    setState({ open: true, ...newState });
-  };
-
-  const handleClose = () => {
-    setState({ ...state, open: false });
-  };
 
   const columns = [
     { field: "id", headerName: "ID", width: 220 },
@@ -118,24 +96,11 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
       {loading || loadingTrainingLogs ? (
         <CircularProgress sx={{ ml: 5 }} />
       ) : trainingLogsError || environmentsError ? (
-        <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          autoHideDuration={6000}
-          key={crypto.randomUUID()}
-        >
-          <Alert
-            onClose={handleClose}
-            severity="error"
-            sx={{
-              width: "100%",
-              "& .MuiAlert-message": { wordWrap: "break-word" },
-            }}
-          >
-            Something went wrong with the request on our part. Please try to
-            reload
-          </Alert>
-        </Snackbar>
+        <SnackbarAlert
+          message={
+            "Something went wrong with the request on our part. Please try to reload"
+          }
+        />
       ) : (
         <DataGrid
           rows={
