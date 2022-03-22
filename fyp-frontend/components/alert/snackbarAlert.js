@@ -1,7 +1,7 @@
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
 
-const SnackbarAlert = ({ message }) => {
+const SnackbarAlert = ({ message, stateSetter, resetState }) => {
   const [state, setState] = React.useState({
     open: true,
     vertical: "bottom",
@@ -12,6 +12,9 @@ const SnackbarAlert = ({ message }) => {
 
   const handleClose = () => {
     setState({ ...state, open: false });
+    if (stateSetter) {
+      stateSetter(resetState);
+    }
   };
   return (
     <Snackbar

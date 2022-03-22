@@ -12,11 +12,17 @@ import { getConfig } from "../../config/defaultConfig";
 import ModalCompletedStatusForm from "../modals/modalCompletedStatusForm";
 import AddModelForm from "../model/addModelForm";
 import ModalTrainModel from "../modals/modalTrainModel";
+import SnackbarAlert from "../alert/snackbarAlert";
+import download from "downloadjs";
 
 const EnvironmentsDataGridHeader = ({ selectedRow }) => {
   const [progressModal, setProgressModal] = React.useState({
     isVisible: false,
     jobLink: null,
+  });
+
+  const [errorState, setErrorState] = React.useState({
+    errorMessage: null,
   });
 
   const [modals, setModals] = React.useState({
@@ -38,17 +44,23 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
       });
       setProgressModal({ isVisible: true, ...res.data });
     } catch (error) {
-      console.log(error);
+      setErrorState({ errorMessage: error.response.data });
     }
   };
 
   const handleDownload = async () => {
     try {
-      const res = await axios.get(getConfig()["environmentModelDownloadUrl"], {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${getConfig()["environmentModelDownloadUrl"]}?environment_id=${
+          selectedRow._id
+        }`,
+        {
+          withCredentials: true,
+        }
+      );
+      download(res.data, "model.pth");
     } catch (error) {
-      console.log(error);
+      setErrorState({ errorMessage: error.response.data });
     }
   };
 
@@ -60,6 +72,14 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
         p: 3,
       }}
     >
+      {errorState.errorMessage && (
+        <SnackbarAlert
+          key={crypto.randomUUID()}
+          message={errorState.errorMessage}
+          stateSetter={setErrorState}
+          resetState={{ errorMessage: null }}
+        />
+      )}
       <Toolbar sx={{ justifyContent: "start" }}>
         <Typography variant="h6" noWrap component="div">
           Environments

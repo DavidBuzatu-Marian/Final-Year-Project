@@ -97,6 +97,7 @@ const EnvironmentsDataGrid = ({ setSelectedRow }) => {
         <CircularProgress sx={{ ml: 5 }} />
       ) : trainingLogsError || environmentsError ? (
         <SnackbarAlert
+          key={crypto.randomUUID()}
           message={
             "Something went wrong with the request on our part. Please try to reload"
           }
