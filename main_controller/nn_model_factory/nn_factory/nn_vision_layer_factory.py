@@ -2,7 +2,7 @@ import sys
 
 
 from helpers.nn_helpers import get_params_from_list
-from nn_factory.nn_layer_factory import NNAbstractLayerFactory
+from nn_model_factory.nn_factory.nn_layer_factory import NNAbstractLayerFactory
 
 import torch
 import torch.nn as nn

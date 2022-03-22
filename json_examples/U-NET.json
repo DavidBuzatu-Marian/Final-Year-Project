@@ -1,5 +1,4 @@
-{
-  "network":[
+[
             {
                 "layer": {
                     "layer_type": "Convolution",
@@ -597,4 +596,3 @@
                 }
             }
         ]
-}

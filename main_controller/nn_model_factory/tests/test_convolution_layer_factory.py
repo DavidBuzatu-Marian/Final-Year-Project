@@ -5,8 +5,8 @@ import torch.nn as nn
 import sys
 
 sys.path.insert(0, "../../")
-sys.path.insert(1, "../../nn_model")
-from nn_model.nn_layer_factory import NNLayerFactory
+sys.path.insert(1, "../../nn_model_factory")
+from nn_model_factory.nn_layer_factory import NNLayerFactory
 
 
 class TestConvolutionLayerFactory(unittest.TestCase):

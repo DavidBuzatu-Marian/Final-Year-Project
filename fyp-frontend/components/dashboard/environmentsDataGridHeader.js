@@ -189,7 +189,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
                 epochs: 60,
                 batch_size: 4,
                 reshape: "4, 1, 96, 96",
-                normalize: true,
+                standardize: true,
               },
             },
             training_options: {

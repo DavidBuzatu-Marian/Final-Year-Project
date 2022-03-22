@@ -16,7 +16,7 @@ try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance, request_wrapper
     from environment_helpers import update_environment_status
     from error_handlers.abort_handler import abort_with_text_response
-    from nn_model.nn_model import NNModel
+    from nn_model_factory.nn_model import NNModel
 
 except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
@@ -167,7 +167,7 @@ def async_train_post(instances, json_parameters, environment):
         async with aiohttp.ClientSession() as session:
             async def fetch(instance_ip):
                 url = "http://{}:{}/model/train".format(instance_ip, os.getenv("ENVIRONMENTS_PORT"))
-                async with session.post(url, data=json_parameters, timeout=20000) as response:
+                async with session.post(url, json=json_parameters, timeout=20000) as response:
                     await process_training_response(response, instances, instances_error, instance_ip, environment)
             return await asyncio.gather(*[
                 fetch(url) for url in instances
@@ -188,7 +188,8 @@ async def process_training_response(response, instances, instances_error, instan
         with open(
                 "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip), "wb+") as instance_model_file:
             chunk_size = 1024
-            instance_model_file.write(await response.content.read(chunk_size))
+            async for data in response.content.iter_chunked(chunk_size):
+                instance_model_file.write(data)
 
 
 # Deprecated
@@ -232,5 +233,4 @@ def create_model(environment_ips, model_network_options):
     for instance_ip in environment_ips:
         request_wrapper(lambda: post_json_to_instance(
             "http://{}:{}/model/create".format(
-                instance_ip, os.getenv("ENVIRONMENTS_PORT")), model_network_options
-        ))
+                instance_ip, os.getenv("ENVIRONMENTS_PORT")), model_network_options, timeout=20))

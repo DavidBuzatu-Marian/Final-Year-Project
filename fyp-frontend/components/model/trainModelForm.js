@@ -89,6 +89,7 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
                 "shuffle",
                 "drop_last",
                 "normalize",
+                "standardize",
                 "reshape",
               ],
             },
@@ -131,7 +132,7 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
             epochs: 60,
             batch_size: 4,
             reshape: "4, 1, 96, 96",
-            normalize: true,
+            standardize: true,
           },
         }}
         theme="light_mitsuketa_tribute"
