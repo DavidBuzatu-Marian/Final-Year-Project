@@ -10,8 +10,7 @@ from bson.objectid import ObjectId
 import aiohttp
 import asyncio
 from asgiref import sync
-from app import app
-
+import random
 try:
     from request_helpers import get_to_instance, post_json_to_instance, post_to_instance, request_wrapper
     from environment_helpers import update_environment_status
@@ -22,13 +21,13 @@ except ImportError as exc:
     sys.stderr.write("Error: failed to import modules ({})".format(exc))
 
 
-def get_available_instances(environment, max_trials, required_instances):
+def get_available_instances(environment_ips, max_trials, required_instances):
     trials = 0
     available_instances = set()
     while trials < max_trials and len(available_instances) < required_instances:
         # Get each environment ip
         # Make request for availability and store available envs
-        for environment_ip in environment["environment_ips"]:
+        for environment_ip in environment_ips:
             if environment_ip not in available_instances:
                 response = request_wrapper(lambda: get_to_instance(
                     "http://{}:{}/instance/availability".format(environment_ip, os.getenv("ENVIRONMENTS_PORT")), allow_failure=True))
@@ -52,10 +51,13 @@ def get_model_network_options(request_json):
     return request_json["environment_model_network_options"]
 
 
-def train_model(database, instances, training_iterations, instance_training_parameters, environment):
-    initial_instances = instances.copy()
+def train_model(database, environment_ips, training_options, training_iterations,
+                instance_training_parameters, environment):
     train_log = list()
     for iteration in range(training_iterations):
+        instances = get_available_instances(environment_ips, training_options)
+        initial_instances = instances.copy()
+
         instances_error = async_train_post(instances, instance_training_parameters, environment)
         write_to_train_log(train_log, process_training_results(
             iteration, instances, initial_instances, instances_error))
@@ -76,6 +78,13 @@ def train_model(database, instances, training_iterations, instance_training_para
     update_environment_status(database, environment, "7")
     return send_file("{}/{}-{}.pth".format(os.getenv("GLOBAL_MODEL"),
                                            environment.id, environment.user_id))
+
+
+def get_available_instances(environment_ips, training_options):
+    available_instances = get_available_instances(
+        environment_ips, training_options['max_trials'], training_options['required_instances']
+    )
+    return random.sample(list(available_instances), training_options['required_instances'])
 
 
 def write_logs_to_database(database, logs, environment):

@@ -58,7 +58,7 @@ def get_hyperparameters(request_json):
 
 
 def get_probability_of_failure(request_json):
-    return {"probabilityOfFailure": request_json["probabilityOfFailure"]}
+    return request_json["probabilityOfFailure"]
 
 
 def get_instance_probability_of_failure(config_path_env="INSTANCE_CONFIG_FILE_PATH"):
