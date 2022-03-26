@@ -27,7 +27,7 @@ def request_wrapper(request_function):
             500, "A request failed due to an internal server error")
 
 
-def post_to_instance(url, data):
+def post_to_instance(url, data, timeout=10):
     files = []
     if data.items() == None:
         abort_with_text_response(400, "Posting data went wrong. Empty data")
@@ -37,7 +37,7 @@ def post_to_instance(url, data):
             file.seek(0)
     if len(files) == 0:
         abort_with_text_response(400, "No files selected")
-    response = requests.post(url=url, files=files, timeout=10)
+    response = requests.post(url=url, files=files, timeout=timeout)
     if not response.ok:
         abort_with_text_response(
             response.status_code,

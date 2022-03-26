@@ -56,6 +56,7 @@ def get_model_network_options(request_json):
 def train_model(database, environment_ips, training_options, training_iterations,
                 instance_training_parameters, environment):
     train_log = list()
+    write_logs_to_database(database, train_log, environment)  # used to reset logs
     for iteration in range(training_iterations):
         instances = get_random_available_instances(environment_ips, training_options)
         initial_instances = instances.copy()
@@ -138,10 +139,10 @@ def update_instances_model(instances, environment):
                                             environment.id, environment.user_id), "rb")
     model = FileStorage(model_file)
     for instance_ip in instances:
-        post_to_instance(
+        request_wrapper(lambda: post_to_instance(
             "http://{}:{}/model/update".format(instance_ip, os.getenv("ENVIRONMENTS_PORT")),
-            {"model": [model]},
-        )
+            {"model": [model]}, timeout=100
+        ))
 
 
 def save_aggregated_model(aggregated_model, environment):
@@ -184,21 +185,24 @@ def train_on_instances(instances, json_parameters, environment):
                 return response
             future_to_training_responses = {executor.submit(
                 fetch, instance_ip): instance_ip for instance_ip in instances}
-
-            for future in concurrent.futures.as_completed(future_to_training_responses):
-                instance_ip = future_to_training_responses[future]
-                try:
-                    response = future.result()
-                except Exception as exc:
-                    error(exc)
-                    instances_error[instance_ip] = exc
-                    instances.remove(instance_ip)
-                else:
-                    process_training_response(
-                        response, instances, instances_error, instance_ip, environment)
+            process_futures(future_to_training_responses, instances_error, instances, environment)
 
     post_requests(instances, json_parameters, environment)
     return instances_error
+
+
+def process_futures(future_to_training_responses, instances_error, instances, environment):
+    for future in concurrent.futures.as_completed(future_to_training_responses):
+        instance_ip = future_to_training_responses[future]
+        try:
+            response = future.result()
+        except Exception as exc:
+            error(exc)
+            instances_error[instance_ip] = exc
+            instances.remove(instance_ip)
+        else:
+            process_training_response(
+                response, instances, instances_error, instance_ip, environment)
 
 
 def process_training_response(response, instances, instances_error, instance_ip, environment):
