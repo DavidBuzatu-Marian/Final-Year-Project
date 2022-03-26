@@ -72,10 +72,11 @@ def train_model(database, environment_ips, training_options, training_iterations
         aggregated_model = aggregate_models(instances, environment)
         write_to_train_log(train_log, ["Aggregated models from contributors"])
         save_aggregated_model(aggregated_model, environment)
-        update_instances_model(instances, environment)
+        updates_log = update_instances_model(instances, environment)
+        write_to_train_log(train_log, updates_log)
         write_to_train_log(
             train_log,
-            ["Updated model on contributors. Sent aggregated model to intances",
+            ["Updated model on contributors.",
              "Preparing next round..."])
     write_logs_to_database(database, train_log, environment)
     update_environment_status(database, environment, "7")
@@ -138,11 +139,38 @@ def update_instances_model(instances, environment):
     model_file = open("{}/{}-{}.pth".format(os.getenv("GLOBAL_MODEL"),
                                             environment.id, environment.user_id), "rb")
     model = FileStorage(model_file)
-    for instance_ip in instances:
-        request_wrapper(lambda: post_to_instance(
-            "http://{}:{}/model/update".format(instance_ip, os.getenv("ENVIRONMENTS_PORT")),
-            {"model": [model]}, timeout=100
-        ))
+    model_update_logs = list()
+
+    def send_aggregated_model(instances, model):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            @copy_current_request_context
+            def fetch(instance_ip):
+                url = "http://{}:{}/model/update".format(instance_ip,
+                                                         os.getenv("ENVIRONMENTS_PORT"))
+                response = request_wrapper(lambda: post_to_instance(
+                    url,
+                    {"model": [model]}, timeout=100
+                ))
+                return response
+            future_to_training_responses = {executor.submit(
+                fetch, instance_ip): instance_ip for instance_ip in instances}
+            process_model_update_futures(future_to_training_responses, model_update_logs)
+
+    send_aggregated_model(instances, model)
+    return model_update_logs
+
+
+def process_model_update_futures(future_to_training_responses, model_update_logs):
+    for future in concurrent.futures.as_completed(future_to_training_responses):
+        instance_ip = future_to_training_responses[future]
+        try:
+            _ = future.result()
+        except:
+            model_update_logs.append(
+                "Instance: {} - failed to update local model".format(instance_ip))
+        else:
+            model_update_logs.append(
+                "Instance: {} - succeeded to update local model".format(instance_ip))
 
 
 def save_aggregated_model(aggregated_model, environment):
@@ -185,13 +213,14 @@ def train_on_instances(instances, json_parameters, environment):
                 return response
             future_to_training_responses = {executor.submit(
                 fetch, instance_ip): instance_ip for instance_ip in instances}
-            process_futures(future_to_training_responses, instances_error, instances, environment)
+            process_training_futures(future_to_training_responses,
+                                     instances_error, instances, environment)
 
     post_requests(instances, json_parameters, environment)
     return instances_error
 
 
-def process_futures(future_to_training_responses, instances_error, instances, environment):
+def process_training_futures(future_to_training_responses, instances_error, instances, environment):
     for future in concurrent.futures.as_completed(future_to_training_responses):
         instance_ip = future_to_training_responses[future]
         try:
@@ -215,29 +244,6 @@ def process_training_response(response, instances, instances_error, instance_ip,
         with open(
                 "./models/model-{}-{}-{}.pth".format(environment.id, environment.user_id, instance_ip), "wb+") as instance_model_file:
             instance_model_file.write(response.content)
-
-
-# Deprecated
-# def train_on_instances(instances, instance_training_parameters, environment):
-#     instances_error = dict()
-#     for instance_ip in instances:
-#         response = request_wrapper(lambda: post_json_to_instance(
-#             "http://{}:{}/model/train".format(instance_ip, os.getenv("ENVIRONMENTS_PORT")),
-#             instance_training_parameters,
-#             True,
-#             10000
-#         ))
-#         if not response.ok:
-#             # Instance failed during training => remove instance from round of training
-#             instances_error[instance_ip] = response.text
-#             instances.remove(instance_ip)
-#         else:
-#             with open(
-#                 "./models/model-{}-{}-{}.pth".format(environment.id,
-#                                                      environment.user_id, instance_ip), "wb"
-#             ) as instance_model_file:
-#                 instance_model_file.write(response.content)
-#     return instances_error
 
 
 def load_model_from_path(path):
