@@ -7,7 +7,7 @@ from logging import error
 from flask.helpers import send_file
 from werkzeug.datastructures import FileStorage
 from bson.objectid import ObjectId
-from flask import copy_current_request_context
+from app import app
 import asyncio
 
 import random
@@ -142,19 +142,20 @@ def update_instances_model(instances, environment):
     model_update_logs = list()
 
     def send_aggregated_model(instances, model):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-            @copy_current_request_context
-            def fetch(instance_ip):
-                url = "http://{}:{}/model/update".format(instance_ip,
-                                                         os.getenv("ENVIRONMENTS_PORT"))
-                response = request_wrapper(lambda: post_to_instance(
-                    url,
-                    {"model": [model]}, timeout=100
-                ))
-                return response
-            future_to_training_responses = {executor.submit(
-                fetch, instance_ip): instance_ip for instance_ip in instances}
-            process_model_update_futures(future_to_training_responses, model_update_logs)
+        with app.app_context():
+            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+                def fetch(instance_ip):
+                    with app.app_context():
+                        url = "http://{}:{}/model/update".format(instance_ip,
+                                                                os.getenv("ENVIRONMENTS_PORT"))
+                        response = request_wrapper(lambda: post_to_instance(
+                            url,
+                            {"model": [model]}, timeout=100
+                        ))
+                        return response
+                future_to_training_responses = {executor.submit(
+                    fetch, instance_ip): instance_ip for instance_ip in instances}
+                process_model_update_futures(future_to_training_responses, model_update_logs)
 
     send_aggregated_model(instances, model)
     return model_update_logs
@@ -204,17 +205,19 @@ def train_on_instances(instances, json_parameters, environment):
     instances_error = dict()
 
     def post_requests(instances, json_parameters, environment):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-            @copy_current_request_context
-            def fetch(instance_ip):
-                url = "http://{}:{}/model/train".format(instance_ip, os.getenv("ENVIRONMENTS_PORT"))
-                response = request_wrapper(lambda: post_json_to_instance(
-                    url, json_parameters, allow_failure=True, timeout=20000))
-                return response
-            future_to_training_responses = {executor.submit(
-                fetch, instance_ip): instance_ip for instance_ip in instances}
-            process_training_futures(future_to_training_responses,
-                                     instances_error, instances, environment)
+        with app.app_context():
+            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+                def fetch(instance_ip):
+                    with app.app_context():
+                        url = "http://{}:{}/model/train".format(instance_ip,
+                                                                os.getenv("ENVIRONMENTS_PORT"))
+                        response = request_wrapper(lambda: post_json_to_instance(
+                            url, json_parameters, allow_failure=True, timeout=20000))
+                        return response
+                future_to_training_responses = {executor.submit(
+                    fetch, instance_ip): instance_ip for instance_ip in instances}
+                process_training_futures(future_to_training_responses,
+                                         instances_error, instances, environment)
 
     post_requests(instances, json_parameters, environment)
     return instances_error

@@ -21,7 +21,10 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
         onChange={(event) =>
           setFormValues({
             ...formValues,
-            training_iterations: event.target.value,
+            training_iterations:
+              event.target.value.length === 0
+                ? 0
+                : parseInt(event.target.value),
           })
         }
         sx={{ width: "100%" }}
@@ -36,7 +39,10 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
             ...formValues,
             ["training_options"]: {
               ...formValues["training_options"],
-              max_trials: parseInt(event.target.value),
+              max_trials:
+                event.target.value.length === 0
+                  ? 0
+                  : parseInt(event.target.value),
             },
           })
         }
@@ -52,7 +58,10 @@ const TrainModelForm = ({ formValues, setFormValues }) => {
             ...formValues,
             ["training_options"]: {
               ...formValues["training_options"],
-              required_instances: parseInt(event.target.value),
+              required_instances:
+                event.target.value.length === 0
+                  ? 0
+                  : parseInt(event.target.value),
             },
           })
         }
