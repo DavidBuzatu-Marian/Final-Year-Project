@@ -136,7 +136,8 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
               Object.keys(selectedRow).length === 0 ||
               (Object.keys(selectedRow).length > 0 &&
                 selectedRow.status !== "Ready to train" &&
-                selectedRow.status !== "Training error") ||
+                selectedRow.status !== "Training error" &&
+                selectedRow.status !== "Finished training") ||
               (Object.keys(selectedRow).length > 0 &&
                 selectedRow.status === "Training")
             }

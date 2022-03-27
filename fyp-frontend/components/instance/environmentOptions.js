@@ -45,7 +45,7 @@ const EnvironmentOptions = ({
           label: "Probability of failure",
           type: "number",
           name: "probabilityOfFailure",
-          min: 1,
+          min: 0,
           max: 100,
           endAdornment: <span className="material-icons">percent</span>,
         },
@@ -62,7 +62,7 @@ const EnvironmentOptions = ({
       updateFormValues(event.target.name, index, "");
       return;
     }
-    const value = parseInt(event.target.value, 10);
+    const value = parseFloat(event.target.value, 10);
     if (value < min) {
       value = min;
     } else if (value > max) {
