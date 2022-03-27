@@ -69,7 +69,6 @@ def model_validate():
 
 
 @app.route("/model/train", methods=["POST"])
-@return_500_on_uncaught_server_error
 def model_train():
     path = os.getenv("MODEL_PATH")
     model = read_model_from_path(path)
