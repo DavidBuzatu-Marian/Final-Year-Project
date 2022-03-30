@@ -32,7 +32,7 @@ def save_ips_for_user(database, ips, environment):
 
 
 def send_options_to_instances(ips, environment_options):
-    time.sleep(60)  # required for the cold start of docker container
+    time.sleep(90)  # required for the cold start of docker container
     ips_with_options = set()
     for option in environment_options:
         instance_ip = ips[option['instanceNumber'] - 1]
