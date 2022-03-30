@@ -92,8 +92,12 @@ def model_train():
             optimizer.zero_grad()
 
             data = reshape_data(data, hyperparameters)
+            if standardize(hyperparameters):
+                data = standardize_data(data, mean, std)
             if normalize(hyperparameters):
-                data = normalize_data(data, mean, std)
+                data = normalize_data(
+                    data, hyperparameters["data_min"],
+                    hyperparameters["data_max"])
             output = model(data)
 
             output = process_output(output, processors)

@@ -19,7 +19,7 @@ modelTrainQueue.process(async (job, done) => {
         "loadBalancerPort"
       )}/model/train`,
       JSON.stringify(job.data.body),
-      { headers: job.data.headers, timeout: 1000 * 60 * 10 }
+      { headers: job.data.headers, timeout: 1000 * 60 * 40 }
     );
     fs.writeFileSync(
       path.join(__dirname, "models", `${job.data.body.environment_id}.pth`),
