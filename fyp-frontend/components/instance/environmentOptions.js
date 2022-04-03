@@ -1,6 +1,6 @@
-import { Typography, TextField, Divider, Button } from '@mui/material';
-import { Box } from '@mui/system';
-import React from 'react';
+import { Typography, TextField, Divider, Button } from "@mui/material";
+import { Box } from "@mui/system";
+import React from "react";
 
 const EnvironmentOptions = ({
   setParentFormValues,
@@ -10,59 +10,59 @@ const EnvironmentOptions = ({
   const [formFields, setFormFields] = React.useState([
     [
       {
-        label: 'Instance number',
-        type: 'number',
-        name: 'instanceNumber',
+        label: "Instance number",
+        type: "number",
+        name: "instanceNumber",
         min: 1,
         max: 0,
       },
       {
-        label: 'Probability of failure',
-        type: 'number',
-        name: 'probabilityOfFailure',
-        min: 1,
+        label: "Probability of failure",
+        type: "number",
+        name: "probabilityOfFailure",
+        min: 0,
         max: 100,
-        endAdornment: <span className='material-icons'>percent</span>,
+        endAdornment: <span className="material-icons">percent</span>,
       },
     ],
   ]);
 
   const [formValues, setFormValues] = React.useState([
-    { instanceNumber: '', probabilityOfFailure: '' },
+    { instanceNumber: "", probabilityOfFailure: "" },
   ]);
   const addFormFields = () => {
     setFormFields([
       ...formFields,
       [
         {
-          label: 'Instance number',
-          type: 'number',
-          name: 'instanceNumber',
+          label: "Instance number",
+          type: "number",
+          name: "instanceNumber",
           min: 1,
           max: 0,
         },
         {
-          label: 'Probability of failure',
-          type: 'number',
-          name: 'probabilityOfFailure',
-          min: 1,
+          label: "Probability of failure",
+          type: "number",
+          name: "probabilityOfFailure",
+          min: 0,
           max: 100,
-          endAdornment: <span className='material-icons'>percent</span>,
+          endAdornment: <span className="material-icons">percent</span>,
         },
       ],
     ]);
     setFormValues([
       ...formValues,
-      { instanceNumber: '', probabilityOfFailure: '' },
+      { instanceNumber: "", probabilityOfFailure: "" },
     ]);
   };
 
   const onChange = (event, index, min, max) => {
     if (event.target.value.length === 0) {
-      updateFormValues(event.target.name, index, '');
+      updateFormValues(event.target.name, index, "");
       return;
     }
-    const value = parseInt(event.target.value, 10);
+    const value = parseFloat(event.target.value, 10);
     if (value < min) {
       value = min;
     } else if (value > max) {
@@ -95,16 +95,16 @@ const EnvironmentOptions = ({
   };
 
   return (
-    <Box sx={{ width: '100%', typography: 'body1', mt: '1rem' }}>
-      <Typography variant='h6'>Environment options</Typography>
+    <Box sx={{ width: "100%", typography: "body1", mt: "1rem" }}>
+      <Typography variant="h6">Environment options</Typography>
       {formFields.map((fields, idx) => {
         return (
-          <div key={idx} style={{ alignItems: 'center', display: 'flex' }}>
+          <div key={idx} style={{ alignItems: "center", display: "flex" }}>
             {fields.map((field, id) => {
               return (
                 <TextField
-                  id='outlined-required'
-                  key={idx + ',' + id}
+                  id="outlined-required"
+                  key={idx + "," + id}
                   label={field.label}
                   type={field.type}
                   name={field.name}
@@ -117,7 +117,7 @@ const EnvironmentOptions = ({
                       field.max === 0 ? nrInstances : field.max
                     )
                   }
-                  sx={{ mt: '1rem !important', mr: 1 }}
+                  sx={{ mt: "1rem !important", mr: 1 }}
                   InputProps={{
                     endAdornment: field.endAdornment && field.endAdornment,
                   }}
@@ -125,9 +125,9 @@ const EnvironmentOptions = ({
               );
             })}
             <Button
-              variant='outlined'
+              variant="outlined"
               onClick={(event) => removeFormFields(idx)}
-              startIcon={<span className='material-icons'>delete</span>}
+              startIcon={<span className="material-icons">delete</span>}
             >
               Remove
             </Button>

@@ -27,10 +27,11 @@ router.post("/*", async (req, res) => {
 });
 
 router.get("/download", async (req, res) => {
-  if (!req.body || (req.body && !req.body.environment_id)) {
+  if (!req.query || (req.query && !req.query.environment_id)) {
     return res.status(400).send("Environment id is required");
   }
-  environment_id = req.body.environment_id;
+  environment_id = req.query.environment_id;
+
   res.download(
     path.join(
       __dirname,
@@ -39,7 +40,12 @@ router.get("/download", async (req, res) => {
       "model",
       "models",
       `${environment_id}.pth`
-    )
+    ),
+    (err) => {
+      if (err) {
+        return res.status(400).send("Model does not exist");
+      }
+    }
   );
 });
 

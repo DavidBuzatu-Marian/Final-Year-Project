@@ -3,7 +3,7 @@ version: '3.8'
 services:
   main-controller-server:
     build: .
-    image: "local_fyp_main_controller"
+    image: "eu.gcr.io/finalyearproject-338819/fyp_main_controller"
     volumes:
       - ./:/app
     ports:

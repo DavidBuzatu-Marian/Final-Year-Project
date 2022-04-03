@@ -83,7 +83,7 @@ const ModalTrainModel = ({
           }
         } catch (error) {
           setModalState({
-            errorMessage: error,
+            errorMessage: error.response.data,
             loading: false,
             alertId: crypto.randomUUID(),
           });
@@ -91,7 +91,6 @@ const ModalTrainModel = ({
         }
       }, 1000);
     } catch (error) {
-      console.log(error);
       setModalState({
         ...modalState,
         errorMessage: "Request could not be made",

@@ -40,7 +40,6 @@ const CreateEnvironmentForm = () => {
       );
       setProgressModal({ isVisible: true, ...res.data });
     } catch (error) {
-      console.log(error);
       setProgressModal({
         isVisible: false,
         errorMessage: "Something went wrong on our end. Please retry.",

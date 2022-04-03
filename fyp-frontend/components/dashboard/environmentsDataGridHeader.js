@@ -12,11 +12,17 @@ import { getConfig } from "../../config/defaultConfig";
 import ModalCompletedStatusForm from "../modals/modalCompletedStatusForm";
 import AddModelForm from "../model/addModelForm";
 import ModalTrainModel from "../modals/modalTrainModel";
+import SnackbarAlert from "../alert/snackbarAlert";
+import download from "downloadjs";
 
 const EnvironmentsDataGridHeader = ({ selectedRow }) => {
   const [progressModal, setProgressModal] = React.useState({
     isVisible: false,
     jobLink: null,
+  });
+
+  const [errorState, setErrorState] = React.useState({
+    errorMessage: null,
   });
 
   const [modals, setModals] = React.useState({
@@ -38,7 +44,23 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
       });
       setProgressModal({ isVisible: true, ...res.data });
     } catch (error) {
-      console.log(error);
+      setErrorState({ errorMessage: error.response.data });
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      const res = await axios.get(
+        `${getConfig()["environmentModelDownloadUrl"]}?environment_id=${
+          selectedRow._id
+        }`,
+        {
+          withCredentials: true,
+        }
+      );
+      download(res.data, "model.pth");
+    } catch (error) {
+      setErrorState({ errorMessage: error.response.data });
     }
   };
 
@@ -50,6 +72,14 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
         p: 3,
       }}
     >
+      {errorState.errorMessage && (
+        <SnackbarAlert
+          key={crypto.randomUUID()}
+          message={errorState.errorMessage}
+          stateSetter={setErrorState}
+          resetState={{ errorMessage: null }}
+        />
+      )}
       <Toolbar sx={{ justifyContent: "start" }}>
         <Typography variant="h6" noWrap component="div">
           Environments
@@ -106,12 +136,28 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
               Object.keys(selectedRow).length === 0 ||
               (Object.keys(selectedRow).length > 0 &&
                 selectedRow.status !== "Ready to train" &&
-                selectedRow.status !== "Training error") ||
+                selectedRow.status !== "Training error" &&
+                selectedRow.status !== "Finished training") ||
               (Object.keys(selectedRow).length > 0 &&
                 selectedRow.status === "Training")
             }
           >
             Train model
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<span className="material-icons">download</span>}
+            onClick={() => handleDownload()}
+            color="error"
+            disabled={
+              Object.keys(selectedRow).length === 0 ||
+              !(
+                Object.keys(selectedRow).length > 0 &&
+                selectedRow.status === "Finished training"
+              )
+            }
+          >
+            Download model
           </Button>
         </Stack>
         <ModalProgress
@@ -189,7 +235,7 @@ const EnvironmentsDataGridHeader = ({ selectedRow }) => {
                 epochs: 60,
                 batch_size: 4,
                 reshape: "4, 1, 96, 96",
-                normalize: true,
+                standardize: true,
               },
             },
             training_options: {

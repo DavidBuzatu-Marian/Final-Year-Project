@@ -16,14 +16,23 @@ def request_wrapper(request_function):
         return request_function()
     except requests.exceptions.Timeout:
         abort_with_text_response(408, "A request to an instance timedout.")
-    except requests.exceptions.RequestException as e:
-        abort_with_text_response(500, "A request failed due to an internal server error")
+    except requests.exceptions.ConnectionError as e:
+        error(e)
+        abort_with_text_response(
+            500, "A request failed due to an internal server error on instance (connection error)")
+    except requests.exceptions.HTTPError as e:
+        error(e)
+        abort_with_text_response(
+            500, "A request failed due to an internal server error on instance (http error)")
     except ValueError:
         abort_with_text_response(
             500, "A request failed due to an internal server error (ValueError)")
+    except:
+        abort_with_text_response(
+            500, "A request failed due to an internal server error")
 
 
-def post_to_instance(url, data):
+def post_to_instance(url, data, timeout=10):
     files = []
     if data.items() == None:
         abort_with_text_response(400, "Posting data went wrong. Empty data")
@@ -33,11 +42,11 @@ def post_to_instance(url, data):
             file.seek(0)
     if len(files) == 0:
         abort_with_text_response(400, "No files selected")
-    response = requests.post(url=url, files=files, timeout=10)
+    response = requests.post(url=url, files=files, timeout=timeout)
     if not response.ok:
         abort_with_text_response(
             response.status_code,
-            "Posting data went wrong. Response: {}".format(response.content),
+            "Posting data went wrong. Url: {}, Response: {}".format(url, response.content),
         )
     return response
 
@@ -45,10 +54,9 @@ def post_to_instance(url, data):
 def post_json_to_instance(url, json, allow_failure=False, timeout=10):
     response = requests.post(url, json=json, timeout=timeout)
     if not response.ok and not allow_failure:
-        abort_with_text_response(
-            response.status_code,
-            "Posting data went wrong. Response: {}".format(response.content),
-        )
+        abort_with_text_response(response.status_code,
+                                 "Posting data went wrong. Url: {}, Json: {}, Response: {}".format(
+                                     url, json, response.content),)
     return response
 
 

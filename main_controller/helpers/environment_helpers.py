@@ -32,12 +32,18 @@ def save_ips_for_user(database, ips, environment):
 
 
 def send_options_to_instances(ips, environment_options):
-    time.sleep(45)  # required for the cold start of docker container
+    time.sleep(90)  # required for the cold start of docker container
     ips_with_options = set()
     for option in environment_options:
-        request_wrapper(lambda: post_json_to_instance("http://{}:{}/instance/probabilityoffailure" .format(
-            ips[option['instanceNumber'] - 1], os.getenv("ENVIRONMENTS_PORT")), json.dumps(option['probabilityOfFailure'])))
-        ips_with_options.add(ips[option['instanceNumber'] - 1])
+        instance_ip = ips[option['instanceNumber'] - 1]
+        request_wrapper(
+            lambda:
+            post_json_to_instance(
+                "http://{}:{}/instance/probabilityoffailure".format(
+                    instance_ip,
+                    os.getenv("ENVIRONMENTS_PORT")),
+                {"probabilityOfFailure": option['probabilityOfFailure']}))
+        ips_with_options.add(instance_ip)
     for ip in ips:
         if ip not in ips_with_options:
             request_wrapper(lambda: post_json_to_instance("http://{}:{}/instance/probabilityoffailure"
@@ -174,7 +180,6 @@ def get_dataset_length(request_json):
     return dataset_length
 
 
-# TODO: Get user id from auhentication token
 def get_user_id(request_json):
     return request_json["user_id"]
 

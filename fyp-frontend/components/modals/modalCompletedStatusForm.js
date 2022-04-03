@@ -128,7 +128,7 @@ const ModalCompletedStatusForm = ({
           }
         } catch (error) {
           setModalState({
-            errorMessage: error,
+            errorMessage: error.response.data,
             successMessage: null,
             loading: false,
             alertId: crypto.randomUUID(),
@@ -140,7 +140,7 @@ const ModalCompletedStatusForm = ({
     } catch (error) {
       setModalState({
         ...modalState,
-        errorMessage: error.message,
+        errorMessage: error.response.data,
         successMessage: null,
         loading: false,
         alertId: crypto.randomUUID(),

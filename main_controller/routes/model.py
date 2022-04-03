@@ -2,7 +2,7 @@ from logging import error
 from flask import request
 import sys
 from flask.json import jsonify
-import random
+
 from app import app
 from app import mongo
 
@@ -25,15 +25,13 @@ def model_train():
     update_environment_status(mongo.db, target_environment, "3")
     environment = get_environment(mongo.db, target_environment)
     training_options = get_training_options(request.json)
-    available_instances = get_available_instances(
-        environment, training_options['max_trials'], training_options['required_instances']
-    )
 
     training_iterations = get_training_iterations(request.json)
     instance_training_parameters = get_instance_training_parameters(request.json)
     return train_model(
         mongo.db,
-        random.sample(list(available_instances), training_options['required_instances']),
+        environment["environment_ips"],
+        training_options,
         training_iterations,
         instance_training_parameters,
         target_environment
