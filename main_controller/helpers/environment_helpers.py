@@ -180,7 +180,6 @@ def get_dataset_length(request_json):
     return dataset_length
 
 
-# TODO: Get user id from auhentication token
 def get_user_id(request_json):
     return request_json["user_id"]
 
