@@ -1,0 +1,262 @@
+{
+	"info": {
+		"_postman_id": "91f517bd-57a8-40cb-8e77-d9928722b63d",
+		"name": "FYP_Env",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET - /",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Create model",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n                \"network\": [\r\n                    {\r\n                        \"layer\": {\r\n                            \"layer_type\": \"Convolution\",\r\n                            \"subtype\": \"Conv2d\",\r\n                            \"parameters\": {\r\n                                \"in_channels\": 1,\r\n                                \"out_channels\": 4,\r\n                                \"kernel_size\": 3,\r\n                                \"stride\": 1,\r\n                                \"padding\": 1\r\n                            }\r\n                        }\r\n                    }\r\n                ]\r\n            }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/model/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"model",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Dataset add",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "train_data",
+							"type": "file",
+							"src": [
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr1.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr2.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr3.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr4.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr5.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr6.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr7.png"
+							]
+						},
+						{
+							"key": "train_labels",
+							"type": "file",
+							"src": [
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr1_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr2_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr3_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr4_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr5_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr6_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr7_mask.png"
+							]
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/dataset/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"dataset",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Train Model",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"loss\": {\r\n        \"loss_type\": \"CrossEntropyLoss\",\r\n        \"parameters\": {}\r\n    },\r\n    \"optimizer\": {\r\n        \"optimizer_type\": \"RMSprop\",\r\n        \"parameters\": {}\r\n    },\r\n    \"hyperparameters\": {\r\n        \"epochs\": 5,\r\n        \"batch_size\": 2,\r\n        \"reshape\": \"2, 1, 96, 96\",\r\n        \"normalize\": \"0.5, 0.5\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/model/train",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"model",
+						"train"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Get instance availability",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/instance/availability",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"instance",
+						"availability"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Probability of failure",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"probabilityOfFailure\": \"0.01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/instance/probabilityoffailure",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"instance",
+						"probabilityoffailure"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Probability of failure",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"probabilityOfFailure\": \"0.01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/instance/getprobabilityoffailure",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"instance",
+						"getprobabilityoffailure"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Model train",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"loss\": {\r\n        \"loss_type\": \"CrossEntropyLoss\",\r\n        \"parameters\": {}\r\n    },\r\n    \"optimizer\": {\r\n        \"optimizer_type\": \"RMSprop\",\r\n        \"parameters\": {\r\n            \"lr\": 0.001,\r\n            \"weight_decay\": 0.00000001,\r\n            \"momentum\": 0.9\r\n        }\r\n    },\r\n    \"hyperparameters\": {\r\n        \"epochs\": 1,\r\n        \"batch_size\": 4,\r\n        \"reshape\": \"4, 1, 96, 96\",\r\n        \"standardize\": true\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:6000/task/model/train",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6000",
+					"path": [
+						"task",
+						"model",
+						"train"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

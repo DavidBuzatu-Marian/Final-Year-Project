@@ -24,10 +24,12 @@ This repository is split into numerous folders. We list the folders below:
 
 ## Software requirements
 
-To be able to run the servers in each aforementioned folder, it is essential to have [Docker](https://www.docker.com/products/docker-desktop/) installed on your machine. Due to all of our servers being containerised, you do not need to install any other external dependencies or even interpreters for programming languages. Docker will install everything needed to run the servers in a container using an isolated environment which automatically installs dependencies.
+To be able to run the servers in each aforementioned folder, it is essential to have [Docker](https://www.docker.com/products/docker-desktop/) installed on your machine. Due to all of our servers being containerised, you do not need to install any other external dependencies or even interpreters for programming languages. Docker will install everything needed to run the servers in a container using an isolated environment which automatically installs dependencies. The exception to this is our front-end, which we were not able to containerise due to internal issues in NextJS. Thus, you will have to install [npm](https://www.npmjs.com) beforehand.
 
 To run our end-to-end tests, you have to install [Postman](https://postman.com). To import our collection of endpoint tests, please follow the steps outlined in the official [tutorial](https://kb.datamotion.com/?ht_kb=postman-instructions-for-exporting-and-importing).
 
 ## How to run the project?
 
 Once docker is installed, follow the instructions in each server's **README.md** file to see how to run the code. We are doing this due to some servers being handled with the `docker-compose` command, while others using `docker run`.
+
+We do have to mention that it may not be able to run the whole functionality of the project due to restrictions imposed by Google Cloud and our personal account. We have set up [gcloud](https://cloud.google.com/sdk/gcloud) on our machines and used our personal account to use the cloud services. We cannot provide our authentication details here due to having direct access to our bank account and violating the privacy terms of Google Cloud. Should you want to set up a Google Cloud account, you can set up our project to run with your account instead. Our [terraform file](/main_controller/terraform/finalyearproject-338819-12b837ed8475.json) contains private authentication tokens that may be usable, but we have no means of testing they work. Please do not share such keys as they are directly connected to our account.

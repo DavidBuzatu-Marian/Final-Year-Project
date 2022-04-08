@@ -1,0 +1,797 @@
+{
+	"info": {
+		"_postman_id": "d5dd5d0e-e9c9-465c-8cc8-72eef18791b5",
+		"name": "FYP - Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST - Register User",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"davidm.buzatu@gmail.com\",\r\n    \"password\": \"1234Aa\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5002/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Login User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"davidm.buzatu@gmail.com\",\r\n    \"password\": \"123456Aa\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5002/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Test proxy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/environment/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"environment",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Environment creation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nr_instances\": 1,\r\n    \"environment_options\": [\r\n        {\r\n            \"id\": 0,\r\n            \"probability_failure\": 0.1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5002/backend/api/environment/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"environment",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Load balancer controller health check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/health/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"health",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Environment Create task status",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5005/api/environment/create/37",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"environment",
+						"create",
+						"37"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Environment Delete task status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5005/api/environment/delete/37",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"environment",
+						"delete",
+						"37"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE - Environment delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"environment_id\": \"61f549d7b178ebb5267aa11d\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5002/backend/api/environment/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"environment",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Environment delete task status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/environment/delete/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"environment",
+						"delete",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Environment health status task status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/health/status/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"health",
+						"status",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Environment Dataset save distribution",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"environment_id\": \"61f55e45e486c02af5540fc3\",\r\n    \"data_distribution\": {\r\n        \"172.22.0.3\": 30,\r\n        \"172.22.0.4\": 25,\r\n        \"172.22.0.5\": 35\r\n    },\r\n    \"dataset_length\": 100\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5002/backend/api/environment/dataset/distribution",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"environment",
+						"dataset",
+						"distribution"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Environment Dataset get task status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/environment/dataset/16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"environment",
+						"dataset",
+						"16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Environment data save",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "train_data",
+							"type": "file",
+							"src": [
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr1.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr2.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr3.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr4.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr5.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr6.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr7.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr8.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr9.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr10.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr11.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr12.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr13.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr14.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr15.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr16.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr17.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr18.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr19.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr20.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr21.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr22.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr23.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr24.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr25.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr26.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr27.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr28.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr29.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr30.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr31.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr32.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr33.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr34.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr35.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr36.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr37.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr38.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr39.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr40.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr41.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr42.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr43.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr44.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr45.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr46.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr47.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr48.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr49.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr50.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr51.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr52.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr53.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr54.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr55.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr56.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr57.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr58.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr59.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr60.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr61.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr62.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr63.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr64.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr65.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr66.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr67.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr68.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr69.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr70.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr71.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr72.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr73.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr74.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr75.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr76.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr77.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr78.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr79.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr80.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr81.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr82.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr83.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr84.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr85.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr86.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr87.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr88.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr89.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr90.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr91.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr92.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr93.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr94.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr95.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr96.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr97.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr98.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr99.png",
+								"/D:/Bham/NC/CW/CW/data/train/image/cmr100.png"
+							]
+						},
+						{
+							"key": "train_labels",
+							"type": "file",
+							"src": [
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr1_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr2_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr3_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr4_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr5_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr6_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr7_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr8_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr9_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr10_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr11_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr12_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr13_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr14_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr15_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr16_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr17_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr18_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr19_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr20_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr21_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr22_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr23_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr24_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr25_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr26_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr27_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr28_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr29_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr30_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr31_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr32_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr33_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr34_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr35_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr36_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr37_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr38_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr39_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr40_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr41_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr42_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr43_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr44_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr45_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr46_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr47_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr48_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr49_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr50_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr51_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr52_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr53_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr54_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr55_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr56_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr57_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr58_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr59_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr60_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr61_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr62_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr63_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr64_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr65_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr66_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr67_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr68_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr69_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr70_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr71_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr72_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr73_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr74_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr75_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr76_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr77_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr78_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr79_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr80_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr81_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr82_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr83_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr84_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr85_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr86_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr87_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr88_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr89_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr90_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr91_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr92_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr93_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr94_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr95_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr96_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr97_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr98_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr99_mask.png",
+								"/D:/Bham/NC/CW/CW/data/train/mask/cmr100_mask.png"
+							]
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5002/api/environment/dataset/data?user_id=61f141cfbf9f948c588baca4&environment_id=61f55e45e486c02af5540fc3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"api",
+						"environment",
+						"dataset",
+						"data"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "61f141cfbf9f948c588baca4"
+						},
+						{
+							"key": "environment_id",
+							"value": "61f55e45e486c02af5540fc3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Environment dataset save data task status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/environment/dataset/74",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"environment",
+						"dataset",
+						"74"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Environment create model ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"environment_id\": \"61f55e45e486c02af5540fc3\",\r\n    \"environment_model_network_options\": {\r\n        \"network\": [\r\n            {\r\n                \"layer\": {\r\n                    \"layer_type\": \"Convolution\",\r\n                    \"subtype\": \"Conv2d\",\r\n                    \"parameters\": {\r\n                        \"in_channels\": 1,\r\n                        \"out_channels\": 4,\r\n                        \"kernel_size\": 3,\r\n                        \"stride\": 1,\r\n                        \"padding\": 1\r\n                    }\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5002/backend/api/model/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"model",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Model create task status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/model/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"model",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Model train",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"environment_id\": \"61f55e45e486c02af5540fc3\",\r\n    \"training_iterations\": 1,\r\n    \"environment_parameters\": {\r\n        \"loss\": {\r\n            \"loss_type\": \"CrossEntropyLoss\",\r\n            \"parameters\": {}\r\n        },\r\n        \"optimizer\": {\r\n            \"optimizer_type\": \"RMSprop\",\r\n            \"parameters\": {}\r\n        },\r\n        \"hyperparameters\": {\r\n            \"epochs\": 5,\r\n            \"batch_size\": 5,\r\n            \"reshape\": \"5, 1, 96, 96\",\r\n            \"normalize\": \"0.5, 0.5\",\r\n            \"drop_last\": true\r\n        }\r\n    },\r\n    \"training_options\": {\r\n        \"max_trials\": 10,\r\n        \"required_instances\": 1\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5002/backend/api/model/train",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"model",
+						"train"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Model train task status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/model/train/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"model",
+						"train",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Data distribution",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/dataset/distribution",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"dataset",
+						"distribution"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Environments for user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/environment/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"environment",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Training data distribution",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/backend/api/dataset/distribution",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"backend",
+						"api",
+						"dataset",
+						"distribution"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
