@@ -11,11 +11,11 @@ This repository is split into numerous folders. We list the folders below:
 - .vscode - Ignored on git. Contains a settings file used by visual studio code.
 - archtiecture_imgs - Contains various diagrams representing architecture variants for our solution. It also contains a [README.md](/architecture_imgs/README.md) file that entails the thorough analysis of different architectures.
 - backend_server: Contains the code that defines the back-end server component written in **JavaScript**.
-- class\*diagrams: Contains the class diagram for the factory classes used in the 'nn\_' files.
+- class_diagrams: Contains the class diagram for the factory classes used in the 'nn\_' files.
 - frontend: Contains the code for the frontend written in **JavaScript**.
 - gateway: Contains the code for the gateway component. It has been written in **JavaScript**.
 - instance: Defines the code required by the instances. It has been developed using **Python**.
-- json*examples: Contains a suite of JSON examples that can be used to create the \_U-Net* model and train it.
+- json_examples: Contains a suite of JSON examples that can be used to create the \U-Net\* model and train it.
 - load_balancer: Contains the code for the **nginx** load balancer.
 - main_controller: Defines the code required by the controllers. It has been developed using **Python**.
 - useful_images: Contains a set of diagrams, figures and flows which are used in our report. They can be inspected for further analysis.
