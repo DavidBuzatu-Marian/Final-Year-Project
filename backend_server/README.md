@@ -63,7 +63,9 @@ Uses the aforementioned [strategy.js](/backend_server/workers/strategy.js) maps 
 - **/api/model/train**
 - **/api/model/loss**
 - **/api/model/status**
-  All these handlers are _POST_ requests and they simply create a task and add it to the corresponding queue. To get the queue, the code uses the strategy map which stores the specific Queue for the endpoint - e.g., '/api/model/create' -> modelCreateQueue. There are also corresponding _GET_ requests for these endpoints to get the task status given the id:
+
+All these handlers are _POST_ requests and they simply create a task and add it to the corresponding queue. To get the queue, the code uses the strategy map which stores the specific Queue for the endpoint - e.g., '/api/model/create' -> modelCreateQueue. There are also corresponding _GET_ requests for these endpoints to get the task status given the id:
+
 - **/api/model/create:id**
 - **/api/model/train:id**
 - **/api/model/loss:id**
@@ -80,7 +82,7 @@ We have also extensively used a [docker-compose](./docker-compose.yml). In the c
 To run the controller locally, execute:
 
 ```Docker
-docker-compose up --build
+docker-compose up --build .
 ```
 
 By default, the back-end should be found on localhost:5005, while the redis container should be found on localhost:6379.
