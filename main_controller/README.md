@@ -63,7 +63,7 @@ We have also extensively used a [docker-compose](./docker-compose.yml) file duri
 To run the controller locally, execute:
 
 ```Docker
-docker-compose up --build
+docker-compose up --build .
 ```
 
 By default, the controller should be found on localhost:5000 or localhost:5001. Please check your docker desktop or use the docker CLI to identify the port.

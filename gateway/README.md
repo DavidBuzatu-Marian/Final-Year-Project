@@ -36,7 +36,7 @@ We provide a list of endpoints that can be targeted inside instances below:
 
 ### Environment endpoints
 
-- **/dataset/data** - we specifically handle the dataset upload endpoint without the proxy middleware due to implementation constrains. The middleware is not capable of proxying files with the request, thus we had to handle this particular case ourselves.
+- **/dataset/data** (POST) - we specifically handle the dataset upload endpoint without the proxy middleware due to implementation constrains. The middleware is not capable of proxying files with the request, thus we had to handle this particular case ourselves.
 
 ### Authentication endpoints
 
@@ -54,7 +54,7 @@ We have also extensively used a [docker-compose](./docker-compose.yml) file duri
 To run the gateway locally, execute:
 
 ```Docker
-docker-compose up --build
+docker-compose up --build .
 ```
 
 By default, the gateway should run on localhost:5002. Please check your Docker Desktop for more details.
