@@ -1,3 +1,6 @@
+# Thesis
+Thesis can be read [here](Thesis.pdf). 
+
 # Project instructions
 
 This file provides general information about the contents of the repository, the required software to be able to run the project and how to run the project.
